@@ -1,0 +1,293 @@
+{
+  "hash": "3cced778cf1a",
+  "db_path": "I:\\AI\\text_to_sql\\data\\bird-sql\\mini_dev\\minidev\\minidev\\MINIDEV\\dev_databases\\debit_card_specializing\\debit_card_specializing.sqlite",
+  "schema": {
+    "tables": [
+      {
+        "table_name": "customers",
+        "columns": [
+          {
+            "name": "CustomerID",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "Segment",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Currency",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 32461,
+        "sample_rows": [
+          {
+            "CustomerID": 3,
+            "Segment": "SME",
+            "Currency": "EUR"
+          },
+          {
+            "CustomerID": 5,
+            "Segment": "LAM",
+            "Currency": "EUR"
+          },
+          {
+            "CustomerID": 6,
+            "Segment": "SME",
+            "Currency": "EUR"
+          }
+        ]
+      },
+      {
+        "table_name": "gasstations",
+        "columns": [
+          {
+            "name": "GasStationID",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "ChainID",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Country",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Segment",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 5716,
+        "sample_rows": [
+          {
+            "GasStationID": 44,
+            "ChainID": 13,
+            "Country": "CZE",
+            "Segment": "Value for money"
+          },
+          {
+            "GasStationID": 45,
+            "ChainID": 6,
+            "Country": "CZE",
+            "Segment": "Premium"
+          },
+          {
+            "GasStationID": 46,
+            "ChainID": 23,
+            "Country": "CZE",
+            "Segment": "Other"
+          }
+        ]
+      },
+      {
+        "table_name": "products",
+        "columns": [
+          {
+            "name": "ProductID",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "Description",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 591,
+        "sample_rows": [
+          {
+            "ProductID": 1,
+            "Description": "Rucní zadání"
+          },
+          {
+            "ProductID": 2,
+            "Description": "Nafta"
+          },
+          {
+            "ProductID": 3,
+            "Description": "Special"
+          }
+        ]
+      },
+      {
+        "table_name": "transactions_1k",
+        "columns": [
+          {
+            "name": "TransactionID",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "Date",
+            "type": "DATE",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Time",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "CustomerID",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "CardID",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "GasStationID",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "ProductID",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Amount",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Price",
+            "type": "REAL",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 1000,
+        "sample_rows": [
+          {
+            "TransactionID": 1,
+            "Date": "2012-08-24",
+            "Time": "09:41:00",
+            "CustomerID": 31543,
+            "CardID": 486621,
+            "GasStationID": 3704,
+            "ProductID": 2,
+            "Amount": 28,
+            "Price": 672.64
+          },
+          {
+            "TransactionID": 2,
+            "Date": "2012-08-24",
+            "Time": "10:03:00",
+            "CustomerID": 46707,
+            "CardID": 550134,
+            "GasStationID": 3704,
+            "ProductID": 2,
+            "Amount": 18,
+            "Price": 430.72
+          },
+          {
+            "TransactionID": 3,
+            "Date": "2012-08-24",
+            "Time": "10:03:00",
+            "CustomerID": 46707,
+            "CardID": 550134,
+            "GasStationID": 3704,
+            "ProductID": 23,
+            "Amount": 1,
+            "Price": 121.99
+          }
+        ]
+      },
+      {
+        "table_name": "yearmonth",
+        "columns": [
+          {
+            "name": "CustomerID",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "Date",
+            "type": "TEXT",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "Consumption",
+            "type": "REAL",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 383282,
+        "sample_rows": [
+          {
+            "CustomerID": 5,
+            "Date": "201207",
+            "Consumption": 528.3
+          },
+          {
+            "CustomerID": 5,
+            "Date": "201302",
+            "Consumption": 1598.28
+          },
+          {
+            "CustomerID": 5,
+            "Date": "201303",
+            "Consumption": 1931.36
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "yearmonth",
+        "from_column": "CustomerID",
+        "to_table": "customers",
+        "to_column": null
+      },
+      {
+        "from_table": "yearmonth",
+        "from_column": "CustomerID",
+        "to_table": "customers",
+        "to_column": null
+      }
+    ]
+  },
+  "descriptions": {
+    "customers": "Bảng lưu trữ thông tin về khách hàng, bao gồm ID, phân khúc khách hàng và loại tiền tệ họ sử dụng.",
+    "gasstations": "Bảng chứa thông tin về các trạm xăng, bao gồm ID, chuỗi cung ứng, quốc gia và phân khúc của trạm xăng.",
+    "products": "Bảng liệt kê các sản phẩm có sẵn, với ID và mô tả chi tiết của từng sản phẩm.",
+    "transactions_1k": "Bảng ghi lại các giao dịch mua hàng, bao gồm ngày, giờ, thông tin khách hàng, trạm xăng, sản phẩm, số lượng và giá trị giao dịch.",
+    "yearmonth": "Bảng tổng hợp lượng tiêu thụ theo tháng cho từng khách hàng, với khóa chính là ID khách hàng và tháng/năm."
+  }
+}

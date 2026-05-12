@@ -1,0 +1,12 @@
+{"path": "data\\northwind\\northwind.sqlite", "event": "introspecting_db", "level": "info", "timestamp": "2026-05-08T08:40:57.107000Z"}
+{"path": "data\\northwind\\northwind.sqlite", "event": "introspecting_db", "level": "info", "timestamp": "2026-05-08T08:42:56.135837Z"}
+{"path": "data\\northwind\\northwind.sqlite", "event": "introspecting_db", "level": "info", "timestamp": "2026-05-08T08:47:42.571662Z"}
+{"tables": 13, "relationships": 13, "event": "introspection_complete", "level": "info", "timestamp": "2026-05-08T08:47:42.595957Z"}
+{"count": 13, "event": "generate_descriptions_success", "level": "info", "timestamp": "2026-05-08T08:47:51.056902Z"}
+{"path": "data\\northwind\\northwind.sqlite", "event": "introspecting_db", "level": "info", "timestamp": "2026-05-08T08:49:38.348540Z"}
+{"tables": 13, "relationships": 13, "event": "introspection_complete", "level": "info", "timestamp": "2026-05-08T08:49:38.652613Z"}
+{"count": 13, "event": "generate_descriptions_success", "level": "info", "timestamp": "2026-05-08T08:49:43.875696Z"}
+{"path": "data\\northwind\\northwind.sqlite", "event": "introspecting_db", "level": "info", "timestamp": "2026-05-08T09:02:33.174769Z"}
+{"tables": 13, "relationships": 13, "event": "introspection_complete", "level": "info", "timestamp": "2026-05-08T09:02:33.206116Z"}
+{"count": 13, "event": "generate_descriptions_success", "level": "info", "timestamp": "2026-05-08T09:02:39.785257Z"}
+{"db_hash": "9b6f5795aaa4", "cache_file": "I:\\AI\\text_to_sql\\schemas\\9b6f5795aaa4.json", "event": "save_cache_success", "level": "info", "timestamp": "2026-05-08T09:06:41.590174Z"}

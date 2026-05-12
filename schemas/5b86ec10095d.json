@@ -1,0 +1,283 @@
+{
+  "hash": "5b86ec10095d",
+  "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\concert_singer\\concert_singer.sqlite",
+  "schema": {
+    "tables": [
+      {
+        "table_name": "stadium",
+        "columns": [
+          {
+            "name": "Stadium_ID",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "Location",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Name",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Capacity",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Highest",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Lowest",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Average",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 9,
+        "sample_rows": [
+          {
+            "Stadium_ID": 1,
+            "Location": "Raith Rovers",
+            "Name": "Stark's Park",
+            "Capacity": 10104,
+            "Highest": 4812,
+            "Lowest": 1294,
+            "Average": 2106
+          },
+          {
+            "Stadium_ID": 2,
+            "Location": "Ayr United",
+            "Name": "Somerset Park",
+            "Capacity": 11998,
+            "Highest": 2363,
+            "Lowest": 1057,
+            "Average": 1477
+          },
+          {
+            "Stadium_ID": 3,
+            "Location": "East Fife",
+            "Name": "Bayview Stadium",
+            "Capacity": 2000,
+            "Highest": 1980,
+            "Lowest": 533,
+            "Average": 864
+          }
+        ]
+      },
+      {
+        "table_name": "singer",
+        "columns": [
+          {
+            "name": "Singer_ID",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "Name",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Country",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Song_Name",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Song_release_year",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Age",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Is_male",
+            "type": "bool",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 6,
+        "sample_rows": [
+          {
+            "Singer_ID": 1,
+            "Name": "Joe Sharp",
+            "Country": "Netherlands",
+            "Song_Name": "You",
+            "Song_release_year": "1992",
+            "Age": 52,
+            "Is_male": "F"
+          },
+          {
+            "Singer_ID": 2,
+            "Name": "Timbaland",
+            "Country": "United States",
+            "Song_Name": "Dangerous",
+            "Song_release_year": "2008",
+            "Age": 32,
+            "Is_male": "T"
+          },
+          {
+            "Singer_ID": 3,
+            "Name": "Justin Brown",
+            "Country": "France",
+            "Song_Name": "Hey Oh",
+            "Song_release_year": "2013",
+            "Age": 29,
+            "Is_male": "T"
+          }
+        ]
+      },
+      {
+        "table_name": "concert",
+        "columns": [
+          {
+            "name": "concert_ID",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "concert_Name",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Theme",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Stadium_ID",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Year",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 6,
+        "sample_rows": [
+          {
+            "concert_ID": 1,
+            "concert_Name": "Auditions",
+            "Theme": "Free choice",
+            "Stadium_ID": "1",
+            "Year": "2014"
+          },
+          {
+            "concert_ID": 2,
+            "concert_Name": "Super bootcamp",
+            "Theme": "Free choice 2",
+            "Stadium_ID": "2",
+            "Year": "2014"
+          },
+          {
+            "concert_ID": 3,
+            "concert_Name": "Home Visits",
+            "Theme": "Bleeding Love",
+            "Stadium_ID": "2",
+            "Year": "2015"
+          }
+        ]
+      },
+      {
+        "table_name": "singer_in_concert",
+        "columns": [
+          {
+            "name": "concert_ID",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "Singer_ID",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": true
+          }
+        ],
+        "description": null,
+        "row_count": 10,
+        "sample_rows": [
+          {
+            "concert_ID": 1,
+            "Singer_ID": "2"
+          },
+          {
+            "concert_ID": 1,
+            "Singer_ID": "3"
+          },
+          {
+            "concert_ID": 1,
+            "Singer_ID": "5"
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "concert",
+        "from_column": "Stadium_ID",
+        "to_table": "stadium",
+        "to_column": "Stadium_ID"
+      },
+      {
+        "from_table": "singer_in_concert",
+        "from_column": "Singer_ID",
+        "to_table": "singer",
+        "to_column": "Singer_ID"
+      },
+      {
+        "from_table": "singer_in_concert",
+        "from_column": "concert_ID",
+        "to_table": "concert",
+        "to_column": "concert_ID"
+      }
+    ]
+  },
+  "descriptions": {
+    "stadium": "Bảng lưu trữ thông tin về các sân vận động, bao gồm ID, địa điểm, tên, sức chứa và các chỉ số liên quan đến sức chứa.",
+    "singer": "Bảng lưu trữ thông tin chi tiết về các ca sĩ, bao gồm ID, tên, quốc gia, tên bài hát, năm phát hành bài hát, tuổi và giới tính.",
+    "concert": "Bảng lưu trữ thông tin về các buổi hòa nhạc, bao gồm ID, tên buổi hòa nhạc, chủ đề, sân vận động diễn ra và năm tổ chức.",
+    "singer_in_concert": "Bảng trung gian liên kết ca sĩ với các buổi hòa nhạc mà họ tham gia, cho biết ca sĩ nào biểu diễn trong buổi hòa nhạc nào."
+  }
+}

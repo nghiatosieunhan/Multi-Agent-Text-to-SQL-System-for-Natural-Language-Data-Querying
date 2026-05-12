@@ -1,0 +1,63 @@
+Topic: Multi-Agent Text-to-SQL System for Natural Language Data Querying
+
+Description:
+- This thesis presents a multi-agent system that enables users to query structured data using
+natural language. The system translates user input into SQL queries, executes them on a
+relational database, and returns structured results.
+- The main technical contribution is a modular multi-agent pipeline combined with structured
+prompting and query guidance to improve the consistency and accuracy of Text-to-SQL
+generation.
+- Additionally, the work includes a practical data engineering pipeline (data crawling,
+cleaning, and transformation) and a lightweight semantic caching mechanism to improve
+system efficiency.
+- The system is implemented on small to medium-scale databases, using both publicly
+collected tabular data and anonymized real-world business data (e.g., revenue-related data).
+Although the scope is limited, the architecture is designed to be extensible to larger datasets
+and real-world enterprise scenarios.
+- Optional features such as basic data visualization are included to enhance result
+interpretation.
+
+Expected outcomes:
+- End-To-End Natural Language Data Querying System: A fully functional system that
+allows users to input natural language queries and automatically receive accurate results
+from structured databases without requiring SQL knowledge.
+- Consistent And Structured Query Generation: The system generates stable and
+well-formed SQL queries using structured prompting techniques and predefined query
+templates, ensuring predictable and reliable behavior across different inputs.
+- Support For Common Analytical Queries: Ability to handle filtering, aggregation,
+grouping, sorting, and simple joins.
+- Efficient Query Processing With Semantic Caching: A caching mechanism that detects
+repeated or semantically similar queries and reuses previous results, reducing execution time and improving system responsiveness.
+- Modular Multi-Agent Pipeline: A clearly defined architecture where components are
+separated into distinct roles such as input processing, query generation, execution, and
+result presentation, enabling scalability and maintainability.
+- Practical Data Collection And Engineering Pipeline: End-to-end workflow including
+integration of anonymized business data, cleaning, and conversion into SQL tables.
+- User-Friendly And Interpretable Output: Results presented in a clear format with
+optional summaries or basic visualizations.
+
+Used Methods and Techniques:
+- Large Language Models (LLMs): Used as the core component for interpreting
+natural language queries, generating SQL statements, and producing human-readable
+outputs.
+- Multi-Agent System Architecture: The system is divided into multiple cooperative
+components, each responsible for a specific stage of the pipeline, improving
+modularity, clarity, and extensibility.
+- Structured Prompting Strategy: Prompts are designed in a step-by-step format to
+guide the model in identifying relevant tables, selecting columns, and constructing
+SQL queries.
+- Query Template Guidance: Predefined SQL patterns are used to constrain and
+standardize query generation, ensuring syntactic correctness and logical consistency.
+- Semantic Caching Mechanism: A lightweight approach to store and reuse results
+of previously executed queries based on semantic similarity, reducing redundant
+computation and improving system efficiency.
+- Task Decomposition Approach: The natural language querying process is broken
+into smaller subtasks, allowing each component to focus on a specific responsibility
+and improving overall system reliability.
+- Data Cleaning And Transformation (Data Engineering): Integrating anonymized
+real-world business datasets for practical experimentation, cleaning, and conversion
+into SQL tables.
+- Basic Data Visualization Techniques: Generating simple charts or summaries
+from query results to enhance interpretability.
+- Experimental Evaluation Methodology: Designing test scenarios and defining
+metrics to evaluate system performance in terms of accuracy, efficiency, and reliability.

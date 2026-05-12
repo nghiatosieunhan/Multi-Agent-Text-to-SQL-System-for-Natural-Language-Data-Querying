@@ -1,0 +1,288 @@
+{
+  "hash": "5d7e4e7985f9",
+  "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\world_1\\world_1.sqlite",
+  "schema": {
+    "tables": [
+      {
+        "table_name": "city",
+        "columns": [
+          {
+            "name": "ID",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "Name",
+            "type": "char(35)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "CountryCode",
+            "type": "char(3)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "District",
+            "type": "char(20)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "Population",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 4079,
+        "sample_rows": [
+          {
+            "ID": 1,
+            "Name": "Kabul",
+            "CountryCode": "AFG",
+            "District": "Kabol",
+            "Population": 1780000
+          },
+          {
+            "ID": 2,
+            "Name": "Qandahar",
+            "CountryCode": "AFG",
+            "District": "Qandahar",
+            "Population": 237500
+          },
+          {
+            "ID": 3,
+            "Name": "Herat",
+            "CountryCode": "AFG",
+            "District": "Herat",
+            "Population": 186800
+          }
+        ]
+      },
+      {
+        "table_name": "country",
+        "columns": [
+          {
+            "name": "Code",
+            "type": "char(3)",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "Name",
+            "type": "char(52)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "Continent",
+            "type": "TEXT",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "Region",
+            "type": "char(26)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "SurfaceArea",
+            "type": "float(10,2)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "IndepYear",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Population",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "LifeExpectancy",
+            "type": "float(3,1)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "GNP",
+            "type": "float(10,2)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "GNPOld",
+            "type": "float(10,2)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "LocalName",
+            "type": "char(45)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "GovernmentForm",
+            "type": "char(45)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "HeadOfState",
+            "type": "char(60)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Capital",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Code2",
+            "type": "char(2)",
+            "nullable": false,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 239,
+        "sample_rows": [
+          {
+            "Code": "ABW",
+            "Name": "Aruba",
+            "Continent": "North America",
+            "Region": "Caribbean",
+            "SurfaceArea": 193.0,
+            "IndepYear": null,
+            "Population": 103000,
+            "LifeExpectancy": 78.4,
+            "GNP": 828.0,
+            "GNPOld": 793.0,
+            "LocalName": "Aruba",
+            "GovernmentForm": "Nonmetropolitan Territory of The Netherlands",
+            "HeadOfState": "Beatrix",
+            "Capital": 129,
+            "Code2": "AW"
+          },
+          {
+            "Code": "AFG",
+            "Name": "Afghanistan",
+            "Continent": "Asia",
+            "Region": "Southern and Central Asia",
+            "SurfaceArea": 652090.0,
+            "IndepYear": 1919,
+            "Population": 22720000,
+            "LifeExpectancy": 45.9,
+            "GNP": 5976.0,
+            "GNPOld": null,
+            "LocalName": "Afganistan/Afqanestan",
+            "GovernmentForm": "Islamic Emirate",
+            "HeadOfState": "Mohammad Omar",
+            "Capital": 1,
+            "Code2": "AF"
+          },
+          {
+            "Code": "AGO",
+            "Name": "Angola",
+            "Continent": "Africa",
+            "Region": "Central Africa",
+            "SurfaceArea": 1246700.0,
+            "IndepYear": 1975,
+            "Population": 12878000,
+            "LifeExpectancy": 38.3,
+            "GNP": 6648.0,
+            "GNPOld": 7984.0,
+            "LocalName": "Angola",
+            "GovernmentForm": "Republic",
+            "HeadOfState": "José Eduardo dos Santos",
+            "Capital": 56,
+            "Code2": "AO"
+          }
+        ]
+      },
+      {
+        "table_name": "countrylanguage",
+        "columns": [
+          {
+            "name": "CountryCode",
+            "type": "char(3)",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "Language",
+            "type": "char(30)",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "IsOfficial",
+            "type": "TEXT",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "Percentage",
+            "type": "float(4,1)",
+            "nullable": false,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 984,
+        "sample_rows": [
+          {
+            "CountryCode": "ABW",
+            "Language": "Dutch",
+            "IsOfficial": "T",
+            "Percentage": 5.3
+          },
+          {
+            "CountryCode": "ABW",
+            "Language": "English",
+            "IsOfficial": "F",
+            "Percentage": 9.5
+          },
+          {
+            "CountryCode": "ABW",
+            "Language": "Papiamento",
+            "IsOfficial": "F",
+            "Percentage": 76.7
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "city",
+        "from_column": "CountryCode",
+        "to_table": "country",
+        "to_column": "Code"
+      },
+      {
+        "from_table": "countrylanguage",
+        "from_column": "CountryCode",
+        "to_table": "country",
+        "to_column": "Code"
+      }
+    ]
+  },
+  "descriptions": {
+    "city": "Lưu trữ thông tin về các thành phố, bao gồm tên, mã quốc gia, quận và dân số.",
+    "country": "Lưu trữ thông tin chi tiết về các quốc gia, bao gồm tên, châu lục, khu vực, diện tích, dân số, tuổi thọ, GNP và hình thức chính phủ.",
+    "countrylanguage": "Lưu trữ thông tin về các ngôn ngữ được nói ở mỗi quốc gia, bao gồm mã quốc gia, tên ngôn ngữ, trạng thái chính thức và tỷ lệ phần trăm người nói."
+  }
+}

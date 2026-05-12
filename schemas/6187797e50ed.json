@@ -1,0 +1,234 @@
+{
+  "hash": "6187797e50ed",
+  "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\battle_death\\battle_death.sqlite",
+  "schema": {
+    "tables": [
+      {
+        "table_name": "battle",
+        "columns": [
+          {
+            "name": "id",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "name",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "date",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "bulgarian_commander",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "latin_commander",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "result",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 8,
+        "sample_rows": [
+          {
+            "id": 1,
+            "name": "Battle of Adrianople",
+            "date": "14 April 1205",
+            "bulgarian_commander": "Kaloyan",
+            "latin_commander": "Baldwin I",
+            "result": "Bulgarian victory"
+          },
+          {
+            "id": 2,
+            "name": "Battle of Serres",
+            "date": "June 1205",
+            "bulgarian_commander": "Kaloyan",
+            "latin_commander": "Unknown",
+            "result": "Bulgarian victory"
+          },
+          {
+            "id": 3,
+            "name": "Battle of Rusion",
+            "date": "31 January 1206",
+            "bulgarian_commander": "Kaloyan",
+            "latin_commander": "Thierry de Termond",
+            "result": "Bulgarian victory"
+          }
+        ]
+      },
+      {
+        "table_name": "ship",
+        "columns": [
+          {
+            "name": "lost_in_battle",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "id",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "name",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "tonnage",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "ship_type",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "location",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "disposition_of_ship",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 7,
+        "sample_rows": [
+          {
+            "lost_in_battle": 8,
+            "id": 1,
+            "name": "Lettice",
+            "tonnage": "t",
+            "ship_type": "Brig",
+            "location": "English Channel",
+            "disposition_of_ship": "Captured"
+          },
+          {
+            "lost_in_battle": 7,
+            "id": 2,
+            "name": "Bon Accord",
+            "tonnage": "t",
+            "ship_type": "Brig",
+            "location": "English Channel",
+            "disposition_of_ship": "Captured"
+          },
+          {
+            "lost_in_battle": 6,
+            "id": 3,
+            "name": "Mary",
+            "tonnage": "t",
+            "ship_type": "Brig",
+            "location": "English Channel",
+            "disposition_of_ship": "Captured"
+          }
+        ]
+      },
+      {
+        "table_name": "death",
+        "columns": [
+          {
+            "name": "caused_by_ship_id",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "id",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "note",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "killed",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "injured",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 13,
+        "sample_rows": [
+          {
+            "caused_by_ship_id": 1,
+            "id": 1,
+            "note": "Dantewada, Chhattisgarh",
+            "killed": 8,
+            "injured": 0
+          },
+          {
+            "caused_by_ship_id": 2,
+            "id": 2,
+            "note": "Dantewada, Chhattisgarh",
+            "killed": 3,
+            "injured": 0
+          },
+          {
+            "caused_by_ship_id": 3,
+            "id": 13,
+            "note": "Erraboru, Chhattisgarh",
+            "killed": 25,
+            "injured": 0
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "ship",
+        "from_column": "lost_in_battle",
+        "to_table": "battle",
+        "to_column": "id"
+      },
+      {
+        "from_table": "death",
+        "from_column": "caused_by_ship_id",
+        "to_table": "ship",
+        "to_column": "id"
+      }
+    ]
+  },
+  "descriptions": {
+    "battle": "Bảng lưu trữ thông tin về các trận chiến, bao gồm tên, ngày diễn ra, chỉ huy và kết quả.",
+    "ship": "Bảng lưu trữ thông tin về các con tàu, bao gồm tên, loại, trọng tải, vị trí và tình trạng của chúng, cũng như trận chiến mà chúng bị mất.",
+    "death": "Bảng ghi lại các sự cố gây tử vong hoặc thương tích, liên kết với con tàu gây ra sự cố và ghi chú chi tiết."
+  }
+}

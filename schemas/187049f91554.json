@@ -1,0 +1,153 @@
+{
+  "hash": "187049f91554",
+  "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\voter_1\\voter_1.sqlite",
+  "schema": {
+    "tables": [
+      {
+        "table_name": "AREA_CODE_STATE",
+        "columns": [
+          {
+            "name": "area_code",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "state",
+            "type": "varchar(2)",
+            "nullable": false,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 305,
+        "sample_rows": [
+          {
+            "area_code": 201,
+            "state": "NJ"
+          },
+          {
+            "area_code": 202,
+            "state": "DC"
+          },
+          {
+            "area_code": 203,
+            "state": "CT"
+          }
+        ]
+      },
+      {
+        "table_name": "CONTESTANTS",
+        "columns": [
+          {
+            "name": "contestant_number",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "contestant_name",
+            "type": "varchar(50)",
+            "nullable": false,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 11,
+        "sample_rows": [
+          {
+            "contestant_number": 1,
+            "contestant_name": "Edwina Burnam"
+          },
+          {
+            "contestant_number": 2,
+            "contestant_name": "Tabatha Gehling"
+          },
+          {
+            "contestant_number": 3,
+            "contestant_name": "Kelly Clauss"
+          }
+        ]
+      },
+      {
+        "table_name": "VOTES",
+        "columns": [
+          {
+            "name": "vote_id",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "phone_number",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "state",
+            "type": "varchar(2)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "contestant_number",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "created",
+            "type": "timestamp",
+            "nullable": false,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 4,
+        "sample_rows": [
+          {
+            "vote_id": 1,
+            "phone_number": 7182887233,
+            "state": "NY",
+            "contestant_number": 2,
+            "created": "2018-03-09 19:03:21"
+          },
+          {
+            "vote_id": 2,
+            "phone_number": 7148407040,
+            "state": "NY",
+            "contestant_number": 3,
+            "created": "2018-03-09 19:03:36"
+          },
+          {
+            "vote_id": 3,
+            "phone_number": 6209222712,
+            "state": "CA",
+            "contestant_number": 3,
+            "created": "2018-03-09 19:03:39"
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "VOTES",
+        "from_column": "contestant_number",
+        "to_table": "CONTESTANTS",
+        "to_column": "contestant_number"
+      },
+      {
+        "from_table": "VOTES",
+        "from_column": "state",
+        "to_table": "AREA_CODE_STATE",
+        "to_column": "state"
+      }
+    ]
+  },
+  "descriptions": {
+    "AREA_CODE_STATE": "Bảng ánh xạ mã vùng điện thoại với tên bang tương ứng.",
+    "CONTESTANTS": "Bảng lưu thông tin của các thí sinh tham gia, bao gồm số báo danh và tên.",
+    "VOTES": "Bảng ghi lại các lượt bình chọn, bao gồm thông tin người bình chọn (số điện thoại, bang), thí sinh được bình chọn và thời gian bình chọn."
+  }
+}

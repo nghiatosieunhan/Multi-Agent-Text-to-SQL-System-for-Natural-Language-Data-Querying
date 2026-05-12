@@ -1,0 +1,180 @@
+{
+  "hash": "b31ec23b55bf",
+  "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\museum_visit\\museum_visit.sqlite",
+  "schema": {
+    "tables": [
+      {
+        "table_name": "museum",
+        "columns": [
+          {
+            "name": "Museum_ID",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "Name",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Num_of_Staff",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Open_Year",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 8,
+        "sample_rows": [
+          {
+            "Museum_ID": 1,
+            "Name": "Plaza Museum",
+            "Num_of_Staff": 62,
+            "Open_Year": "2000"
+          },
+          {
+            "Museum_ID": 2,
+            "Name": "Capital Plaza Museum",
+            "Num_of_Staff": 25,
+            "Open_Year": "2012"
+          },
+          {
+            "Museum_ID": 3,
+            "Name": "Jefferson Development Museum",
+            "Num_of_Staff": 18,
+            "Open_Year": "2010"
+          }
+        ]
+      },
+      {
+        "table_name": "visitor",
+        "columns": [
+          {
+            "name": "ID",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "Name",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Level_of_membership",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Age",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 6,
+        "sample_rows": [
+          {
+            "ID": 1,
+            "Name": "Gonzalo Higuaín ",
+            "Level_of_membership": 8,
+            "Age": 35
+          },
+          {
+            "ID": 2,
+            "Name": "Guti Midfielder",
+            "Level_of_membership": 5,
+            "Age": 28
+          },
+          {
+            "ID": 3,
+            "Name": "Arjen Robben",
+            "Level_of_membership": 1,
+            "Age": 27
+          }
+        ]
+      },
+      {
+        "table_name": "visit",
+        "columns": [
+          {
+            "name": "Museum_ID",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "visitor_ID",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "Num_of_Ticket",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Total_spent",
+            "type": "REAL",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 6,
+        "sample_rows": [
+          {
+            "Museum_ID": 1,
+            "visitor_ID": "5",
+            "Num_of_Ticket": 20,
+            "Total_spent": 320.14
+          },
+          {
+            "Museum_ID": 2,
+            "visitor_ID": "5",
+            "Num_of_Ticket": 4,
+            "Total_spent": 89.98
+          },
+          {
+            "Museum_ID": 4,
+            "visitor_ID": "3",
+            "Num_of_Ticket": 10,
+            "Total_spent": 320.44
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "visit",
+        "from_column": "visitor_ID",
+        "to_table": "visitor",
+        "to_column": "ID"
+      },
+      {
+        "from_table": "visit",
+        "from_column": "Museum_ID",
+        "to_table": "museum",
+        "to_column": "Museum_ID"
+      }
+    ]
+  },
+  "descriptions": {
+    "museum": "Bảng lưu trữ thông tin về các bảo tàng, bao gồm ID, tên, số lượng nhân viên và năm mở cửa.",
+    "visitor": "Bảng lưu trữ thông tin về khách tham quan, bao gồm ID, tên, cấp độ thành viên và tuổi.",
+    "visit": "Bảng ghi lại lịch sử các lượt ghé thăm của khách tham quan đến các bảo tàng, bao gồm ID bảo tàng, ID khách tham quan, số lượng vé và tổng số tiền đã chi tiêu."
+  }
+}

@@ -1,0 +1,758 @@
+{
+  "hash": "8685a50441a1",
+  "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\student_transcripts_tracking\\student_transcripts_tracking.sqlite",
+  "schema": {
+    "tables": [
+      {
+        "table_name": "Addresses",
+        "columns": [
+          {
+            "name": "address_id",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "line_1",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "line_2",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "line_3",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "city",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "zip_postcode",
+            "type": "VARCHAR(20)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "state_province_county",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "country",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "other_address_details",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 15,
+        "sample_rows": [
+          {
+            "address_id": 1,
+            "line_1": "2294 Grant Square Apt. 235",
+            "line_2": "Apt. 370",
+            "line_3": null,
+            "city": "Port Chelsea",
+            "zip_postcode": "148",
+            "state_province_county": "Virginia",
+            "country": "Iceland",
+            "other_address_details": null
+          },
+          {
+            "address_id": 2,
+            "line_1": "3999 Aufderhar Ways Suite 593",
+            "line_2": "Apt. 388",
+            "line_3": null,
+            "city": "Lake Laishafurt",
+            "zip_postcode": "943",
+            "state_province_county": "Kentucky",
+            "country": "Burundi",
+            "other_address_details": null
+          },
+          {
+            "address_id": 3,
+            "line_1": "67942 Carlotta Ferry Apt. 686",
+            "line_2": "Apt. 583",
+            "line_3": null,
+            "city": "Goodwinhaven",
+            "zip_postcode": "541",
+            "state_province_county": "Kansas",
+            "country": "Saudi Arabia",
+            "other_address_details": null
+          }
+        ]
+      },
+      {
+        "table_name": "Courses",
+        "columns": [
+          {
+            "name": "course_id",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "course_name",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "course_description",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "other_details",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 15,
+        "sample_rows": [
+          {
+            "course_id": 1,
+            "course_name": "ds",
+            "course_description": "p",
+            "other_details": null
+          },
+          {
+            "course_id": 2,
+            "course_name": "math",
+            "course_description": "q",
+            "other_details": null
+          },
+          {
+            "course_id": 3,
+            "course_name": "os",
+            "course_description": "v",
+            "other_details": null
+          }
+        ]
+      },
+      {
+        "table_name": "Departments",
+        "columns": [
+          {
+            "name": "department_id",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "department_name",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "department_description",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "other_details",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 15,
+        "sample_rows": [
+          {
+            "department_id": 1,
+            "department_name": "computer science",
+            "department_description": "error",
+            "other_details": null
+          },
+          {
+            "department_id": 2,
+            "department_name": "history",
+            "department_description": "nostrum",
+            "other_details": null
+          },
+          {
+            "department_id": 3,
+            "department_name": "art",
+            "department_description": "aliquam",
+            "other_details": null
+          }
+        ]
+      },
+      {
+        "table_name": "Degree_Programs",
+        "columns": [
+          {
+            "name": "degree_program_id",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "department_id",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "degree_summary_name",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "degree_summary_description",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "other_details",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 15,
+        "sample_rows": [
+          {
+            "degree_program_id": 1,
+            "department_id": 13,
+            "degree_summary_name": "Master",
+            "degree_summary_description": "architecto",
+            "other_details": null
+          },
+          {
+            "degree_program_id": 2,
+            "department_id": 2,
+            "degree_summary_name": "Master",
+            "degree_summary_description": "cumque",
+            "other_details": null
+          },
+          {
+            "degree_program_id": 3,
+            "department_id": 13,
+            "degree_summary_name": "Master",
+            "degree_summary_description": "placeat",
+            "other_details": null
+          }
+        ]
+      },
+      {
+        "table_name": "Sections",
+        "columns": [
+          {
+            "name": "section_id",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "course_id",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "section_name",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "section_description",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "other_details",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 15,
+        "sample_rows": [
+          {
+            "section_id": 1,
+            "course_id": 9,
+            "section_name": "a",
+            "section_description": "non",
+            "other_details": null
+          },
+          {
+            "section_id": 2,
+            "course_id": 2,
+            "section_name": "b",
+            "section_description": "voluptatem",
+            "other_details": null
+          },
+          {
+            "section_id": 3,
+            "course_id": 8,
+            "section_name": "c",
+            "section_description": "qui",
+            "other_details": null
+          }
+        ]
+      },
+      {
+        "table_name": "Semesters",
+        "columns": [
+          {
+            "name": "semester_id",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "semester_name",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "semester_description",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "other_details",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 15,
+        "sample_rows": [
+          {
+            "semester_id": 1,
+            "semester_name": "spring 2010",
+            "semester_description": "x",
+            "other_details": null
+          },
+          {
+            "semester_id": 2,
+            "semester_name": "summer 2010",
+            "semester_description": "g",
+            "other_details": null
+          },
+          {
+            "semester_id": 3,
+            "semester_name": "fall 2010",
+            "semester_description": "w",
+            "other_details": null
+          }
+        ]
+      },
+      {
+        "table_name": "Students",
+        "columns": [
+          {
+            "name": "student_id",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "current_address_id",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "permanent_address_id",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "first_name",
+            "type": "VARCHAR(80)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "middle_name",
+            "type": "VARCHAR(40)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "last_name",
+            "type": "VARCHAR(40)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "cell_mobile_number",
+            "type": "VARCHAR(40)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "email_address",
+            "type": "VARCHAR(40)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "ssn",
+            "type": "VARCHAR(40)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "date_first_registered",
+            "type": "DATETIME",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "date_left",
+            "type": "DATETIME",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "other_student_details",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 15,
+        "sample_rows": [
+          {
+            "student_id": 1,
+            "current_address_id": 10,
+            "permanent_address_id": 15,
+            "first_name": "Timmothy",
+            "middle_name": "Anna",
+            "last_name": "Ward",
+            "cell_mobile_number": "(096)889-8954x524",
+            "email_address": "erwin.zboncak@example.com",
+            "ssn": "965",
+            "date_first_registered": "1971-02-05 07:28:23",
+            "date_left": "1971-05-17 19:28:49",
+            "other_student_details": "quia"
+          },
+          {
+            "student_id": 2,
+            "current_address_id": 12,
+            "permanent_address_id": 5,
+            "first_name": "Hobart",
+            "middle_name": "Lorenz",
+            "last_name": "Balistreri",
+            "cell_mobile_number": "1-009-710-5151",
+            "email_address": "swift.kolby@example.com",
+            "ssn": "304246",
+            "date_first_registered": "1976-10-26 02:33:06",
+            "date_left": "2013-10-05 17:41:28",
+            "other_student_details": "autem"
+          },
+          {
+            "student_id": 3,
+            "current_address_id": 9,
+            "permanent_address_id": 5,
+            "first_name": "Warren",
+            "middle_name": "Violet",
+            "last_name": "Gleichner",
+            "cell_mobile_number": "07661787471",
+            "email_address": "johns.unique@example.net",
+            "ssn": "3",
+            "date_first_registered": "2007-08-29 23:25:41",
+            "date_left": "2007-03-31 09:53:19",
+            "other_student_details": "facilis"
+          }
+        ]
+      },
+      {
+        "table_name": "Student_Enrolment",
+        "columns": [
+          {
+            "name": "student_enrolment_id",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "degree_program_id",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "semester_id",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "student_id",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "other_details",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 15,
+        "sample_rows": [
+          {
+            "student_enrolment_id": 1,
+            "degree_program_id": 12,
+            "semester_id": 13,
+            "student_id": 14,
+            "other_details": null
+          },
+          {
+            "student_enrolment_id": 2,
+            "degree_program_id": 4,
+            "semester_id": 2,
+            "student_id": 9,
+            "other_details": null
+          },
+          {
+            "student_enrolment_id": 3,
+            "degree_program_id": 10,
+            "semester_id": 2,
+            "student_id": 7,
+            "other_details": null
+          }
+        ]
+      },
+      {
+        "table_name": "Student_Enrolment_Courses",
+        "columns": [
+          {
+            "name": "student_course_id",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "course_id",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "student_enrolment_id",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 15,
+        "sample_rows": [
+          {
+            "student_course_id": 0,
+            "course_id": 6,
+            "student_enrolment_id": 2
+          },
+          {
+            "student_course_id": 1,
+            "course_id": 6,
+            "student_enrolment_id": 8
+          },
+          {
+            "student_course_id": 2,
+            "course_id": 14,
+            "student_enrolment_id": 5
+          }
+        ]
+      },
+      {
+        "table_name": "Transcripts",
+        "columns": [
+          {
+            "name": "transcript_id",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "transcript_date",
+            "type": "DATETIME",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "other_details",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 15,
+        "sample_rows": [
+          {
+            "transcript_id": 1,
+            "transcript_date": "1988-04-30 01:19:47",
+            "other_details": null
+          },
+          {
+            "transcript_id": 2,
+            "transcript_date": "1975-10-28 15:16:51",
+            "other_details": null
+          },
+          {
+            "transcript_id": 3,
+            "transcript_date": "1984-12-19 00:37:21",
+            "other_details": null
+          }
+        ]
+      },
+      {
+        "table_name": "Transcript_Contents",
+        "columns": [
+          {
+            "name": "student_course_id",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "transcript_id",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 15,
+        "sample_rows": [
+          {
+            "student_course_id": 0,
+            "transcript_id": 2
+          },
+          {
+            "student_course_id": 96,
+            "transcript_id": 8
+          },
+          {
+            "student_course_id": 76,
+            "transcript_id": 9
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "Degree_Programs",
+        "from_column": "department_id",
+        "to_table": "Departments",
+        "to_column": "department_id"
+      },
+      {
+        "from_table": "Sections",
+        "from_column": "course_id",
+        "to_table": "Courses",
+        "to_column": "course_id"
+      },
+      {
+        "from_table": "Students",
+        "from_column": "permanent_address_id",
+        "to_table": "Addresses",
+        "to_column": "address_id"
+      },
+      {
+        "from_table": "Students",
+        "from_column": "current_address_id",
+        "to_table": "Addresses",
+        "to_column": "address_id"
+      },
+      {
+        "from_table": "Student_Enrolment",
+        "from_column": "student_id",
+        "to_table": "Students",
+        "to_column": "student_id"
+      },
+      {
+        "from_table": "Student_Enrolment",
+        "from_column": "semester_id",
+        "to_table": "Semesters",
+        "to_column": "semester_id"
+      },
+      {
+        "from_table": "Student_Enrolment",
+        "from_column": "degree_program_id",
+        "to_table": "Degree_Programs",
+        "to_column": "degree_program_id"
+      },
+      {
+        "from_table": "Student_Enrolment_Courses",
+        "from_column": "student_enrolment_id",
+        "to_table": "Student_Enrolment",
+        "to_column": "student_enrolment_id"
+      },
+      {
+        "from_table": "Student_Enrolment_Courses",
+        "from_column": "course_id",
+        "to_table": "Courses",
+        "to_column": "course_id"
+      },
+      {
+        "from_table": "Transcript_Contents",
+        "from_column": "transcript_id",
+        "to_table": "Transcripts",
+        "to_column": "transcript_id"
+      },
+      {
+        "from_table": "Transcript_Contents",
+        "from_column": "student_course_id",
+        "to_table": "Student_Enrolment_Courses",
+        "to_column": "student_course_id"
+      }
+    ]
+  },
+  "descriptions": {
+    "Addresses": "Lưu trữ thông tin địa chỉ chi tiết của các đối tượng liên quan như sinh viên.",
+    "Courses": "Lưu trữ thông tin về các khóa học được cung cấp, bao gồm tên và mô tả.",
+    "Departments": "Lưu trữ thông tin về các phòng ban hoặc khoa trong một tổ chức giáo dục.",
+    "Degree_Programs": "Định nghĩa các chương trình cấp bằng, liên kết với phòng ban và mô tả chương trình.",
+    "Sections": "Biểu diễn các lớp học cụ thể của một khóa học trong một học kỳ hoặc ngữ cảnh nhất định.",
+    "Semesters": "Lưu trữ thông tin về các học kỳ hoặc kỳ học.",
+    "Students": "Lưu trữ thông tin cá nhân của sinh viên, bao gồm thông tin liên lạc và địa chỉ.",
+    "Student_Enrolment": "Ghi lại việc ghi danh của sinh viên vào một chương trình cấp bằng trong một học kỳ cụ thể.",
+    "Student_Enrolment_Courses": "Theo dõi các khóa học mà một sinh viên đã đăng ký trong một lần ghi danh cụ thể.",
+    "Transcripts": "Lưu trữ thông tin chung về bảng điểm của sinh viên, bao gồm ngày lập.",
+    "Transcript_Contents": "Liên kết chi tiết các khóa học đã hoàn thành với bảng điểm tương ứng của sinh viên."
+  }
+}

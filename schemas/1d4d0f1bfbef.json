@@ -1,0 +1,297 @@
+{
+  "hash": "1d4d0f1bfbef",
+  "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\tvshow\\tvshow.sqlite",
+  "schema": {
+    "tables": [
+      {
+        "table_name": "TV_Channel",
+        "columns": [
+          {
+            "name": "id",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "series_name",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Country",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Language",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Content",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Pixel_aspect_ratio_PAR",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Hight_definition_TV",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Pay_per_view_PPV",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Package_Option",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 15,
+        "sample_rows": [
+          {
+            "id": "700",
+            "series_name": "Sky Radio",
+            "Country": "Italy",
+            "Language": "Italian",
+            "Content": "music",
+            "Pixel_aspect_ratio_PAR": "4:3",
+            "Hight_definition_TV": "no",
+            "Pay_per_view_PPV": "no",
+            "Package_Option": "Sky Famiglia"
+          },
+          {
+            "id": "701",
+            "series_name": "Sky Music",
+            "Country": "Italy",
+            "Language": "Italian",
+            "Content": "music",
+            "Pixel_aspect_ratio_PAR": "4:3",
+            "Hight_definition_TV": "no",
+            "Pay_per_view_PPV": "no",
+            "Package_Option": "Sky Famiglia"
+          },
+          {
+            "id": "703",
+            "series_name": "Music Box Italia",
+            "Country": "Italy",
+            "Language": "Italian",
+            "Content": "music",
+            "Pixel_aspect_ratio_PAR": "4:3 / 16:9",
+            "Hight_definition_TV": "no",
+            "Pay_per_view_PPV": "no",
+            "Package_Option": "Sky Famiglia"
+          }
+        ]
+      },
+      {
+        "table_name": "TV_series",
+        "columns": [
+          {
+            "name": "id",
+            "type": "REAL",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "Episode",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Air_Date",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Rating",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Share",
+            "type": "REAL",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "18_49_Rating_Share",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Viewers_m",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Weekly_Rank",
+            "type": "REAL",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Channel",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 12,
+        "sample_rows": [
+          {
+            "id": 1.0,
+            "Episode": "A Love of a Lifetime",
+            "Air_Date": "September 24, 2007",
+            "Rating": "5.8",
+            "Share": 9.0,
+            "18_49_Rating_Share": "3.5/9",
+            "Viewers_m": "9.16",
+            "Weekly_Rank": 43.0,
+            "Channel": "700"
+          },
+          {
+            "id": 2.0,
+            "Episode": "Friendly Skies",
+            "Air_Date": "October 1, 2007",
+            "Rating": "5.3",
+            "Share": 9.0,
+            "18_49_Rating_Share": "3.2/8",
+            "Viewers_m": "8.23",
+            "Weekly_Rank": 50.0,
+            "Channel": "701"
+          },
+          {
+            "id": 3.0,
+            "Episode": "Game Three",
+            "Air_Date": "October 8, 2007",
+            "Rating": "4.4",
+            "Share": 7.0,
+            "18_49_Rating_Share": "2.9/7",
+            "Viewers_m": "6.94",
+            "Weekly_Rank": 61.0,
+            "Channel": "707"
+          }
+        ]
+      },
+      {
+        "table_name": "Cartoon",
+        "columns": [
+          {
+            "name": "id",
+            "type": "REAL",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "Title",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Directed_by",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Written_by",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Original_air_date",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Production_code",
+            "type": "REAL",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Channel",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 12,
+        "sample_rows": [
+          {
+            "id": 1.0,
+            "Title": "The Rise of the Blue Beetle!",
+            "Directed_by": "Ben Jones",
+            "Written_by": "Michael Jelenic",
+            "Original_air_date": "November14,2008",
+            "Production_code": 101.0,
+            "Channel": "700"
+          },
+          {
+            "id": 2.0,
+            "Title": "Terror on Dinosaur Island!",
+            "Directed_by": "Brandon Vietti",
+            "Written_by": "Steven Melching",
+            "Original_air_date": "November21,2008",
+            "Production_code": 102.0,
+            "Channel": "701"
+          },
+          {
+            "id": 3.0,
+            "Title": "Evil Under the Sea!",
+            "Directed_by": "Michael Chang",
+            "Written_by": "Joseph Kuhr",
+            "Original_air_date": "December5,2008",
+            "Production_code": 103.0,
+            "Channel": "703"
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "TV_series",
+        "from_column": "Channel",
+        "to_table": "TV_Channel",
+        "to_column": "id"
+      },
+      {
+        "from_table": "Cartoon",
+        "from_column": "Channel",
+        "to_table": "TV_Channel",
+        "to_column": "id"
+      }
+    ]
+  },
+  "descriptions": {
+    "TV_Channel": "Bảng lưu trữ thông tin về các kênh truyền hình, bao gồm tên series, quốc gia, ngôn ngữ, loại nội dung, định dạng hình ảnh, và thông tin về dịch vụ trả phí.",
+    "TV_series": "Bảng này chứa thông tin chi tiết về các tập của một series truyền hình, bao gồm ngày phát sóng, xếp hạng, tỷ lệ chia sẻ, số lượng người xem và thứ hạng hàng tuần trên một kênh cụ thể.",
+    "Cartoon": "Bảng này lưu trữ thông tin về các bộ phim hoạt hình, bao gồm tiêu đề, đạo diễn, biên kịch, ngày phát sóng gốc, mã sản xuất và kênh phát sóng."
+  }
+}

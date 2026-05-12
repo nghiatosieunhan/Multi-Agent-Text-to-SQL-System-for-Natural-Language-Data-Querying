@@ -1,0 +1,149 @@
+{
+  "hash": "21fbce851fff",
+  "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\poker_player\\poker_player.sqlite",
+  "schema": {
+    "tables": [
+      {
+        "table_name": "poker_player",
+        "columns": [
+          {
+            "name": "Poker_Player_ID",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "People_ID",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Final_Table_Made",
+            "type": "REAL",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Best_Finish",
+            "type": "REAL",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Money_Rank",
+            "type": "REAL",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Earnings",
+            "type": "REAL",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 5,
+        "sample_rows": [
+          {
+            "Poker_Player_ID": 1,
+            "People_ID": 1,
+            "Final_Table_Made": 42.0,
+            "Best_Finish": 1.0,
+            "Money_Rank": 68.0,
+            "Earnings": 476090.0
+          },
+          {
+            "Poker_Player_ID": 2,
+            "People_ID": 2,
+            "Final_Table_Made": 10.0,
+            "Best_Finish": 2.0,
+            "Money_Rank": 141.0,
+            "Earnings": 189233.0
+          },
+          {
+            "Poker_Player_ID": 3,
+            "People_ID": 5,
+            "Final_Table_Made": 21.0,
+            "Best_Finish": 1.0,
+            "Money_Rank": 166.0,
+            "Earnings": 104871.0
+          }
+        ]
+      },
+      {
+        "table_name": "people",
+        "columns": [
+          {
+            "name": "People_ID",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "Nationality",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Name",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Birth_Date",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Height",
+            "type": "REAL",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 7,
+        "sample_rows": [
+          {
+            "People_ID": 1,
+            "Nationality": "Russia",
+            "Name": "Aleksey Ostapenko",
+            "Birth_Date": "May 26, 1986",
+            "Height": 207.0
+          },
+          {
+            "People_ID": 2,
+            "Nationality": "Bulgaria",
+            "Name": "Teodor Salparov",
+            "Birth_Date": "August 16, 1982",
+            "Height": 182.0
+          },
+          {
+            "People_ID": 3,
+            "Nationality": "Russia",
+            "Name": "Roman Bragin",
+            "Birth_Date": "April 17, 1987",
+            "Height": 187.0
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "poker_player",
+        "from_column": "People_ID",
+        "to_table": "people",
+        "to_column": "People_ID"
+      }
+    ]
+  },
+  "descriptions": {
+    "poker_player": "Bảng này lưu trữ thông tin chi tiết về những người chơi poker, bao gồm ID người chơi, ID người, thành tích tại các giải đấu cuối cùng, thứ hạng tốt nhất, thứ hạng tiền thưởng và tổng số tiền kiếm được.",
+    "people": "Bảng này lưu trữ thông tin cá nhân cơ bản của mọi người, bao gồm ID người, quốc tịch, tên, ngày sinh và chiều cao."
+  }
+}

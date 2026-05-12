@@ -1,0 +1,1064 @@
+{
+  "hash": "9b6f5795aaa4",
+  "db_path": "I:\\AI\\text_to_sql\\data\\northwind\\northwind.sqlite",
+  "schema": {
+    "tables": [
+      {
+        "table_name": "Categories",
+        "columns": [
+          {
+            "name": "CategoryID",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "CategoryName",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Description",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Picture",
+            "type": "BLOB",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 8,
+        "sample_rows": [
+          {
+            "CategoryID": 1,
+            "CategoryName": "Beverages",
+            "Description": "Soft drinks, coffees, teas, beers, and ales",
+            "Picture": "<binary>"
+          },
+          {
+            "CategoryID": 2,
+            "CategoryName": "Condiments",
+            "Description": "Sweet and savory sauces, relishes, spreads, and seasonings",
+            "Picture": "<binary>"
+          },
+          {
+            "CategoryID": 3,
+            "CategoryName": "Confections",
+            "Description": "Desserts, candies, and sweet breads",
+            "Picture": "<binary>"
+          }
+        ]
+      },
+      {
+        "table_name": "CustomerCustomerDemo",
+        "columns": [
+          {
+            "name": "CustomerID",
+            "type": "TEXT",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "CustomerTypeID",
+            "type": "TEXT",
+            "nullable": false,
+            "pk": true
+          }
+        ],
+        "description": null,
+        "row_count": 0,
+        "sample_rows": []
+      },
+      {
+        "table_name": "CustomerDemographics",
+        "columns": [
+          {
+            "name": "CustomerTypeID",
+            "type": "TEXT",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "CustomerDesc",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 0,
+        "sample_rows": []
+      },
+      {
+        "table_name": "Customers",
+        "columns": [
+          {
+            "name": "CustomerID",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "CompanyName",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "ContactName",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "ContactTitle",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Address",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "City",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Region",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "PostalCode",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Country",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Phone",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Fax",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 93,
+        "sample_rows": [
+          {
+            "CustomerID": "ALFKI",
+            "CompanyName": "Alfreds Futterkiste",
+            "ContactName": "Maria Anders",
+            "ContactTitle": "Sales Representative",
+            "Address": "Obere Str. 57",
+            "City": "Berlin",
+            "Region": "Western Europe",
+            "PostalCode": "12209",
+            "Country": "Germany",
+            "Phone": "030-0074321",
+            "Fax": "030-0076545"
+          },
+          {
+            "CustomerID": "ANATR",
+            "CompanyName": "Ana Trujillo Emparedados y helados",
+            "ContactName": "Ana Trujillo",
+            "ContactTitle": "Owner",
+            "Address": "Avda. de la Constitución 2222",
+            "City": "México D.F.",
+            "Region": "Central America",
+            "PostalCode": "05021",
+            "Country": "Mexico",
+            "Phone": "(5) 555-4729",
+            "Fax": "(5) 555-3745"
+          },
+          {
+            "CustomerID": "ANTON",
+            "CompanyName": "Antonio Moreno Taquería",
+            "ContactName": "Antonio Moreno",
+            "ContactTitle": "Owner",
+            "Address": "Mataderos  2312",
+            "City": "México D.F.",
+            "Region": "Central America",
+            "PostalCode": "05023",
+            "Country": "Mexico",
+            "Phone": "(5) 555-3932",
+            "Fax": null
+          }
+        ]
+      },
+      {
+        "table_name": "Employees",
+        "columns": [
+          {
+            "name": "EmployeeID",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "LastName",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "FirstName",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Title",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "TitleOfCourtesy",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "BirthDate",
+            "type": "DATE",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "HireDate",
+            "type": "DATE",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Address",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "City",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Region",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "PostalCode",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Country",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "HomePhone",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Extension",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Photo",
+            "type": "BLOB",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Notes",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "ReportsTo",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "PhotoPath",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 9,
+        "sample_rows": [
+          {
+            "EmployeeID": 1,
+            "LastName": "Davolio",
+            "FirstName": "Nancy",
+            "Title": "Sales Representative",
+            "TitleOfCourtesy": "Ms.",
+            "BirthDate": "1968-12-08",
+            "HireDate": "2012-05-01",
+            "Address": "507 - 20th Ave. E.Apt. 2A",
+            "City": "Seattle",
+            "Region": "North America",
+            "PostalCode": "98122",
+            "Country": "USA",
+            "HomePhone": "(206) 555-9857",
+            "Extension": "5467",
+            "Photo": "<binary>",
+            "Notes": "Education includes a BA in psychology from Colorado State University in 1970.  She also completed \"The Art of the Cold Call.\"  Nancy is a member of Toastmasters International.",
+            "ReportsTo": 2,
+            "PhotoPath": "http://accweb/emmployees/davolio.bmp"
+          },
+          {
+            "EmployeeID": 2,
+            "LastName": "Fuller",
+            "FirstName": "Andrew",
+            "Title": "Vice President, Sales",
+            "TitleOfCourtesy": "Dr.",
+            "BirthDate": "1972-02-19",
+            "HireDate": "2012-08-14",
+            "Address": "908 W. Capital Way",
+            "City": "Tacoma",
+            "Region": "North America",
+            "PostalCode": "98401",
+            "Country": "USA",
+            "HomePhone": "(206) 555-9482",
+            "Extension": "3457",
+            "Photo": "<binary>",
+            "Notes": "Andrew received his BTS commercial in 1974 and a Ph.D. in international marketing from the University of Dallas in 1981.  He is fluent in French and Italian and reads German.  He joined the company as a sales representative, was promoted to sales manager in January 1992 and to vice president of sales in March 1993.  Andrew is a member of the Sales Management Roundtable, the Seattle Chamber of Commerce, and the Pacific Rim Importers Association.",
+            "ReportsTo": null,
+            "PhotoPath": "http://accweb/emmployees/fuller.bmp"
+          },
+          {
+            "EmployeeID": 3,
+            "LastName": "Leverling",
+            "FirstName": "Janet",
+            "Title": "Sales Representative",
+            "TitleOfCourtesy": "Ms.",
+            "BirthDate": "1983-08-30",
+            "HireDate": "2012-04-01",
+            "Address": "722 Moss Bay Blvd.",
+            "City": "Kirkland",
+            "Region": "North America",
+            "PostalCode": "98033",
+            "Country": "USA",
+            "HomePhone": "(206) 555-3412",
+            "Extension": "3355",
+            "Photo": "<binary>",
+            "Notes": "Janet has a BS degree in chemistry from Boston College (1984).  She has also completed a certificate program in food retailing management.  Janet was hired as a sales associate in 1991 and promoted to sales representative in February 1992.",
+            "ReportsTo": 2,
+            "PhotoPath": "http://accweb/emmployees/leverling.bmp"
+          }
+        ]
+      },
+      {
+        "table_name": "EmployeeTerritories",
+        "columns": [
+          {
+            "name": "EmployeeID",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "TerritoryID",
+            "type": "TEXT",
+            "nullable": false,
+            "pk": true
+          }
+        ],
+        "description": null,
+        "row_count": 49,
+        "sample_rows": [
+          {
+            "EmployeeID": 1,
+            "TerritoryID": "06897"
+          },
+          {
+            "EmployeeID": 1,
+            "TerritoryID": "19713"
+          },
+          {
+            "EmployeeID": 2,
+            "TerritoryID": "01581"
+          }
+        ]
+      },
+      {
+        "table_name": "Order Details",
+        "columns": [
+          {
+            "name": "OrderID",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "ProductID",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "UnitPrice",
+            "type": "NUMERIC",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "Quantity",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "Discount",
+            "type": "REAL",
+            "nullable": false,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 609283,
+        "sample_rows": [
+          {
+            "OrderID": 10248,
+            "ProductID": 11,
+            "UnitPrice": 14,
+            "Quantity": 12,
+            "Discount": 0.0
+          },
+          {
+            "OrderID": 10248,
+            "ProductID": 42,
+            "UnitPrice": 9.8,
+            "Quantity": 10,
+            "Discount": 0.0
+          },
+          {
+            "OrderID": 10248,
+            "ProductID": 72,
+            "UnitPrice": 34.8,
+            "Quantity": 5,
+            "Discount": 0.0
+          }
+        ]
+      },
+      {
+        "table_name": "Orders",
+        "columns": [
+          {
+            "name": "OrderID",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "CustomerID",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "EmployeeID",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "OrderDate",
+            "type": "DATETIME",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "RequiredDate",
+            "type": "DATETIME",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "ShippedDate",
+            "type": "DATETIME",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "ShipVia",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Freight",
+            "type": "NUMERIC",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "ShipName",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "ShipAddress",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "ShipCity",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "ShipRegion",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "ShipPostalCode",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "ShipCountry",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 16282,
+        "sample_rows": [
+          {
+            "OrderID": 10248,
+            "CustomerID": "VINET",
+            "EmployeeID": 5,
+            "OrderDate": "2016-07-04",
+            "RequiredDate": "2016-08-01",
+            "ShippedDate": "2016-07-16",
+            "ShipVia": 3,
+            "Freight": 16.75,
+            "ShipName": "Vins et alcools Chevalier",
+            "ShipAddress": "59 rue de l-Abbaye",
+            "ShipCity": "Reims",
+            "ShipRegion": "Western Europe",
+            "ShipPostalCode": "51100",
+            "ShipCountry": "France"
+          },
+          {
+            "OrderID": 10249,
+            "CustomerID": "TOMSP",
+            "EmployeeID": 6,
+            "OrderDate": "2016-07-05",
+            "RequiredDate": "2016-08-16",
+            "ShippedDate": "2016-07-10",
+            "ShipVia": 1,
+            "Freight": 22.25,
+            "ShipName": "Toms Spezialitäten",
+            "ShipAddress": "Luisenstr. 48",
+            "ShipCity": "Münster",
+            "ShipRegion": "Western Europe",
+            "ShipPostalCode": "44087",
+            "ShipCountry": "Germany"
+          },
+          {
+            "OrderID": 10250,
+            "CustomerID": "HANAR",
+            "EmployeeID": 4,
+            "OrderDate": "2016-07-08",
+            "RequiredDate": "2016-08-05",
+            "ShippedDate": "2016-07-12",
+            "ShipVia": 2,
+            "Freight": 25,
+            "ShipName": "Hanari Carnes",
+            "ShipAddress": "Rua do Paço, 67",
+            "ShipCity": "Rio de Janeiro",
+            "ShipRegion": "South America",
+            "ShipPostalCode": "05454-876",
+            "ShipCountry": "Brazil"
+          }
+        ]
+      },
+      {
+        "table_name": "Products",
+        "columns": [
+          {
+            "name": "ProductID",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "ProductName",
+            "type": "TEXT",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "SupplierID",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "CategoryID",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "QuantityPerUnit",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "UnitPrice",
+            "type": "NUMERIC",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "UnitsInStock",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "UnitsOnOrder",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "ReorderLevel",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Discontinued",
+            "type": "TEXT",
+            "nullable": false,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 77,
+        "sample_rows": [
+          {
+            "ProductID": 1,
+            "ProductName": "Chai",
+            "SupplierID": 1,
+            "CategoryID": 1,
+            "QuantityPerUnit": "10 boxes x 20 bags",
+            "UnitPrice": 18,
+            "UnitsInStock": 39,
+            "UnitsOnOrder": 0,
+            "ReorderLevel": 10,
+            "Discontinued": "0"
+          },
+          {
+            "ProductID": 2,
+            "ProductName": "Chang",
+            "SupplierID": 1,
+            "CategoryID": 1,
+            "QuantityPerUnit": "24 - 12 oz bottles",
+            "UnitPrice": 19,
+            "UnitsInStock": 17,
+            "UnitsOnOrder": 40,
+            "ReorderLevel": 25,
+            "Discontinued": "0"
+          },
+          {
+            "ProductID": 3,
+            "ProductName": "Aniseed Syrup",
+            "SupplierID": 1,
+            "CategoryID": 2,
+            "QuantityPerUnit": "12 - 550 ml bottles",
+            "UnitPrice": 10,
+            "UnitsInStock": 13,
+            "UnitsOnOrder": 70,
+            "ReorderLevel": 25,
+            "Discontinued": "0"
+          }
+        ]
+      },
+      {
+        "table_name": "Regions",
+        "columns": [
+          {
+            "name": "RegionID",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "RegionDescription",
+            "type": "TEXT",
+            "nullable": false,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 4,
+        "sample_rows": [
+          {
+            "RegionID": 1,
+            "RegionDescription": "Eastern"
+          },
+          {
+            "RegionID": 2,
+            "RegionDescription": "Western"
+          },
+          {
+            "RegionID": 3,
+            "RegionDescription": "Northern"
+          }
+        ]
+      },
+      {
+        "table_name": "Shippers",
+        "columns": [
+          {
+            "name": "ShipperID",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "CompanyName",
+            "type": "TEXT",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "Phone",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 3,
+        "sample_rows": [
+          {
+            "ShipperID": 1,
+            "CompanyName": "Speedy Express",
+            "Phone": "(503) 555-9831"
+          },
+          {
+            "ShipperID": 2,
+            "CompanyName": "United Package",
+            "Phone": "(503) 555-3199"
+          },
+          {
+            "ShipperID": 3,
+            "CompanyName": "Federal Shipping",
+            "Phone": "(503) 555-9931"
+          }
+        ]
+      },
+      {
+        "table_name": "Suppliers",
+        "columns": [
+          {
+            "name": "SupplierID",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "CompanyName",
+            "type": "TEXT",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "ContactName",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "ContactTitle",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Address",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "City",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Region",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "PostalCode",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Country",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Phone",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Fax",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "HomePage",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 29,
+        "sample_rows": [
+          {
+            "SupplierID": 1,
+            "CompanyName": "Exotic Liquids",
+            "ContactName": "Charlotte Cooper",
+            "ContactTitle": "Purchasing Manager",
+            "Address": "49 Gilbert St.",
+            "City": "London",
+            "Region": "British Isles",
+            "PostalCode": "EC1 4SD",
+            "Country": "UK",
+            "Phone": "(171) 555-2222",
+            "Fax": null,
+            "HomePage": null
+          },
+          {
+            "SupplierID": 2,
+            "CompanyName": "New Orleans Cajun Delights",
+            "ContactName": "Shelley Burke",
+            "ContactTitle": "Order Administrator",
+            "Address": "P.O. Box 78934",
+            "City": "New Orleans",
+            "Region": "North America",
+            "PostalCode": "70117",
+            "Country": "USA",
+            "Phone": "(100) 555-4822",
+            "Fax": null,
+            "HomePage": "#CAJUN.HTM#"
+          },
+          {
+            "SupplierID": 3,
+            "CompanyName": "Grandma Kelly's Homestead",
+            "ContactName": "Regina Murphy",
+            "ContactTitle": "Sales Representative",
+            "Address": "707 Oxford Rd.",
+            "City": "Ann Arbor",
+            "Region": "North America",
+            "PostalCode": "48104",
+            "Country": "USA",
+            "Phone": "(313) 555-5735",
+            "Fax": "(313) 555-3349",
+            "HomePage": null
+          }
+        ]
+      },
+      {
+        "table_name": "Territories",
+        "columns": [
+          {
+            "name": "TerritoryID",
+            "type": "TEXT",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "TerritoryDescription",
+            "type": "TEXT",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "RegionID",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 53,
+        "sample_rows": [
+          {
+            "TerritoryID": "01581",
+            "TerritoryDescription": "Westboro",
+            "RegionID": 1
+          },
+          {
+            "TerritoryID": "01730",
+            "TerritoryDescription": "Bedford",
+            "RegionID": 1
+          },
+          {
+            "TerritoryID": "01833",
+            "TerritoryDescription": "Georgetow",
+            "RegionID": 1
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "CustomerCustomerDemo",
+        "from_column": "CustomerTypeID",
+        "to_table": "CustomerDemographics",
+        "to_column": "CustomerTypeID"
+      },
+      {
+        "from_table": "CustomerCustomerDemo",
+        "from_column": "CustomerID",
+        "to_table": "Customers",
+        "to_column": "CustomerID"
+      },
+      {
+        "from_table": "Employees",
+        "from_column": "ReportsTo",
+        "to_table": "Employees",
+        "to_column": "EmployeeID"
+      },
+      {
+        "from_table": "EmployeeTerritories",
+        "from_column": "TerritoryID",
+        "to_table": "Territories",
+        "to_column": "TerritoryID"
+      },
+      {
+        "from_table": "EmployeeTerritories",
+        "from_column": "EmployeeID",
+        "to_table": "Employees",
+        "to_column": "EmployeeID"
+      },
+      {
+        "from_table": "Order Details",
+        "from_column": "ProductID",
+        "to_table": "Products",
+        "to_column": "ProductID"
+      },
+      {
+        "from_table": "Order Details",
+        "from_column": "OrderID",
+        "to_table": "Orders",
+        "to_column": "OrderID"
+      },
+      {
+        "from_table": "Orders",
+        "from_column": "ShipVia",
+        "to_table": "Shippers",
+        "to_column": "ShipperID"
+      },
+      {
+        "from_table": "Orders",
+        "from_column": "CustomerID",
+        "to_table": "Customers",
+        "to_column": "CustomerID"
+      },
+      {
+        "from_table": "Orders",
+        "from_column": "EmployeeID",
+        "to_table": "Employees",
+        "to_column": "EmployeeID"
+      },
+      {
+        "from_table": "Products",
+        "from_column": "SupplierID",
+        "to_table": "Suppliers",
+        "to_column": "SupplierID"
+      },
+      {
+        "from_table": "Products",
+        "from_column": "CategoryID",
+        "to_table": "Categories",
+        "to_column": "CategoryID"
+      },
+      {
+        "from_table": "Territories",
+        "from_column": "RegionID",
+        "to_table": "Regions",
+        "to_column": "RegionID"
+      }
+    ]
+  },
+  "descriptions": {
+    "Categories": "Bảng lưu trữ các danh mục sản phẩm, bao gồm tên, mô tả và hình ảnh.",
+    "CustomerCustomerDemo": "Bảng trung gian liên kết khách hàng với các loại đặc điểm nhân khẩu học của họ.",
+    "CustomerDemographics": "Bảng lưu trữ các mô tả về các loại đặc điểm nhân khẩu học của khách hàng.",
+    "Customers": "Bảng lưu trữ thông tin chi tiết về các khách hàng, bao gồm tên công ty, thông tin liên hệ và địa chỉ.",
+    "Employees": "Bảng lưu trữ thông tin về nhân viên, bao gồm thông tin cá nhân, ngày sinh, ngày làm việc và người quản lý trực tiếp.",
+    "EmployeeTerritories": "Bảng trung gian liên kết nhân viên với các khu vực địa lý mà họ phụ trách.",
+    "Order Details": "Bảng lưu trữ chi tiết từng mặt hàng trong một đơn hàng, bao gồm sản phẩm, đơn giá, số lượng và chiết khấu.",
+    "Orders": "Bảng lưu trữ thông tin về các đơn hàng, bao gồm khách hàng đặt hàng, nhân viên xử lý, ngày đặt hàng và thông tin vận chuyển.",
+    "Products": "Bảng lưu trữ thông tin về các sản phẩm, bao gồm tên, nhà cung cấp, danh mục, đơn giá và số lượng tồn kho.",
+    "Regions": "Bảng lưu trữ thông tin về các khu vực địa lý.",
+    "Shippers": "Bảng lưu trữ thông tin về các đơn vị vận chuyển.",
+    "Suppliers": "Bảng lưu trữ thông tin về các nhà cung cấp sản phẩm.",
+    "Territories": "Bảng lưu trữ thông tin về các vùng lãnh thổ địa lý, liên kết với các khu vực."
+  }
+}

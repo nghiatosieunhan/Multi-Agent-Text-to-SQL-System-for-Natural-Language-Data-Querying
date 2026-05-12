@@ -1,0 +1,345 @@
+{
+  "hash": "f7db82ea8523",
+  "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\car_1\\car_1.sqlite",
+  "schema": {
+    "tables": [
+      {
+        "table_name": "continents",
+        "columns": [
+          {
+            "name": "ContId",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "Continent",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 5,
+        "sample_rows": [
+          {
+            "ContId": 1,
+            "Continent": "america"
+          },
+          {
+            "ContId": 2,
+            "Continent": "europe"
+          },
+          {
+            "ContId": 3,
+            "Continent": "asia"
+          }
+        ]
+      },
+      {
+        "table_name": "countries",
+        "columns": [
+          {
+            "name": "CountryId",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "CountryName",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Continent",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 15,
+        "sample_rows": [
+          {
+            "CountryId": 1,
+            "CountryName": "usa",
+            "Continent": 1
+          },
+          {
+            "CountryId": 2,
+            "CountryName": "germany",
+            "Continent": 2
+          },
+          {
+            "CountryId": 3,
+            "CountryName": "france",
+            "Continent": 2
+          }
+        ]
+      },
+      {
+        "table_name": "car_makers",
+        "columns": [
+          {
+            "name": "Id",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "Maker",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "FullName",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Country",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 22,
+        "sample_rows": [
+          {
+            "Id": 1,
+            "Maker": "amc",
+            "FullName": "American Motor Company",
+            "Country": "1"
+          },
+          {
+            "Id": 2,
+            "Maker": "volkswagen",
+            "FullName": "Volkswagen",
+            "Country": "2"
+          },
+          {
+            "Id": 3,
+            "Maker": "bmw",
+            "FullName": "BMW",
+            "Country": "2"
+          }
+        ]
+      },
+      {
+        "table_name": "model_list",
+        "columns": [
+          {
+            "name": "ModelId",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "Maker",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Model",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 36,
+        "sample_rows": [
+          {
+            "ModelId": 1,
+            "Maker": 1,
+            "Model": "amc"
+          },
+          {
+            "ModelId": 2,
+            "Maker": 2,
+            "Model": "audi"
+          },
+          {
+            "ModelId": 3,
+            "Maker": 3,
+            "Model": "bmw"
+          }
+        ]
+      },
+      {
+        "table_name": "car_names",
+        "columns": [
+          {
+            "name": "MakeId",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "Model",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Make",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 406,
+        "sample_rows": [
+          {
+            "MakeId": 1,
+            "Model": "chevrolet",
+            "Make": "chevrolet chevelle malibu"
+          },
+          {
+            "MakeId": 2,
+            "Model": "buick",
+            "Make": "buick skylark 320"
+          },
+          {
+            "MakeId": 3,
+            "Model": "plymouth",
+            "Make": "plymouth satellite"
+          }
+        ]
+      },
+      {
+        "table_name": "cars_data",
+        "columns": [
+          {
+            "name": "Id",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "MPG",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Cylinders",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Edispl",
+            "type": "REAL",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Horsepower",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Weight",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Accelerate",
+            "type": "REAL",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Year",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 406,
+        "sample_rows": [
+          {
+            "Id": 1,
+            "MPG": "18",
+            "Cylinders": 8,
+            "Edispl": 307.0,
+            "Horsepower": "130",
+            "Weight": 3504,
+            "Accelerate": 12.0,
+            "Year": 1970
+          },
+          {
+            "Id": 2,
+            "MPG": "15",
+            "Cylinders": 8,
+            "Edispl": 350.0,
+            "Horsepower": "165",
+            "Weight": 3693,
+            "Accelerate": 11.5,
+            "Year": 1970
+          },
+          {
+            "Id": 3,
+            "MPG": "18",
+            "Cylinders": 8,
+            "Edispl": 318.0,
+            "Horsepower": "150",
+            "Weight": 3436,
+            "Accelerate": 11.0,
+            "Year": 1970
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "countries",
+        "from_column": "Continent",
+        "to_table": "continents",
+        "to_column": "ContId"
+      },
+      {
+        "from_table": "car_makers",
+        "from_column": "Country",
+        "to_table": "countries",
+        "to_column": "CountryId"
+      },
+      {
+        "from_table": "model_list",
+        "from_column": "Maker",
+        "to_table": "car_makers",
+        "to_column": "Id"
+      },
+      {
+        "from_table": "car_names",
+        "from_column": "Model",
+        "to_table": "model_list",
+        "to_column": "Model"
+      },
+      {
+        "from_table": "cars_data",
+        "from_column": "Id",
+        "to_table": "car_names",
+        "to_column": "MakeId"
+      }
+    ]
+  },
+  "descriptions": {
+    "continents": "Bảng lưu trữ danh sách các châu lục, mỗi châu lục có một mã định danh duy nhất.",
+    "countries": "Bảng lưu trữ thông tin các quốc gia, mỗi quốc gia thuộc về một châu lục.",
+    "car_makers": "Bảng lưu trữ thông tin các nhà sản xuất ô tô, bao gồm tên viết tắt, tên đầy đủ và quốc gia của nhà sản xuất.",
+    "model_list": "Bảng lưu trữ danh sách các mẫu xe, mỗi mẫu xe thuộc về một nhà sản xuất.",
+    "car_names": "Bảng này có vẻ là một bảng trung gian hoặc bảng tra cứu, liên kết tên mẫu xe với nhà sản xuất.",
+    "cars_data": "Bảng này chứa dữ liệu chi tiết về các loại xe, bao gồm các thông số kỹ thuật như MPG, số xi-lanh, mã lực, trọng lượng, thời gian tăng tốc và năm sản xuất."
+  }
+}

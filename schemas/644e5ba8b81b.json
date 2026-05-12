@@ -1,0 +1,140 @@
+{
+  "hash": "644e5ba8b81b",
+  "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\singer\\singer.sqlite",
+  "schema": {
+    "tables": [
+      {
+        "table_name": "singer",
+        "columns": [
+          {
+            "name": "Singer_ID",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "Name",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Birth_Year",
+            "type": "REAL",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Net_Worth_Millions",
+            "type": "REAL",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Citizenship",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 8,
+        "sample_rows": [
+          {
+            "Singer_ID": 1,
+            "Name": "Liliane Bettencourt",
+            "Birth_Year": 1944.0,
+            "Net_Worth_Millions": 30.0,
+            "Citizenship": "France"
+          },
+          {
+            "Singer_ID": 2,
+            "Name": "Christy Walton",
+            "Birth_Year": 1948.0,
+            "Net_Worth_Millions": 28.8,
+            "Citizenship": "United States"
+          },
+          {
+            "Singer_ID": 3,
+            "Name": "Alice Walton",
+            "Birth_Year": 1949.0,
+            "Net_Worth_Millions": 26.3,
+            "Citizenship": "United States"
+          }
+        ]
+      },
+      {
+        "table_name": "song",
+        "columns": [
+          {
+            "name": "Song_ID",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "Title",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Singer_ID",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Sales",
+            "type": "REAL",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Highest_Position",
+            "type": "REAL",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 8,
+        "sample_rows": [
+          {
+            "Song_ID": 1,
+            "Title": "Do They Know It's Christmas",
+            "Singer_ID": 1,
+            "Sales": 1094000.0,
+            "Highest_Position": 1.0
+          },
+          {
+            "Song_ID": 2,
+            "Title": "F**k It (I Don't Want You Back)",
+            "Singer_ID": 1,
+            "Sales": 552407.0,
+            "Highest_Position": 1.0
+          },
+          {
+            "Song_ID": 3,
+            "Title": "Cha Cha Slide",
+            "Singer_ID": 2,
+            "Sales": 351421.0,
+            "Highest_Position": 1.0
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "song",
+        "from_column": "Singer_ID",
+        "to_table": "singer",
+        "to_column": "Singer_ID"
+      }
+    ]
+  },
+  "descriptions": {
+    "singer": "Bảng lưu trữ thông tin về các ca sĩ, bao gồm ID, tên, năm sinh, tài sản ròng và quốc tịch.",
+    "song": "Bảng lưu trữ thông tin về các bài hát, bao gồm ID, tiêu đề, ID ca sĩ biểu diễn, doanh số và vị trí cao nhất trên bảng xếp hạng."
+  }
+}

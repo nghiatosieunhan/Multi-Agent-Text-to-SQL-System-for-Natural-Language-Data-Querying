@@ -1,0 +1,465 @@
+{
+  "hash": "b066d1ad36ec",
+  "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\wta_1\\wta_1.sqlite",
+  "schema": {
+    "tables": [
+      {
+        "table_name": "players",
+        "columns": [
+          {
+            "name": "player_id",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "first_name",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "last_name",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "hand",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "birth_date",
+            "type": "DATE",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "country_code",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 20662,
+        "sample_rows": [
+          {
+            "player_id": 200001,
+            "first_name": "Martina",
+            "last_name": "Hingis",
+            "hand": "R",
+            "birth_date": 19800930,
+            "country_code": "SUI"
+          },
+          {
+            "player_id": 200002,
+            "first_name": "Mirjana",
+            "last_name": "Lucic",
+            "hand": "R",
+            "birth_date": 19820309,
+            "country_code": "CRO"
+          },
+          {
+            "player_id": 200003,
+            "first_name": "Justine",
+            "last_name": "Henin",
+            "hand": "R",
+            "birth_date": 19820601,
+            "country_code": "BEL"
+          }
+        ]
+      },
+      {
+        "table_name": "matches",
+        "columns": [
+          {
+            "name": "best_of",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "draw_size",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "loser_age",
+            "type": "FLOAT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "loser_entry",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "loser_hand",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "loser_ht",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "loser_id",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "loser_ioc",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "loser_name",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "loser_rank",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "loser_rank_points",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "loser_seed",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "match_num",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "minutes",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "round",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "score",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "surface",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "tourney_date",
+            "type": "DATE",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "tourney_id",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "tourney_level",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "tourney_name",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "winner_age",
+            "type": "FLOAT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "winner_entry",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "winner_hand",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "winner_ht",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "winner_id",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "winner_ioc",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "winner_name",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "winner_rank",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "winner_rank_points",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "winner_seed",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "year",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 278,
+        "sample_rows": [
+          {
+            "best_of": 3,
+            "draw_size": 4,
+            "loser_age": 24.626967830300003,
+            "loser_entry": "",
+            "loser_hand": "R",
+            "loser_ht": 170,
+            "loser_id": 201474,
+            "loser_ioc": "POL",
+            "loser_name": "Agnieszka Radwanska",
+            "loser_rank": 4,
+            "loser_rank_points": 5890,
+            "loser_seed": 3,
+            "match_num": 297,
+            "minutes": 82,
+            "round": "RR",
+            "score": "6-2 6-4",
+            "surface": "Hard",
+            "tourney_date": 20131021,
+            "tourney_id": "2013-W-WT-TUR-01A-2013",
+            "tourney_level": "W",
+            "tourney_name": "WTA Championships",
+            "winner_age": 32.0684462697,
+            "winner_entry": "",
+            "winner_hand": "R",
+            "winner_ht": 175,
+            "winner_id": 200033,
+            "winner_ioc": "USA",
+            "winner_name": "Serena Williams",
+            "winner_rank": 1,
+            "winner_rank_points": 12040,
+            "winner_seed": 1,
+            "year": 2013
+          },
+          {
+            "best_of": 3,
+            "draw_size": 4,
+            "loser_age": 23.6221765914,
+            "loser_entry": "",
+            "loser_hand": "L",
+            "loser_ht": 183,
+            "loser_id": 201520,
+            "loser_ioc": "CZE",
+            "loser_name": "Petra Kvitova",
+            "loser_rank": 6,
+            "loser_rank_points": 4370,
+            "loser_seed": 5,
+            "match_num": 296,
+            "minutes": 72,
+            "round": "RR",
+            "score": "6-2 6-3",
+            "surface": "Hard",
+            "tourney_date": 20131021,
+            "tourney_id": "2013-W-WT-TUR-01A-2013",
+            "tourney_level": "W",
+            "tourney_name": "WTA Championships",
+            "winner_age": 32.0684462697,
+            "winner_entry": "",
+            "winner_hand": "R",
+            "winner_ht": 175,
+            "winner_id": 200033,
+            "winner_ioc": "USA",
+            "winner_name": "Serena Williams",
+            "winner_rank": 1,
+            "winner_rank_points": 12040,
+            "winner_seed": 1,
+            "year": 2013
+          },
+          {
+            "best_of": 3,
+            "draw_size": 4,
+            "loser_age": 25.7577002053,
+            "loser_entry": "",
+            "loser_hand": "L",
+            "loser_ht": 173,
+            "loser_id": 201493,
+            "loser_ioc": "GER",
+            "loser_name": "Angelique Kerber",
+            "loser_rank": 9,
+            "loser_rank_points": 3715,
+            "loser_seed": 8,
+            "match_num": 295,
+            "minutes": 64,
+            "round": "RR",
+            "score": "6-3 6-1",
+            "surface": "Hard",
+            "tourney_date": 20131021,
+            "tourney_id": "2013-W-WT-TUR-01A-2013",
+            "tourney_level": "W",
+            "tourney_name": "WTA Championships",
+            "winner_age": 32.0684462697,
+            "winner_entry": "",
+            "winner_hand": "R",
+            "winner_ht": 175,
+            "winner_id": 200033,
+            "winner_ioc": "USA",
+            "winner_name": "Serena Williams",
+            "winner_rank": 1,
+            "winner_rank_points": 12040,
+            "winner_seed": 1,
+            "year": 2013
+          }
+        ]
+      },
+      {
+        "table_name": "rankings",
+        "columns": [
+          {
+            "name": "ranking_date",
+            "type": "DATE",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "ranking",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "player_id",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "ranking_points",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "tours",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 510437,
+        "sample_rows": [
+          {
+            "ranking_date": 20000101,
+            "ranking": 3,
+            "player_id": 200748,
+            "ranking_points": 4378,
+            "tours": 13
+          },
+          {
+            "ranking_date": 20000101,
+            "ranking": 4,
+            "player_id": 200033,
+            "ranking_points": 3021,
+            "tours": 15
+          },
+          {
+            "ranking_date": 20000101,
+            "ranking": 28,
+            "player_id": 200020,
+            "ranking_points": 960,
+            "tours": 0
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "matches",
+        "from_column": "winner_id",
+        "to_table": "players",
+        "to_column": "player_id"
+      },
+      {
+        "from_table": "matches",
+        "from_column": "loser_id",
+        "to_table": "players",
+        "to_column": "player_id"
+      },
+      {
+        "from_table": "rankings",
+        "from_column": "player_id",
+        "to_table": "players",
+        "to_column": "player_id"
+      }
+    ]
+  },
+  "descriptions": {
+    "players": "Lưu trữ thông tin cá nhân của các vận động viên, bao gồm ID, tên, tay thuận, ngày sinh và quốc gia.",
+    "matches": "Ghi lại chi tiết của các trận đấu quần vợt, bao gồm thông tin về người thắng, người thua, kết quả, địa điểm, thời gian và các thông số liên quan đến trận đấu.",
+    "rankings": "Lưu trữ thông tin xếp hạng của các vận động viên theo từng ngày, bao gồm thứ hạng, điểm số và các tour đấu tham gia."
+  }
+}

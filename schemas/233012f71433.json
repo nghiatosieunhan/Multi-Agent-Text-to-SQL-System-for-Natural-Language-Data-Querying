@@ -1,0 +1,830 @@
+{
+  "hash": "233012f71433",
+  "db_path": "I:\\AI\\text_to_sql\\data\\chinook\\Chinook_VN.sqlite",
+  "schema": {
+    "tables": [
+      {
+        "table_name": "Album",
+        "columns": [
+          {
+            "name": "MaAlbum",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "TieuDe",
+            "type": "NVARCHAR(160)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "MaNgheSi",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 347,
+        "sample_rows": [
+          {
+            "MaAlbum": 1,
+            "TieuDe": "For Those About To Rock We Salute You",
+            "MaNgheSi": 1
+          },
+          {
+            "MaAlbum": 2,
+            "TieuDe": "Balls to the Wall",
+            "MaNgheSi": 2
+          },
+          {
+            "MaAlbum": 3,
+            "TieuDe": "Restless and Wild",
+            "MaNgheSi": 2
+          }
+        ]
+      },
+      {
+        "table_name": "NgheSi",
+        "columns": [
+          {
+            "name": "MaNgheSi",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "Ten",
+            "type": "NVARCHAR(120)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 275,
+        "sample_rows": [
+          {
+            "MaNgheSi": 1,
+            "Ten": "AC/DC"
+          },
+          {
+            "MaNgheSi": 2,
+            "Ten": "Accept"
+          },
+          {
+            "MaNgheSi": 3,
+            "Ten": "Aerosmith"
+          }
+        ]
+      },
+      {
+        "table_name": "KhachHang",
+        "columns": [
+          {
+            "name": "MaKhachHang",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "Ten",
+            "type": "NVARCHAR(40)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "Ho",
+            "type": "NVARCHAR(20)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "Company",
+            "type": "NVARCHAR(80)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "DiaChi",
+            "type": "NVARCHAR(70)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "ThanhPho",
+            "type": "NVARCHAR(40)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "TieuBang",
+            "type": "NVARCHAR(40)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "QuocGia",
+            "type": "NVARCHAR(40)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "PostalCode",
+            "type": "NVARCHAR(10)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Phone",
+            "type": "NVARCHAR(24)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Fax",
+            "type": "NVARCHAR(24)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Email",
+            "type": "NVARCHAR(60)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "SupportRepId",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 59,
+        "sample_rows": [
+          {
+            "MaKhachHang": 1,
+            "Ten": "Luís",
+            "Ho": "Gonçalves",
+            "Company": "Embraer - Empresa Brasileira de Aeronáutica S.A.",
+            "DiaChi": "Av. Brigadeiro Faria Lima, 2170",
+            "ThanhPho": "São José dos Campos",
+            "TieuBang": "SP",
+            "QuocGia": "Brazil",
+            "PostalCode": "12227-000",
+            "Phone": "+55 (12) 3923-5555",
+            "Fax": "+55 (12) 3923-5566",
+            "Email": "luisg@embraer.com.br",
+            "SupportRepId": 3
+          },
+          {
+            "MaKhachHang": 2,
+            "Ten": "Leonie",
+            "Ho": "Köhler",
+            "Company": null,
+            "DiaChi": "Theodor-Heuss-Straße 34",
+            "ThanhPho": "Stuttgart",
+            "TieuBang": null,
+            "QuocGia": "Germany",
+            "PostalCode": "70174",
+            "Phone": "+49 0711 2842222",
+            "Fax": null,
+            "Email": "leonekohler@surfeu.de",
+            "SupportRepId": 5
+          },
+          {
+            "MaKhachHang": 3,
+            "Ten": "François",
+            "Ho": "Tremblay",
+            "Company": null,
+            "DiaChi": "1498 rue Bélanger",
+            "ThanhPho": "Montréal",
+            "TieuBang": "QC",
+            "QuocGia": "Canada",
+            "PostalCode": "H2G 1A7",
+            "Phone": "+1 (514) 721-4711",
+            "Fax": null,
+            "Email": "ftremblay@gmail.com",
+            "SupportRepId": 3
+          }
+        ]
+      },
+      {
+        "table_name": "NhanVien",
+        "columns": [
+          {
+            "name": "MaNhanVien",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "Ho",
+            "type": "NVARCHAR(20)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "Ten",
+            "type": "NVARCHAR(20)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "ChucVu",
+            "type": "NVARCHAR(30)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "MaNguoiQuanLy",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "BirthDate",
+            "type": "DATETIME",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "HireDate",
+            "type": "DATETIME",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Address",
+            "type": "NVARCHAR(70)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "City",
+            "type": "NVARCHAR(40)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "State",
+            "type": "NVARCHAR(40)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Country",
+            "type": "NVARCHAR(40)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "PostalCode",
+            "type": "NVARCHAR(10)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Phone",
+            "type": "NVARCHAR(24)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Fax",
+            "type": "NVARCHAR(24)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Email",
+            "type": "NVARCHAR(60)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 8,
+        "sample_rows": [
+          {
+            "MaNhanVien": 1,
+            "Ho": "Adams",
+            "Ten": "Andrew",
+            "ChucVu": "General Manager",
+            "MaNguoiQuanLy": null,
+            "BirthDate": "1962-02-18 00:00:00",
+            "HireDate": "2002-08-14 00:00:00",
+            "Address": "11120 Jasper Ave NW",
+            "City": "Edmonton",
+            "State": "AB",
+            "Country": "Canada",
+            "PostalCode": "T5K 2N1",
+            "Phone": "+1 (780) 428-9482",
+            "Fax": "+1 (780) 428-3457",
+            "Email": "andrew@chinookcorp.com"
+          },
+          {
+            "MaNhanVien": 2,
+            "Ho": "Edwards",
+            "Ten": "Nancy",
+            "ChucVu": "Sales Manager",
+            "MaNguoiQuanLy": 1,
+            "BirthDate": "1958-12-08 00:00:00",
+            "HireDate": "2002-05-01 00:00:00",
+            "Address": "825 8 Ave SW",
+            "City": "Calgary",
+            "State": "AB",
+            "Country": "Canada",
+            "PostalCode": "T2P 2T3",
+            "Phone": "+1 (403) 262-3443",
+            "Fax": "+1 (403) 262-3322",
+            "Email": "nancy@chinookcorp.com"
+          },
+          {
+            "MaNhanVien": 3,
+            "Ho": "Peacock",
+            "Ten": "Jane",
+            "ChucVu": "Sales Support Agent",
+            "MaNguoiQuanLy": 2,
+            "BirthDate": "1973-08-29 00:00:00",
+            "HireDate": "2002-04-01 00:00:00",
+            "Address": "1111 6 Ave SW",
+            "City": "Calgary",
+            "State": "AB",
+            "Country": "Canada",
+            "PostalCode": "T2P 5M5",
+            "Phone": "+1 (403) 262-3443",
+            "Fax": "+1 (403) 262-6712",
+            "Email": "jane@chinookcorp.com"
+          }
+        ]
+      },
+      {
+        "table_name": "TheLoai",
+        "columns": [
+          {
+            "name": "MaTheLoai",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "Ten",
+            "type": "NVARCHAR(120)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 25,
+        "sample_rows": [
+          {
+            "MaTheLoai": 1,
+            "Ten": "Rock"
+          },
+          {
+            "MaTheLoai": 2,
+            "Ten": "Jazz"
+          },
+          {
+            "MaTheLoai": 3,
+            "Ten": "Metal"
+          }
+        ]
+      },
+      {
+        "table_name": "HoaDon",
+        "columns": [
+          {
+            "name": "MaHoaDon",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "MaKhachHang",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "NgayLapHoaDon",
+            "type": "DATETIME",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "BillingAddress",
+            "type": "NVARCHAR(70)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "BillingCity",
+            "type": "NVARCHAR(40)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "BillingState",
+            "type": "NVARCHAR(40)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "BillingCountry",
+            "type": "NVARCHAR(40)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "BillingPostalCode",
+            "type": "NVARCHAR(10)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "TongTien",
+            "type": "NUMERIC(10,2)",
+            "nullable": false,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 412,
+        "sample_rows": [
+          {
+            "MaHoaDon": 1,
+            "MaKhachHang": 2,
+            "NgayLapHoaDon": "2021-01-01 00:00:00",
+            "BillingAddress": "Theodor-Heuss-Straße 34",
+            "BillingCity": "Stuttgart",
+            "BillingState": null,
+            "BillingCountry": "Germany",
+            "BillingPostalCode": "70174",
+            "TongTien": 1.98
+          },
+          {
+            "MaHoaDon": 2,
+            "MaKhachHang": 4,
+            "NgayLapHoaDon": "2021-01-02 00:00:00",
+            "BillingAddress": "Ullevålsveien 14",
+            "BillingCity": "Oslo",
+            "BillingState": null,
+            "BillingCountry": "Norway",
+            "BillingPostalCode": "0171",
+            "TongTien": 3.96
+          },
+          {
+            "MaHoaDon": 3,
+            "MaKhachHang": 8,
+            "NgayLapHoaDon": "2021-01-03 00:00:00",
+            "BillingAddress": "Grétrystraat 63",
+            "BillingCity": "Brussels",
+            "BillingState": null,
+            "BillingCountry": "Belgium",
+            "BillingPostalCode": "1000",
+            "TongTien": 5.94
+          }
+        ]
+      },
+      {
+        "table_name": "ChiTietHoaDon",
+        "columns": [
+          {
+            "name": "MaChiTiet",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "MaHoaDon",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "MaBaiHat",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "DonGia",
+            "type": "NUMERIC(10,2)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "SoLuong",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 2240,
+        "sample_rows": [
+          {
+            "MaChiTiet": 1,
+            "MaHoaDon": 1,
+            "MaBaiHat": 2,
+            "DonGia": 0.99,
+            "SoLuong": 1
+          },
+          {
+            "MaChiTiet": 2,
+            "MaHoaDon": 1,
+            "MaBaiHat": 4,
+            "DonGia": 0.99,
+            "SoLuong": 1
+          },
+          {
+            "MaChiTiet": 3,
+            "MaHoaDon": 2,
+            "MaBaiHat": 6,
+            "DonGia": 0.99,
+            "SoLuong": 1
+          }
+        ]
+      },
+      {
+        "table_name": "DinhDang",
+        "columns": [
+          {
+            "name": "MaDinhDang",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "Ten",
+            "type": "NVARCHAR(120)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 5,
+        "sample_rows": [
+          {
+            "MaDinhDang": 1,
+            "Ten": "MPEG audio file"
+          },
+          {
+            "MaDinhDang": 2,
+            "Ten": "Protected AAC audio file"
+          },
+          {
+            "MaDinhDang": 3,
+            "Ten": "Protected MPEG-4 video file"
+          }
+        ]
+      },
+      {
+        "table_name": "DanhSachPhat",
+        "columns": [
+          {
+            "name": "MaDanhSachPhat",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "Ten",
+            "type": "NVARCHAR(120)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 18,
+        "sample_rows": [
+          {
+            "MaDanhSachPhat": 1,
+            "Ten": "Music"
+          },
+          {
+            "MaDanhSachPhat": 2,
+            "Ten": "Movies"
+          },
+          {
+            "MaDanhSachPhat": 3,
+            "Ten": "TV Shows"
+          }
+        ]
+      },
+      {
+        "table_name": "ChiTietDanhSachPhat",
+        "columns": [
+          {
+            "name": "MaDanhSachPhat",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "MaBaiHat",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          }
+        ],
+        "description": null,
+        "row_count": 8715,
+        "sample_rows": [
+          {
+            "MaDanhSachPhat": 1,
+            "MaBaiHat": 3402
+          },
+          {
+            "MaDanhSachPhat": 1,
+            "MaBaiHat": 3389
+          },
+          {
+            "MaDanhSachPhat": 1,
+            "MaBaiHat": 3390
+          }
+        ]
+      },
+      {
+        "table_name": "BaiHat",
+        "columns": [
+          {
+            "name": "MaBaiHat",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "Ten",
+            "type": "NVARCHAR(200)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "MaAlbum",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "MaDinhDang",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "MaTheLoai",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Composer",
+            "type": "NVARCHAR(220)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "ThoiLuong_ms",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "DungLuong_bytes",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "DonGia",
+            "type": "NUMERIC(10,2)",
+            "nullable": false,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 3503,
+        "sample_rows": [
+          {
+            "MaBaiHat": 1,
+            "Ten": "For Those About To Rock (We Salute You)",
+            "MaAlbum": 1,
+            "MaDinhDang": 1,
+            "MaTheLoai": 1,
+            "Composer": "Angus Young, Malcolm Young, Brian Johnson",
+            "ThoiLuong_ms": 343719,
+            "DungLuong_bytes": 11170334,
+            "DonGia": 0.99
+          },
+          {
+            "MaBaiHat": 2,
+            "Ten": "Balls to the Wall",
+            "MaAlbum": 2,
+            "MaDinhDang": 2,
+            "MaTheLoai": 1,
+            "Composer": "U. Dirkschneider, W. Hoffmann, H. Frank, P. Baltes, S. Kaufmann, G. Hoffmann",
+            "ThoiLuong_ms": 342562,
+            "DungLuong_bytes": 5510424,
+            "DonGia": 0.99
+          },
+          {
+            "MaBaiHat": 3,
+            "Ten": "Fast As a Shark",
+            "MaAlbum": 3,
+            "MaDinhDang": 2,
+            "MaTheLoai": 1,
+            "Composer": "F. Baltes, S. Kaufman, U. Dirkscneider & W. Hoffman",
+            "ThoiLuong_ms": 230619,
+            "DungLuong_bytes": 3990994,
+            "DonGia": 0.99
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "Album",
+        "from_column": "MaNgheSi",
+        "to_table": "NgheSi",
+        "to_column": "MaNgheSi"
+      },
+      {
+        "from_table": "KhachHang",
+        "from_column": "SupportRepId",
+        "to_table": "NhanVien",
+        "to_column": "MaNhanVien"
+      },
+      {
+        "from_table": "NhanVien",
+        "from_column": "MaNguoiQuanLy",
+        "to_table": "NhanVien",
+        "to_column": "MaNhanVien"
+      },
+      {
+        "from_table": "HoaDon",
+        "from_column": "MaKhachHang",
+        "to_table": "KhachHang",
+        "to_column": "MaKhachHang"
+      },
+      {
+        "from_table": "ChiTietHoaDon",
+        "from_column": "MaBaiHat",
+        "to_table": "BaiHat",
+        "to_column": "MaBaiHat"
+      },
+      {
+        "from_table": "ChiTietHoaDon",
+        "from_column": "MaHoaDon",
+        "to_table": "HoaDon",
+        "to_column": "MaHoaDon"
+      },
+      {
+        "from_table": "ChiTietDanhSachPhat",
+        "from_column": "MaBaiHat",
+        "to_table": "BaiHat",
+        "to_column": "MaBaiHat"
+      },
+      {
+        "from_table": "ChiTietDanhSachPhat",
+        "from_column": "MaDanhSachPhat",
+        "to_table": "DanhSachPhat",
+        "to_column": "MaDanhSachPhat"
+      },
+      {
+        "from_table": "BaiHat",
+        "from_column": "MaDinhDang",
+        "to_table": "DinhDang",
+        "to_column": "MaDinhDang"
+      },
+      {
+        "from_table": "BaiHat",
+        "from_column": "MaTheLoai",
+        "to_table": "TheLoai",
+        "to_column": "MaTheLoai"
+      },
+      {
+        "from_table": "BaiHat",
+        "from_column": "MaAlbum",
+        "to_table": "Album",
+        "to_column": "MaAlbum"
+      }
+    ]
+  },
+  "descriptions": {
+    "Album": "Lưu trữ thông tin về các album nhạc, bao gồm tiêu đề và nghệ sĩ thể hiện.",
+    "NgheSi": "Lưu trữ thông tin về các nghệ sĩ âm nhạc.",
+    "KhachHang": "Lưu trữ thông tin chi tiết về khách hàng, bao gồm thông tin liên hệ và địa chỉ.",
+    "NhanVien": "Lưu trữ thông tin về nhân viên, bao gồm chức vụ và thông tin quản lý.",
+    "TheLoai": "Lưu trữ thông tin về các thể loại nhạc.",
+    "HoaDon": "Lưu trữ thông tin về các hóa đơn đã được lập cho khách hàng.",
+    "ChiTietHoaDon": "Lưu trữ chi tiết các bài hát có trong mỗi hóa đơn, bao gồm số lượng và đơn giá.",
+    "DinhDang": "Lưu trữ thông tin về các định dạng file nhạc khác nhau.",
+    "DanhSachPhat": "Lưu trữ thông tin về các danh sách phát nhạc do người dùng tạo.",
+    "ChiTietDanhSachPhat": "Liên kết các bài hát với danh sách phát mà chúng thuộc về.",
+    "BaiHat": "Lưu trữ thông tin chi tiết về các bài hát, bao gồm tên, album, thể loại, định dạng và giá."
+  }
+}

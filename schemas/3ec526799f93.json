@@ -1,0 +1,301 @@
+{
+  "hash": "3ec526799f93",
+  "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\orchestra\\orchestra.sqlite",
+  "schema": {
+    "tables": [
+      {
+        "table_name": "conductor",
+        "columns": [
+          {
+            "name": "Conductor_ID",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "Name",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Age",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Nationality",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Year_of_Work",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 12,
+        "sample_rows": [
+          {
+            "Conductor_ID": 1,
+            "Name": "Antal Doráti",
+            "Age": 40,
+            "Nationality": "USA",
+            "Year_of_Work": 10
+          },
+          {
+            "Conductor_ID": 2,
+            "Name": "Igor Stravinsky",
+            "Age": 41,
+            "Nationality": "UK",
+            "Year_of_Work": 11
+          },
+          {
+            "Conductor_ID": 3,
+            "Name": "Colin Davis",
+            "Age": 42,
+            "Nationality": "USA",
+            "Year_of_Work": 6
+          }
+        ]
+      },
+      {
+        "table_name": "orchestra",
+        "columns": [
+          {
+            "name": "Orchestra_ID",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "Orchestra",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Conductor_ID",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Record_Company",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Year_of_Founded",
+            "type": "REAL",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Major_Record_Format",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 12,
+        "sample_rows": [
+          {
+            "Orchestra_ID": 1,
+            "Orchestra": "London Symphony Orchestra",
+            "Conductor_ID": 1,
+            "Record_Company": "Mercury Records",
+            "Year_of_Founded": 2003.0,
+            "Major_Record_Format": "CD"
+          },
+          {
+            "Orchestra_ID": 2,
+            "Orchestra": "Columbia Symphony Orchestra",
+            "Conductor_ID": 2,
+            "Record_Company": "Columbia Masterworks",
+            "Year_of_Founded": 2009.0,
+            "Major_Record_Format": "CD / LP"
+          },
+          {
+            "Orchestra_ID": 3,
+            "Orchestra": "Royal Concertgebouw Orchestra",
+            "Conductor_ID": 3,
+            "Record_Company": "Philips",
+            "Year_of_Founded": 2008.0,
+            "Major_Record_Format": "CD"
+          }
+        ]
+      },
+      {
+        "table_name": "performance",
+        "columns": [
+          {
+            "name": "Performance_ID",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "Orchestra_ID",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Type",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Date",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Official_ratings_(millions)",
+            "type": "REAL",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Weekly_rank",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Share",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 11,
+        "sample_rows": [
+          {
+            "Performance_ID": 1,
+            "Orchestra_ID": 1,
+            "Type": "Auditions 1",
+            "Date": "9 June",
+            "Official_ratings_(millions)": 5.2,
+            "Weekly_rank": "12",
+            "Share": "22.7%"
+          },
+          {
+            "Performance_ID": 2,
+            "Orchestra_ID": 2,
+            "Type": "Auditions 2",
+            "Date": "10 June",
+            "Official_ratings_(millions)": 6.73,
+            "Weekly_rank": "8",
+            "Share": "28.0%"
+          },
+          {
+            "Performance_ID": 3,
+            "Orchestra_ID": 3,
+            "Type": "Auditions 3",
+            "Date": "11 June",
+            "Official_ratings_(millions)": 7.28,
+            "Weekly_rank": "15",
+            "Share": "29.4%"
+          }
+        ]
+      },
+      {
+        "table_name": "show",
+        "columns": [
+          {
+            "name": "Show_ID",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Performance_ID",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "If_first_show",
+            "type": "bool",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Result",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Attendance",
+            "type": "REAL",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 5,
+        "sample_rows": [
+          {
+            "Show_ID": 1,
+            "Performance_ID": 1,
+            "If_first_show": "Glebe Park",
+            "Result": "T",
+            "Attendance": 1026.0
+          },
+          {
+            "Show_ID": 2,
+            "Performance_ID": 2,
+            "If_first_show": "Fir Park",
+            "Result": "T",
+            "Attendance": 695.0
+          },
+          {
+            "Show_ID": 3,
+            "Performance_ID": 3,
+            "If_first_show": "St. Mirren Park",
+            "Result": "F",
+            "Attendance": 555.0
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "orchestra",
+        "from_column": "Conductor_ID",
+        "to_table": "conductor",
+        "to_column": "Conductor_ID"
+      },
+      {
+        "from_table": "performance",
+        "from_column": "Orchestra_ID",
+        "to_table": "orchestra",
+        "to_column": "Orchestra_ID"
+      },
+      {
+        "from_table": "show",
+        "from_column": "Performance_ID",
+        "to_table": "performance",
+        "to_column": "Performance_ID"
+      }
+    ]
+  },
+  "descriptions": {
+    "conductor": "Bảng lưu trữ thông tin về các nhạc trưởng, bao gồm ID, tên, tuổi, quốc tịch và năm bắt đầu làm việc.",
+    "orchestra": "Bảng lưu trữ thông tin về các dàn nhạc, bao gồm ID, tên, nhạc trưởng phụ trách, công ty thu âm, năm thành lập và định dạng bản ghi chính.",
+    "performance": "Bảng ghi lại các buổi biểu diễn của các dàn nhạc, bao gồm ID buổi biểu diễn, dàn nhạc, loại hình, ngày, xếp hạng chính thức, thứ hạng hàng tuần và tỷ lệ chia sẻ.",
+    "show": "Bảng chi tiết về các buổi diễn trong một buổi biểu diễn, bao gồm ID buổi diễn, ID buổi biểu diễn chính, thông tin về buổi diễn đầu tiên, kết quả và số lượng khán giả."
+  }
+}

@@ -1,0 +1,247 @@
+{
+  "hash": "132fba417ef9",
+  "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\cre_Doc_Template_Mgt\\cre_Doc_Template_Mgt.sqlite",
+  "schema": {
+    "tables": [
+      {
+        "table_name": "Ref_Template_Types",
+        "columns": [
+          {
+            "name": "Template_Type_Code",
+            "type": "CHAR(15)",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "Template_Type_Description",
+            "type": "VARCHAR(255)",
+            "nullable": false,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 5,
+        "sample_rows": [
+          {
+            "Template_Type_Code": "PPT",
+            "Template_Type_Description": "Presentation"
+          },
+          {
+            "Template_Type_Code": "CV",
+            "Template_Type_Description": "CV"
+          },
+          {
+            "Template_Type_Code": "AD",
+            "Template_Type_Description": "Advertisement"
+          }
+        ]
+      },
+      {
+        "table_name": "Templates",
+        "columns": [
+          {
+            "name": "Template_ID",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "Version_Number",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "Template_Type_Code",
+            "type": "CHAR(15)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "Date_Effective_From",
+            "type": "DATETIME",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Date_Effective_To",
+            "type": "DATETIME",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Template_Details",
+            "type": "VARCHAR(255)",
+            "nullable": false,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 20,
+        "sample_rows": [
+          {
+            "Template_ID": 0,
+            "Version_Number": 5,
+            "Template_Type_Code": "PP",
+            "Date_Effective_From": "2005-11-12 07:09:48",
+            "Date_Effective_To": "2008-01-05 14:19:28",
+            "Template_Details": ""
+          },
+          {
+            "Template_ID": 1,
+            "Version_Number": 9,
+            "Template_Type_Code": "PP",
+            "Date_Effective_From": "2010-09-24 01:15:11",
+            "Date_Effective_To": "1999-07-08 03:31:04",
+            "Template_Details": ""
+          },
+          {
+            "Template_ID": 4,
+            "Version_Number": 4,
+            "Template_Type_Code": "BK",
+            "Date_Effective_From": "2002-03-02 14:39:49",
+            "Date_Effective_To": "2001-04-18 09:29:52",
+            "Template_Details": ""
+          }
+        ]
+      },
+      {
+        "table_name": "Documents",
+        "columns": [
+          {
+            "name": "Document_ID",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "Template_ID",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Document_Name",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Document_Description",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Other_Details",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 15,
+        "sample_rows": [
+          {
+            "Document_ID": 0,
+            "Template_ID": 7,
+            "Document_Name": "Introduction of OS",
+            "Document_Description": "n",
+            "Other_Details": null
+          },
+          {
+            "Document_ID": 1,
+            "Template_ID": 25,
+            "Document_Name": "Understanding DB",
+            "Document_Description": "y",
+            "Other_Details": null
+          },
+          {
+            "Document_ID": 3,
+            "Template_ID": 6,
+            "Document_Name": "Summer Show",
+            "Document_Description": "u",
+            "Other_Details": null
+          }
+        ]
+      },
+      {
+        "table_name": "Paragraphs",
+        "columns": [
+          {
+            "name": "Paragraph_ID",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "Document_ID",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "Paragraph_Text",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Other_Details",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 15,
+        "sample_rows": [
+          {
+            "Paragraph_ID": 7,
+            "Document_ID": 2394,
+            "Paragraph_Text": "Korea",
+            "Other_Details": null
+          },
+          {
+            "Paragraph_ID": 9,
+            "Document_ID": 3,
+            "Paragraph_Text": "Somalia",
+            "Other_Details": null
+          },
+          {
+            "Paragraph_ID": 65,
+            "Document_ID": 50123,
+            "Paragraph_Text": "Palestinian Territory",
+            "Other_Details": null
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "Templates",
+        "from_column": "Template_Type_Code",
+        "to_table": "Ref_Template_Types",
+        "to_column": "Template_Type_Code"
+      },
+      {
+        "from_table": "Documents",
+        "from_column": "Template_ID",
+        "to_table": "Templates",
+        "to_column": "Template_ID"
+      },
+      {
+        "from_table": "Paragraphs",
+        "from_column": "Document_ID",
+        "to_table": "Documents",
+        "to_column": "Document_ID"
+      }
+    ]
+  },
+  "descriptions": {
+    "Ref_Template_Types": "Bảng tham chiếu định nghĩa các loại mẫu khác nhau, mỗi loại có một mã và mô tả.",
+    "Templates": "Bảng lưu trữ các mẫu tài liệu, bao gồm số phiên bản, loại mẫu, ngày hiệu lực và chi tiết mẫu.",
+    "Documents": "Bảng lưu trữ các tài liệu được tạo ra, có thể liên kết với một mẫu cụ thể và chứa thông tin mô tả tài liệu.",
+    "Paragraphs": "Bảng lưu trữ các đoạn văn bản thuộc về một tài liệu cụ thể, bao gồm nội dung đoạn văn và các chi tiết khác."
+  }
+}

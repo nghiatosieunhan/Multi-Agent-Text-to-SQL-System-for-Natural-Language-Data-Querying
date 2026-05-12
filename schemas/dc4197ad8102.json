@@ -1,0 +1,189 @@
+{
+  "hash": "dc4197ad8102",
+  "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\flight_2\\flight_2.sqlite",
+  "schema": {
+    "tables": [
+      {
+        "table_name": "airlines",
+        "columns": [
+          {
+            "name": "uid",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "Airline",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Abbreviation",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Country",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 12,
+        "sample_rows": [
+          {
+            "uid": 1,
+            "Airline": "United Airlines",
+            "Abbreviation": "UAL",
+            "Country": "USA"
+          },
+          {
+            "uid": 2,
+            "Airline": "US Airways",
+            "Abbreviation": "USAir",
+            "Country": "USA"
+          },
+          {
+            "uid": 3,
+            "Airline": "Delta Airlines",
+            "Abbreviation": "Delta",
+            "Country": "USA"
+          }
+        ]
+      },
+      {
+        "table_name": "airports",
+        "columns": [
+          {
+            "name": "City",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "AirportCode",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "AirportName",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Country",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "CountryAbbrev",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 100,
+        "sample_rows": [
+          {
+            "City": "Aberdeen ",
+            "AirportCode": "APG",
+            "AirportName": "Phillips AAF ",
+            "Country": "United States ",
+            "CountryAbbrev": "US "
+          },
+          {
+            "City": "Aberdeen ",
+            "AirportCode": "ABR",
+            "AirportName": "Municipal ",
+            "Country": "United States ",
+            "CountryAbbrev": "US"
+          },
+          {
+            "City": "Abilene ",
+            "AirportCode": "DYS",
+            "AirportName": "Dyess AFB ",
+            "Country": "United States ",
+            "CountryAbbrev": "US"
+          }
+        ]
+      },
+      {
+        "table_name": "flights",
+        "columns": [
+          {
+            "name": "Airline",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "FlightNo",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "SourceAirport",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "DestAirport",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 1200,
+        "sample_rows": [
+          {
+            "Airline": 1,
+            "FlightNo": 28,
+            "SourceAirport": " APG",
+            "DestAirport": " ASY"
+          },
+          {
+            "Airline": 1,
+            "FlightNo": 29,
+            "SourceAirport": " ASY",
+            "DestAirport": " APG"
+          },
+          {
+            "Airline": 1,
+            "FlightNo": 44,
+            "SourceAirport": " CVO",
+            "DestAirport": " ACV"
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "flights",
+        "from_column": "DestAirport",
+        "to_table": "airports",
+        "to_column": "AirportCode"
+      },
+      {
+        "from_table": "flights",
+        "from_column": "SourceAirport",
+        "to_table": "airports",
+        "to_column": "AirportCode"
+      }
+    ]
+  },
+  "descriptions": {
+    "airlines": "Bảng lưu trữ thông tin về các hãng hàng không, bao gồm mã định danh, tên, viết tắt và quốc gia.",
+    "airports": "Bảng lưu trữ thông tin về các sân bay, bao gồm thành phố, mã sân bay, tên sân bay, quốc gia và viết tắt quốc gia.",
+    "flights": "Bảng lưu trữ thông tin về các chuyến bay, bao gồm hãng hàng không, số hiệu chuyến bay, sân bay khởi hành và sân bay đích."
+  }
+}

@@ -1,0 +1,162 @@
+{
+  "hash": "1194a24f22b6",
+  "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\course_teach\\course_teach.sqlite",
+  "schema": {
+    "tables": [
+      {
+        "table_name": "course",
+        "columns": [
+          {
+            "name": "Course_ID",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "Staring_Date",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Course",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 10,
+        "sample_rows": [
+          {
+            "Course_ID": 1,
+            "Staring_Date": "5 May",
+            "Course": "Language Arts"
+          },
+          {
+            "Course_ID": 2,
+            "Staring_Date": "6 May",
+            "Course": "Math"
+          },
+          {
+            "Course_ID": 3,
+            "Staring_Date": "7 May",
+            "Course": "Science"
+          }
+        ]
+      },
+      {
+        "table_name": "teacher",
+        "columns": [
+          {
+            "name": "Teacher_ID",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "Name",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Age",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Hometown",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 7,
+        "sample_rows": [
+          {
+            "Teacher_ID": 1,
+            "Name": "Joseph Huts",
+            "Age": "32",
+            "Hometown": "Blackrod Urban District"
+          },
+          {
+            "Teacher_ID": 2,
+            "Name": "Gustaaf Deloor",
+            "Age": "29",
+            "Hometown": "Bolton County Borough"
+          },
+          {
+            "Teacher_ID": 3,
+            "Name": "Vicente Carretero",
+            "Age": "26",
+            "Hometown": "Farnworth Municipal Borough"
+          }
+        ]
+      },
+      {
+        "table_name": "course_arrange",
+        "columns": [
+          {
+            "name": "Course_ID",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "Teacher_ID",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "Grade",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          }
+        ],
+        "description": null,
+        "row_count": 6,
+        "sample_rows": [
+          {
+            "Course_ID": 2,
+            "Teacher_ID": 5,
+            "Grade": 1
+          },
+          {
+            "Course_ID": 2,
+            "Teacher_ID": 3,
+            "Grade": 3
+          },
+          {
+            "Course_ID": 3,
+            "Teacher_ID": 2,
+            "Grade": 5
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "course_arrange",
+        "from_column": "Teacher_ID",
+        "to_table": "teacher",
+        "to_column": "Teacher_ID"
+      },
+      {
+        "from_table": "course_arrange",
+        "from_column": "Course_ID",
+        "to_table": "course",
+        "to_column": "Course_ID"
+      }
+    ]
+  },
+  "descriptions": {
+    "course": "Lưu trữ thông tin về các khóa học, bao gồm mã khóa học, ngày bắt đầu và tên khóa học.",
+    "teacher": "Lưu trữ thông tin về giáo viên, bao gồm mã giáo viên, tên, tuổi và quê quán.",
+    "course_arrange": "Bảng trung gian thể hiện sự sắp xếp giữa khóa học và giáo viên, đồng thời lưu trữ điểm số của giáo viên trong khóa học đó."
+  }
+}

@@ -1,0 +1,191 @@
+{
+  "9f44f6f81652": {
+    "db_path": "I:\\AI\\text_to_sql\\data\\chinook\\Chinook_Sqlite.sqlite",
+    "db_name": "Chinook_Sqlite",
+    "onboarded_at": "2026-04-15 16:13:54",
+    "table_count": 11,
+    "hash": "9f44f6f81652"
+  },
+  "5b86ec10095d": {
+    "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\concert_singer\\concert_singer.sqlite",
+    "db_name": "concert_singer",
+    "onboarded_at": "2026-04-16 11:12:48",
+    "table_count": 4,
+    "hash": "5b86ec10095d"
+  },
+  "8930eec4f57a": {
+    "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\pets_1\\pets_1.sqlite",
+    "db_name": "pets_1",
+    "onboarded_at": "2026-04-16 16:00:17",
+    "table_count": 3,
+    "hash": "8930eec4f57a"
+  },
+  "f7db82ea8523": {
+    "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\car_1\\car_1.sqlite",
+    "db_name": "car_1",
+    "onboarded_at": "2026-04-16 16:09:11",
+    "table_count": 6,
+    "hash": "f7db82ea8523"
+  },
+  "dc4197ad8102": {
+    "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\flight_2\\flight_2.sqlite",
+    "db_name": "flight_2",
+    "onboarded_at": "2026-04-16 16:17:24",
+    "table_count": 3,
+    "hash": "dc4197ad8102"
+  },
+  "fc28177f7d08": {
+    "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\employee_hire_evaluation\\employee_hire_evaluation.sqlite",
+    "db_name": "employee_hire_evaluation",
+    "onboarded_at": "2026-04-16 16:23:29",
+    "table_count": 4,
+    "hash": "fc28177f7d08"
+  },
+  "132fba417ef9": {
+    "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\cre_Doc_Template_Mgt\\cre_Doc_Template_Mgt.sqlite",
+    "db_name": "cre_Doc_Template_Mgt",
+    "onboarded_at": "2026-04-16 16:26:33",
+    "table_count": 4,
+    "hash": "132fba417ef9"
+  },
+  "1194a24f22b6": {
+    "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\course_teach\\course_teach.sqlite",
+    "db_name": "course_teach",
+    "onboarded_at": "2026-04-16 16:32:16",
+    "table_count": 3,
+    "hash": "1194a24f22b6"
+  },
+  "b31ec23b55bf": {
+    "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\museum_visit\\museum_visit.sqlite",
+    "db_name": "museum_visit",
+    "onboarded_at": "2026-04-16 16:34:31",
+    "table_count": 3,
+    "hash": "b31ec23b55bf"
+  },
+  "b066d1ad36ec": {
+    "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\wta_1\\wta_1.sqlite",
+    "db_name": "wta_1",
+    "onboarded_at": "2026-04-16 16:35:56",
+    "table_count": 3,
+    "hash": "b066d1ad36ec"
+  },
+  "6187797e50ed": {
+    "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\battle_death\\battle_death.sqlite",
+    "db_name": "battle_death",
+    "onboarded_at": "2026-04-16 16:41:08",
+    "table_count": 3,
+    "hash": "6187797e50ed"
+  },
+  "8685a50441a1": {
+    "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\student_transcripts_tracking\\student_transcripts_tracking.sqlite",
+    "db_name": "student_transcripts_tracking",
+    "onboarded_at": "2026-04-16 16:42:24",
+    "table_count": 11,
+    "hash": "8685a50441a1"
+  },
+  "1d4d0f1bfbef": {
+    "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\tvshow\\tvshow.sqlite",
+    "db_name": "tvshow",
+    "onboarded_at": "2026-04-16 16:48:19",
+    "table_count": 3,
+    "hash": "1d4d0f1bfbef"
+  },
+  "21fbce851fff": {
+    "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\poker_player\\poker_player.sqlite",
+    "db_name": "poker_player",
+    "onboarded_at": "2026-04-16 16:53:05",
+    "table_count": 2,
+    "hash": "21fbce851fff"
+  },
+  "187049f91554": {
+    "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\voter_1\\voter_1.sqlite",
+    "db_name": "voter_1",
+    "onboarded_at": "2026-04-16 16:56:00",
+    "table_count": 3,
+    "hash": "187049f91554"
+  },
+  "5d7e4e7985f9": {
+    "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\world_1\\world_1.sqlite",
+    "db_name": "world_1",
+    "onboarded_at": "2026-04-16 16:57:03",
+    "table_count": 3,
+    "hash": "5d7e4e7985f9"
+  },
+  "3ec526799f93": {
+    "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\orchestra\\orchestra.sqlite",
+    "db_name": "orchestra",
+    "onboarded_at": "2026-04-16 17:12:07",
+    "table_count": 4,
+    "hash": "3ec526799f93"
+  },
+  "34b034102530": {
+    "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\network_1\\network_1.sqlite",
+    "db_name": "network_1",
+    "onboarded_at": "2026-04-16 17:15:19",
+    "table_count": 3,
+    "hash": "34b034102530"
+  },
+  "67b8e803cd9b": {
+    "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\dog_kennels\\dog_kennels.sqlite",
+    "db_name": "dog_kennels",
+    "onboarded_at": "2026-04-16 17:19:58",
+    "table_count": 8,
+    "hash": "67b8e803cd9b"
+  },
+  "644e5ba8b81b": {
+    "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\singer\\singer.sqlite",
+    "db_name": "singer",
+    "onboarded_at": "2026-04-16 17:26:46",
+    "table_count": 2,
+    "hash": "644e5ba8b81b"
+  },
+  "aea9e5202d55": {
+    "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\real_estate_properties\\real_estate_properties.sqlite",
+    "db_name": "real_estate_properties",
+    "onboarded_at": "2026-04-16 17:29:11",
+    "table_count": 5,
+    "hash": "aea9e5202d55"
+  },
+  "3cced778cf1a": {
+    "db_path": "I:\\AI\\text_to_sql\\data\\bird-sql\\mini_dev\\minidev\\minidev\\MINIDEV\\dev_databases\\debit_card_specializing\\debit_card_specializing.sqlite",
+    "db_name": "debit_card_specializing",
+    "onboarded_at": "2026-04-20 14:05:55",
+    "table_count": 5,
+    "hash": "3cced778cf1a"
+  },
+  "f6f5e3a5d3ac": {
+    "db_path": "I:\\AI\\text_to_sql\\data\\bird-sql\\mini_dev\\minidev\\minidev\\MINIDEV\\dev_databases\\student_club\\student_club.sqlite",
+    "db_name": "student_club",
+    "onboarded_at": "2026-04-21 15:32:54",
+    "table_count": 8,
+    "hash": "f6f5e3a5d3ac"
+  },
+  "233012f71433": {
+    "db_path": "I:\\AI\\text_to_sql\\data\\chinook\\Chinook_VN.sqlite",
+    "db_name": "Chinook_VN",
+    "onboarded_at": "2026-04-22 11:36:16",
+    "table_count": 11,
+    "hash": "233012f71433"
+  },
+  "0a0ee374435f": {
+    "db_path": "I:\\AI\\text_to_sql\\data\\business\\spider_sales_vn.sqlite",
+    "db_name": "spider_sales_vn",
+    "onboarded_at": "2026-04-28 16:01:52",
+    "table_count": 7,
+    "hash": "0a0ee374435f"
+  },
+  "9b6f5795aaa4": {
+    "db_path": "I:\\AI\\text_to_sql\\data\\northwind\\northwind.sqlite",
+    "db_name": "northwind",
+    "onboarded_at": "2026-05-08 16:06:41",
+    "table_count": 13,
+    "hash": "9b6f5795aaa4"
+  },
+  "8c2340bd99e5": {
+    "db_path": "C:\\Users\\nghia\\AppData\\Local\\Temp\\tmp132sp2wy.sqlite",
+    "db_name": "tmp132sp2wy",
+    "onboarded_at": "2026-05-11 16:11:28",
+    "table_count": 13,
+    "hash": "8c2340bd99e5"
+  }
+}

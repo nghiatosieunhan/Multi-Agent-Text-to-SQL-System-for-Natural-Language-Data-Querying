@@ -1,0 +1,402 @@
+{
+  "hash": "0a0ee374435f",
+  "db_path": "I:\\AI\\text_to_sql\\data\\business\\spider_sales_vn.sqlite",
+  "schema": {
+    "tables": [
+      {
+        "table_name": "NhanVien",
+        "columns": [
+          {
+            "name": "MaNV",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "TenNV",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "ChucVu",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "MaNQL",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "NgayVaoLam",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Luong",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 20,
+        "sample_rows": [
+          {
+            "MaNV": "NV001",
+            "TenNV": "Chị Chi Phạm",
+            "ChucVu": "Giám Đốc",
+            "MaNQL": null,
+            "NgayVaoLam": "2020-01-01",
+            "Luong": 50000000
+          },
+          {
+            "MaNV": "NV002",
+            "TenNV": "Khoa Đức Bùi",
+            "ChucVu": "Trưởng Phòng Sale",
+            "MaNQL": "NV001",
+            "NgayVaoLam": "2020-05-15",
+            "Luong": 30000000
+          },
+          {
+            "MaNV": "NV003",
+            "TenNV": "Vi Đặng",
+            "ChucVu": "Nhân viên Sale",
+            "MaNQL": "NV002",
+            "NgayVaoLam": "2024-11-22",
+            "Luong": 9000000
+          }
+        ]
+      },
+      {
+        "table_name": "KhachHang",
+        "columns": [
+          {
+            "name": "MaKH",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "TenKH",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "SoDienThoai",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Email",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "LoaiThe",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "MaNV_PhuTrach",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 300,
+        "sample_rows": [
+          {
+            "MaKH": "KH0001",
+            "TenKH": "Nhật Tấn Nguyễn",
+            "SoDienThoai": "0913628671",
+            "Email": "jane67@hotmail.com",
+            "LoaiThe": "Normal",
+            "MaNV_PhuTrach": "NV005"
+          },
+          {
+            "MaKH": "KH0002",
+            "TenKH": "Thảo Hoàng",
+            "SoDienThoai": "84457704749",
+            "Email": "wnguyen@yahoo.com",
+            "LoaiThe": "Thành viên",
+            "MaNV_PhuTrach": "NV018"
+          },
+          {
+            "MaKH": "KH0003",
+            "TenKH": "Chị Dương Mai",
+            "SoDienThoai": "84701771577",
+            "Email": "ipham@yahoo.com",
+            "LoaiThe": "Normal",
+            "MaNV_PhuTrach": "NV011"
+          }
+        ]
+      },
+      {
+        "table_name": "CuaHang",
+        "columns": [
+          {
+            "name": "MaCH",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "TenCH",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "KhuVuc",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 4,
+        "sample_rows": [
+          {
+            "MaCH": "CH01",
+            "TenCH": "Chi nhánh Hà Nội",
+            "KhuVuc": "Miền Bắc"
+          },
+          {
+            "MaCH": "CH02",
+            "TenCH": "Chi nhánh Đà Nẵng",
+            "KhuVuc": "Miền Trung"
+          },
+          {
+            "MaCH": "CH03",
+            "TenCH": "Chi nhánh TP.HCM",
+            "KhuVuc": "Miền Nam"
+          }
+        ]
+      },
+      {
+        "table_name": "DanhMuc",
+        "columns": [
+          {
+            "name": "MaDM",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "TenDM",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 4,
+        "sample_rows": [
+          {
+            "MaDM": "DM1",
+            "TenDM": "Điện thoại"
+          },
+          {
+            "MaDM": "DM2",
+            "TenDM": "Laptop"
+          },
+          {
+            "MaDM": "DM3",
+            "TenDM": "Phụ kiện"
+          }
+        ]
+      },
+      {
+        "table_name": "SanPham",
+        "columns": [
+          {
+            "name": "MaSP",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "TenSP",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "MaDM",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "DonGia",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 8,
+        "sample_rows": [
+          {
+            "MaSP": "SP001",
+            "TenSP": "iPhone 15 Pro Max",
+            "MaDM": "DM1",
+            "DonGia": 30000000
+          },
+          {
+            "MaSP": "SP002",
+            "TenSP": "Samsung Galaxy S24",
+            "MaDM": "DM1",
+            "DonGia": 25000000
+          },
+          {
+            "MaSP": "SP003",
+            "TenSP": "MacBook Air M2",
+            "MaDM": "DM2",
+            "DonGia": 22000000
+          }
+        ]
+      },
+      {
+        "table_name": "DonHang",
+        "columns": [
+          {
+            "name": "MaDH",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "MaKH",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "MaCH",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "MaNV",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "NgayMua",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "TrangThai",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 1000,
+        "sample_rows": [
+          {
+            "MaDH": "DH00001",
+            "MaKH": "KH0295",
+            "MaCH": "CH02",
+            "MaNV": "NV004",
+            "NgayMua": "2025-03-08",
+            "TrangThai": "Đã hủy"
+          },
+          {
+            "MaDH": "DH00002",
+            "MaKH": "KH0122",
+            "MaCH": "CH01",
+            "MaNV": "NV007",
+            "NgayMua": "2025-03-01",
+            "TrangThai": "Hoàn thành"
+          },
+          {
+            "MaDH": "DH00003",
+            "MaKH": "KH0196",
+            "MaCH": "CH03",
+            "MaNV": "NV019",
+            "NgayMua": "2025-04-11",
+            "TrangThai": "Đã hủy"
+          }
+        ]
+      },
+      {
+        "table_name": "ChiTietDonHang",
+        "columns": [
+          {
+            "name": "MaDH",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "MaSP",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "SoLuong",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "MucGiamGia",
+            "type": "REAL",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 1992,
+        "sample_rows": [
+          {
+            "MaDH": "DH00001",
+            "MaSP": "SP005",
+            "SoLuong": 2,
+            "MucGiamGia": 0.0
+          },
+          {
+            "MaDH": "DH00001",
+            "MaSP": "SP002",
+            "SoLuong": 2,
+            "MucGiamGia": 0.0
+          },
+          {
+            "MaDH": "DH00001",
+            "MaSP": "SP008",
+            "SoLuong": 1,
+            "MucGiamGia": 0.1
+          }
+        ]
+      }
+    ],
+    "relationships": []
+  },
+  "descriptions": {
+    "NhanVien": "Bảng lưu trữ thông tin nhân viên, bao gồm mã, tên, chức vụ, người quản lý, ngày vào làm và lương.",
+    "KhachHang": "Bảng lưu trữ thông tin khách hàng, bao gồm mã, tên, số điện thoại, email, loại thẻ và nhân viên phụ trách.",
+    "CuaHang": "Bảng lưu trữ thông tin cửa hàng, bao gồm mã, tên và khu vực.",
+    "DanhMuc": "Bảng lưu trữ danh mục sản phẩm, bao gồm mã và tên danh mục.",
+    "SanPham": "Bảng lưu trữ thông tin sản phẩm, bao gồm mã, tên, danh mục và đơn giá.",
+    "DonHang": "Bảng lưu trữ thông tin các đơn hàng, bao gồm mã đơn hàng, khách hàng, cửa hàng, nhân viên, ngày mua và trạng thái.",
+    "ChiTietDonHang": "Bảng lưu trữ chi tiết các mặt hàng trong mỗi đơn hàng, bao gồm mã đơn hàng, sản phẩm, số lượng và mức giảm giá."
+  }
+}

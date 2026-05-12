@@ -1,0 +1,620 @@
+{
+  "hash": "f6f5e3a5d3ac",
+  "db_path": "I:\\AI\\text_to_sql\\data\\bird-sql\\mini_dev\\minidev\\minidev\\MINIDEV\\dev_databases\\student_club\\student_club.sqlite",
+  "schema": {
+    "tables": [
+      {
+        "table_name": "event",
+        "columns": [
+          {
+            "name": "event_id",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "event_name",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "event_date",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "type",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "notes",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "location",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "status",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 42,
+        "sample_rows": [
+          {
+            "event_id": "rec0Si5cQ4rJRVzd6",
+            "event_name": "March Meeting",
+            "event_date": "2020-03-10T12:00:00",
+            "type": "Meeting",
+            "notes": null,
+            "location": "MU 215",
+            "status": "Open"
+          },
+          {
+            "event_id": "rec0akZnLLpGUloLH",
+            "event_name": "Officers meeting - January",
+            "event_date": "2020-01-14T09:30:00",
+            "type": "Meeting",
+            "notes": null,
+            "location": null,
+            "status": "Open"
+          },
+          {
+            "event_id": "rec0dZPcWXF0QjNnE",
+            "event_name": "Spring Elections",
+            "event_date": "2019-11-24T09:00:00",
+            "type": "Election",
+            "notes": "All active members can vote for new officers between 4pm-8pm.",
+            "location": "MU 215",
+            "status": "Open"
+          }
+        ]
+      },
+      {
+        "table_name": "major",
+        "columns": [
+          {
+            "name": "major_id",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "major_name",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "department",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "college",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 113,
+        "sample_rows": [
+          {
+            "major_id": "rec06DF6vZ1CyPKpc",
+            "major_name": "Outdoor Product Design and Development",
+            "department": "School of Applied Sciences, Technology and Education",
+            "college": "College of Agriculture and Applied Sciences"
+          },
+          {
+            "major_id": "rec09LedkREyskCNv",
+            "major_name": "Agricultural Communication",
+            "department": "School of Applied Sciences, Technology and Education",
+            "college": "College of Agriculture and Applied Sciences"
+          },
+          {
+            "major_id": "rec0Eanv576RhQllI",
+            "major_name": "Fisheries and Aquatic Sciences",
+            "department": "Watershed Sciences Department",
+            "college": "College of Natural Resources"
+          }
+        ]
+      },
+      {
+        "table_name": "zip_code",
+        "columns": [
+          {
+            "name": "zip_code",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "type",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "city",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "county",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "state",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "short_state",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 41877,
+        "sample_rows": [
+          {
+            "zip_code": 501,
+            "type": "Unique",
+            "city": "Holtsville",
+            "county": "Suffolk County",
+            "state": "New York",
+            "short_state": "NY"
+          },
+          {
+            "zip_code": 544,
+            "type": "Unique",
+            "city": "Holtsville",
+            "county": "Suffolk County",
+            "state": "New York",
+            "short_state": "NY"
+          },
+          {
+            "zip_code": 601,
+            "type": "Standard",
+            "city": "Adjuntas",
+            "county": "Adjuntas Municipio",
+            "state": "Puerto Rico",
+            "short_state": "PR"
+          }
+        ]
+      },
+      {
+        "table_name": "attendance",
+        "columns": [
+          {
+            "name": "link_to_event",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "link_to_member",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": true
+          }
+        ],
+        "description": null,
+        "row_count": 326,
+        "sample_rows": [
+          {
+            "link_to_event": "rec2N69DMcrqN9PJC",
+            "link_to_member": "recD078PnS3x2doBe"
+          },
+          {
+            "link_to_event": "rec2N69DMcrqN9PJC",
+            "link_to_member": "recP6DJPyi5donvXL"
+          },
+          {
+            "link_to_event": "rec2N69DMcrqN9PJC",
+            "link_to_member": "rec28ORZgcm1dtqBZ"
+          }
+        ]
+      },
+      {
+        "table_name": "budget",
+        "columns": [
+          {
+            "name": "budget_id",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "category",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "spent",
+            "type": "REAL",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "remaining",
+            "type": "REAL",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "amount",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "event_status",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "link_to_event",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 52,
+        "sample_rows": [
+          {
+            "budget_id": "rec0QmEc3cSQFQ6V2",
+            "category": "Advertisement",
+            "spent": 67.81,
+            "remaining": 7.19,
+            "amount": 75,
+            "event_status": "Closed",
+            "link_to_event": "recI43CzsZ0Q625ma"
+          },
+          {
+            "budget_id": "rec1bG6HSft7XIvTP",
+            "category": "Food",
+            "spent": 121.14,
+            "remaining": 28.86,
+            "amount": 150,
+            "event_status": "Closed",
+            "link_to_event": "recggMW2eyCYceNcy"
+          },
+          {
+            "budget_id": "rec1z6ISJU2HdIsVm",
+            "category": "Food",
+            "spent": 20.2,
+            "remaining": -0.199999999999999,
+            "amount": 20,
+            "event_status": "Closed",
+            "link_to_event": "recJ4Witp9tpjaugn"
+          }
+        ]
+      },
+      {
+        "table_name": "expense",
+        "columns": [
+          {
+            "name": "expense_id",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "expense_description",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "expense_date",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "cost",
+            "type": "REAL",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "approved",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "link_to_member",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "link_to_budget",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 32,
+        "sample_rows": [
+          {
+            "expense_id": "rec017x6R3hQqkLAo",
+            "expense_description": "Post Cards, Posters",
+            "expense_date": "2019-08-20",
+            "cost": 122.06,
+            "approved": "true",
+            "link_to_member": "rec4BLdZHS2Blfp4v",
+            "link_to_budget": "recvKTAWAFKkVNnXQ"
+          },
+          {
+            "expense_id": "rec1nIjoZKTYayqZ6",
+            "expense_description": "Water, Cookies",
+            "expense_date": "2019-10-08",
+            "cost": 20.2,
+            "approved": "true",
+            "link_to_member": "recro8T1MPMwRadVH",
+            "link_to_budget": "recy8KY5bUdzF81vv"
+          },
+          {
+            "expense_id": "rec1oMgNFt7Y0G40x",
+            "expense_description": "Pizza",
+            "expense_date": "2019-09-10",
+            "cost": 51.81,
+            "approved": "true",
+            "link_to_member": "recD078PnS3x2doBe",
+            "link_to_budget": "recwXIiKoBMjXJsGZ"
+          }
+        ]
+      },
+      {
+        "table_name": "income",
+        "columns": [
+          {
+            "name": "income_id",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "date_received",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "amount",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "source",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "notes",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "link_to_member",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 36,
+        "sample_rows": [
+          {
+            "income_id": "rec0s9ZrO15zhzUeE",
+            "date_received": "2019-10-17",
+            "amount": 50,
+            "source": "Dues",
+            "notes": null,
+            "link_to_member": "reccW7q1KkhSKZsea"
+          },
+          {
+            "income_id": "rec7f5XMQZexgtQJo",
+            "date_received": "2019-09-04",
+            "amount": 50,
+            "source": "Dues",
+            "notes": null,
+            "link_to_member": "recTjHY5xXhvkCdVT"
+          },
+          {
+            "income_id": "rec8BUJa8GXUjiglg",
+            "date_received": "2019-10-08",
+            "amount": 50,
+            "source": "Dues",
+            "notes": null,
+            "link_to_member": "recUdRhbhcEO1Hk5r"
+          }
+        ]
+      },
+      {
+        "table_name": "member",
+        "columns": [
+          {
+            "name": "member_id",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "first_name",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "last_name",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "email",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "position",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "t_shirt_size",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "phone",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "zip",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "link_to_major",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 33,
+        "sample_rows": [
+          {
+            "member_id": "rec1x5zBFIqoOuPW8",
+            "first_name": "Angela",
+            "last_name": "Sanders",
+            "email": "angela.sanders@lpu.edu",
+            "position": "Member",
+            "t_shirt_size": "Medium",
+            "phone": "(651) 928-4507",
+            "zip": 55108,
+            "link_to_major": "recxK3MHQFbR9J5uO"
+          },
+          {
+            "member_id": "rec280Sk7o31iG0Tx",
+            "first_name": "Grant",
+            "last_name": "Gilmour",
+            "email": "grant.gilmour@lpu.edu",
+            "position": "Member",
+            "t_shirt_size": "X-Large",
+            "phone": "403-555-1310",
+            "zip": 29440,
+            "link_to_major": "rec7BxKpjJ7bNph3O"
+          },
+          {
+            "member_id": "rec28ORZgcm1dtqBZ",
+            "first_name": "Luisa",
+            "last_name": "Guidi",
+            "email": "luisa.guidi@lpu.edu",
+            "position": "Member",
+            "t_shirt_size": "Medium",
+            "phone": "442-555-5882",
+            "zip": 10002,
+            "link_to_major": "recdIBgeU38UbV2sy"
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "attendance",
+        "from_column": "link_to_member",
+        "to_table": "member",
+        "to_column": "member_id"
+      },
+      {
+        "from_table": "attendance",
+        "from_column": "link_to_event",
+        "to_table": "event",
+        "to_column": "event_id"
+      },
+      {
+        "from_table": "budget",
+        "from_column": "link_to_event",
+        "to_table": "event",
+        "to_column": "event_id"
+      },
+      {
+        "from_table": "expense",
+        "from_column": "link_to_member",
+        "to_table": "member",
+        "to_column": "member_id"
+      },
+      {
+        "from_table": "expense",
+        "from_column": "link_to_budget",
+        "to_table": "budget",
+        "to_column": "budget_id"
+      },
+      {
+        "from_table": "income",
+        "from_column": "link_to_member",
+        "to_table": "member",
+        "to_column": "member_id"
+      },
+      {
+        "from_table": "member",
+        "from_column": "zip",
+        "to_table": "zip_code",
+        "to_column": "zip_code"
+      },
+      {
+        "from_table": "member",
+        "from_column": "link_to_major",
+        "to_table": "major",
+        "to_column": "major_id"
+      }
+    ]
+  },
+  "descriptions": {
+    "event": "Lưu trữ thông tin về các sự kiện, bao gồm tên, ngày, loại, địa điểm và trạng thái.",
+    "major": "Lưu trữ thông tin về các chuyên ngành học, bao gồm tên chuyên ngành, khoa và trường đại học.",
+    "zip_code": "Lưu trữ thông tin về mã bưu chính, bao gồm thành phố, quận, tiểu bang và loại mã bưu chính.",
+    "attendance": "Ghi lại sự tham dự của thành viên vào các sự kiện, liên kết thành viên với sự kiện.",
+    "budget": "Quản lý ngân sách cho các sự kiện, bao gồm danh mục, số tiền đã chi, còn lại và tổng số tiền.",
+    "expense": "Ghi lại các khoản chi tiêu, bao gồm mô tả, ngày, chi phí, trạng thái phê duyệt và liên kết đến thành viên và ngân sách.",
+    "income": "Ghi lại các khoản thu nhập, bao gồm ngày nhận, số tiền, nguồn và ghi chú.",
+    "member": "Lưu trữ thông tin chi tiết về các thành viên, bao gồm tên, email, chức vụ, thông tin liên hệ và chuyên ngành."
+  }
+}

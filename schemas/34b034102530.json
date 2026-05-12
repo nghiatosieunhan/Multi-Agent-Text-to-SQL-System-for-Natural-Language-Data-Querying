@@ -1,0 +1,147 @@
+{
+  "hash": "34b034102530",
+  "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\network_1\\network_1.sqlite",
+  "schema": {
+    "tables": [
+      {
+        "table_name": "Highschooler",
+        "columns": [
+          {
+            "name": "ID",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "name",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "grade",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 16,
+        "sample_rows": [
+          {
+            "ID": 1510,
+            "name": "Jordan",
+            "grade": 9
+          },
+          {
+            "ID": 1689,
+            "name": "Gabriel",
+            "grade": 9
+          },
+          {
+            "ID": 1381,
+            "name": "Tiffany",
+            "grade": 9
+          }
+        ]
+      },
+      {
+        "table_name": "Friend",
+        "columns": [
+          {
+            "name": "student_id",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "friend_id",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          }
+        ],
+        "description": null,
+        "row_count": 20,
+        "sample_rows": [
+          {
+            "student_id": 1510,
+            "friend_id": 1381
+          },
+          {
+            "student_id": 1510,
+            "friend_id": 1689
+          },
+          {
+            "student_id": 1689,
+            "friend_id": 1709
+          }
+        ]
+      },
+      {
+        "table_name": "Likes",
+        "columns": [
+          {
+            "name": "student_id",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "liked_id",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          }
+        ],
+        "description": null,
+        "row_count": 10,
+        "sample_rows": [
+          {
+            "student_id": 1689,
+            "liked_id": 1709
+          },
+          {
+            "student_id": 1709,
+            "liked_id": 1689
+          },
+          {
+            "student_id": 1782,
+            "liked_id": 1709
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "Friend",
+        "from_column": "friend_id",
+        "to_table": "Highschooler",
+        "to_column": "ID"
+      },
+      {
+        "from_table": "Friend",
+        "from_column": "student_id",
+        "to_table": "Highschooler",
+        "to_column": "ID"
+      },
+      {
+        "from_table": "Likes",
+        "from_column": "student_id",
+        "to_table": "Highschooler",
+        "to_column": "ID"
+      },
+      {
+        "from_table": "Likes",
+        "from_column": "liked_id",
+        "to_table": "Highschooler",
+        "to_column": "ID"
+      }
+    ]
+  },
+  "descriptions": {
+    "Highschooler": "Bảng này lưu trữ thông tin cơ bản của học sinh trung học, bao gồm ID, tên và khối lớp.",
+    "Friend": "Bảng này biểu diễn mối quan hệ bạn bè giữa các học sinh. Mỗi dòng cho biết một học sinh (student_id) là bạn của một học sinh khác (friend_id).",
+    "Likes": "Bảng này ghi lại sở thích hoặc sự ngưỡng mộ giữa các học sinh. Mỗi dòng cho biết một học sinh (student_id) thích một học sinh khác (liked_id)."
+  }
+}

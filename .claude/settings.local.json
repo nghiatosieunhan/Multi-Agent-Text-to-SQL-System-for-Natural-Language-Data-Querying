@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip --version)",
+      "Bash(pip install:*)",
+      "Bash(python -c \"import langgraph; import pandas; import structlog; import sqlalchemy; import matplotlib; print\\(''''All core imports OK''''\\)\")",
+      "Bash(python -m pytest tests/ -v --tb=short)",
+      "Bash(python -m pytest tests/ -v)",
+      "Bash(python main.py --setup)",
+      "Bash(python -c \":*)",
+      "Bash(python -m pytest tests/ -q)",
+      "Bash(python:*)",
+      "Bash(dir \"%USERPROFILE%\\\\.kaggle\\\\kaggle.json\")",
+      "Bash(curl -L \"https://github.com/lerocha/chinook-database/raw/master/ChinookDatabase/DataSources/Chinook_Sqlite.sqlite\" -o \"i:/AI/text_to_sql/data/chinook/Chinook_Sqlite.sqlite\")",
+      "Bash(pip show:*)",
+      "Bash(set PYTHONIOENCODING=utf-8)",
+      "Bash(Select-String -Pattern \"^\\(=|PASS|FAIL|Database|total|Avg|  [0-9]|Accuracy|DOING\\)\")",
+      "Bash(kaggle datasets:*)",
+      "Bash(ls i:/AI/text_to_sql/*.py i:/AI/text_to_sql/src/*.py)",
+      "Bash(dir /b /s i:AItext_to_sql*.py)",
+      "Bash(findstr /v \"venv\")",
+      "Bash(cd \"i:\\\\\\\\AI\\\\\\\\text_to_sql\")",
+      "Bash(python3)",
+      "Bash(chcp 65001)",
+      "Bash(ls \"i:\\\\\\\\AI\\\\\\\\text_to_sql\\\\\\\\generate_questions.py\")",
+      "Bash(dir /b i:\\\\AI\\\\text_to_sql\\\\spider)",
+      "Bash(dir:*)",
+      "Bash(curl -L \"https://drive.google.com/uc?export=download&id=1_3unmCXhElVNPJj9JTd0S70Ypz-O0O2v\" -o spider/spider.zip --progress-bar)",
+      "Bash(mkdir -p i:/AI/text_to_sql/spider)",
+      "Bash(curl -L \"https://drive.google.com/uc?export=download&id=1_3unmCXhElVNPJj9JTd0S70Ypz-O0O2v\" -o spider/spider.zip)",
+      "Bash(curl -L \"https://github.com/taoyds/spider/raw/main/data/spider_database.zip\" -o spider/spider_database.zip)",
+      "Bash(curl -s \"https://api.github.com/repos/taoyds/spider/contents/data\")",
+      "Bash(curl -s \"https://api.github.com/repos/taoyds/spider/contents\")",
+      "Bash(curl -sL \"https://raw.githubusercontent.com/taoyds/spider/main/data/spider_database.zip\" -o spider/spider_db.zip)",
+      "Bash(git lfs:*)",
+      "Bash(curl -sL \"https://yale-lily.github.io/spider\")"
+    ]
+  }
+}

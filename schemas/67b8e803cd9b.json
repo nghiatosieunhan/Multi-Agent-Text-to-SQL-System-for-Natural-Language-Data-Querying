@@ -1,0 +1,623 @@
+{
+  "hash": "67b8e803cd9b",
+  "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\dog_kennels\\dog_kennels.sqlite",
+  "schema": {
+    "tables": [
+      {
+        "table_name": "Breeds",
+        "columns": [
+          {
+            "name": "breed_code",
+            "type": "VARCHAR(10)",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "breed_name",
+            "type": "VARCHAR(80)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 3,
+        "sample_rows": [
+          {
+            "breed_code": "ESK",
+            "breed_name": "Eskimo"
+          },
+          {
+            "breed_code": "HUS",
+            "breed_name": "Husky"
+          },
+          {
+            "breed_code": "BUL",
+            "breed_name": "Bulldog"
+          }
+        ]
+      },
+      {
+        "table_name": "Charges",
+        "columns": [
+          {
+            "name": "charge_id",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "charge_type",
+            "type": "VARCHAR(10)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "charge_amount",
+            "type": "DECIMAL(19,4)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 3,
+        "sample_rows": [
+          {
+            "charge_id": 1,
+            "charge_type": "Daily Accommodation",
+            "charge_amount": 98
+          },
+          {
+            "charge_id": 2,
+            "charge_type": "Drugs",
+            "charge_amount": 322
+          },
+          {
+            "charge_id": 3,
+            "charge_type": "Health Check",
+            "charge_amount": 640
+          }
+        ]
+      },
+      {
+        "table_name": "Sizes",
+        "columns": [
+          {
+            "name": "size_code",
+            "type": "VARCHAR(10)",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "size_description",
+            "type": "VARCHAR(80)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 3,
+        "sample_rows": [
+          {
+            "size_code": "SML",
+            "size_description": "Small"
+          },
+          {
+            "size_code": "MED",
+            "size_description": "Medium"
+          },
+          {
+            "size_code": "LGE",
+            "size_description": "Large"
+          }
+        ]
+      },
+      {
+        "table_name": "Treatment_Types",
+        "columns": [
+          {
+            "name": "treatment_type_code",
+            "type": "VARCHAR(10)",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "treatment_type_description",
+            "type": "VARCHAR(80)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 3,
+        "sample_rows": [
+          {
+            "treatment_type_code": "EXAM",
+            "treatment_type_description": "Physical examination"
+          },
+          {
+            "treatment_type_code": "VAC",
+            "treatment_type_description": "Vaccination"
+          },
+          {
+            "treatment_type_code": "WALK",
+            "treatment_type_description": "Take for a Walk"
+          }
+        ]
+      },
+      {
+        "table_name": "Owners",
+        "columns": [
+          {
+            "name": "owner_id",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "first_name",
+            "type": "VARCHAR(50)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "last_name",
+            "type": "VARCHAR(50)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "street",
+            "type": "VARCHAR(50)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "city",
+            "type": "VARCHAR(50)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "state",
+            "type": "VARCHAR(20)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "zip_code",
+            "type": "VARCHAR(20)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "email_address",
+            "type": "VARCHAR(50)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "home_phone",
+            "type": "VARCHAR(20)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "cell_number",
+            "type": "VARCHAR(20)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 15,
+        "sample_rows": [
+          {
+            "owner_id": 1,
+            "first_name": "Nora",
+            "last_name": "Haley",
+            "street": "0647 Hintz Village Apt. 024",
+            "city": "Lake Tia",
+            "state": "Wisconsin",
+            "zip_code": "93165",
+            "email_address": "lynn81@example.org",
+            "home_phone": "1-682-845-0116x63235",
+            "cell_number": "478.978.0729"
+          },
+          {
+            "owner_id": 2,
+            "first_name": "Melisa",
+            "last_name": "DuBuque",
+            "street": "1204 Mae Highway Apt. 107",
+            "city": "Port Reannamouth",
+            "state": "Virginia",
+            "zip_code": "45244",
+            "email_address": "ykris@example.com",
+            "home_phone": "(799)563-0260x454",
+            "cell_number": "(722)768-5439x484"
+          },
+          {
+            "owner_id": 3,
+            "first_name": "Jaclyn",
+            "last_name": "Stoltenberg",
+            "street": "2635 Caitlyn Plains",
+            "city": "Barrettburgh",
+            "state": "Vermont",
+            "zip_code": "02647",
+            "email_address": "hudson.favian@example.com",
+            "home_phone": "916.976.9480x13851",
+            "cell_number": "481-483-9083x37986"
+          }
+        ]
+      },
+      {
+        "table_name": "Dogs",
+        "columns": [
+          {
+            "name": "dog_id",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "owner_id",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "abandoned_yn",
+            "type": "VARCHAR(1)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "breed_code",
+            "type": "VARCHAR(10)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "size_code",
+            "type": "VARCHAR(10)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(50)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "age",
+            "type": "VARCHAR(20)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "date_of_birth",
+            "type": "DATETIME",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "gender",
+            "type": "VARCHAR(1)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "weight",
+            "type": "VARCHAR(20)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "date_arrived",
+            "type": "DATETIME",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "date_adopted",
+            "type": "DATETIME",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "date_departed",
+            "type": "DATETIME",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 15,
+        "sample_rows": [
+          {
+            "dog_id": 1,
+            "owner_id": 3,
+            "abandoned_yn": "1",
+            "breed_code": "ESK",
+            "size_code": "LGE",
+            "name": "Kacey",
+            "age": "6",
+            "date_of_birth": "2012-01-27 05:11:53",
+            "gender": "1",
+            "weight": "7.57",
+            "date_arrived": "2017-09-08 20:10:13",
+            "date_adopted": "2018-03-06 16:32:11",
+            "date_departed": "2018-03-25 06:58:44"
+          },
+          {
+            "dog_id": 2,
+            "owner_id": 11,
+            "abandoned_yn": "0",
+            "breed_code": "BUL",
+            "size_code": "LGE",
+            "name": "Hipolito",
+            "age": "9",
+            "date_of_birth": "2013-02-13 05:15:21",
+            "gender": "0",
+            "weight": "1.72",
+            "date_arrived": "2017-12-22 05:02:02",
+            "date_adopted": "2018-03-25 08:12:51",
+            "date_departed": "2018-03-25 02:11:32"
+          },
+          {
+            "dog_id": 3,
+            "owner_id": 1,
+            "abandoned_yn": "0",
+            "breed_code": "BUL",
+            "size_code": "MED",
+            "name": "Mavis",
+            "age": "8",
+            "date_of_birth": "2008-05-19 15:54:49",
+            "gender": "1",
+            "weight": "8.04",
+            "date_arrived": "2017-06-25 10:14:05",
+            "date_adopted": "2018-03-07 21:45:43",
+            "date_departed": "2018-03-25 10:25:46"
+          }
+        ]
+      },
+      {
+        "table_name": "Professionals",
+        "columns": [
+          {
+            "name": "professional_id",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "role_code",
+            "type": "VARCHAR(10)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "first_name",
+            "type": "VARCHAR(50)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "street",
+            "type": "VARCHAR(50)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "city",
+            "type": "VARCHAR(50)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "state",
+            "type": "VARCHAR(20)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "zip_code",
+            "type": "VARCHAR(20)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "last_name",
+            "type": "VARCHAR(50)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "email_address",
+            "type": "VARCHAR(50)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "home_phone",
+            "type": "VARCHAR(20)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "cell_number",
+            "type": "VARCHAR(20)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 15,
+        "sample_rows": [
+          {
+            "professional_id": 1,
+            "role_code": "Employee",
+            "first_name": "Taryn",
+            "street": "6915 Oberbrunner Point Suite 491\nGleasonville, LA ",
+            "city": "West Heidi",
+            "state": "Indiana",
+            "zip_code": "06646",
+            "last_name": "Braun",
+            "email_address": "deanna.schuster@example.com",
+            "home_phone": "+71(6)2898266914",
+            "cell_number": "(275)939-2435x80863"
+          },
+          {
+            "professional_id": 2,
+            "role_code": "Employee",
+            "first_name": "Jayson",
+            "street": "88665 Terence Lodge Apt. 904\nCorneliusfort, NC 194",
+            "city": "North Odellfurt",
+            "state": "Connecticut",
+            "zip_code": "43129",
+            "last_name": "Ullrich",
+            "email_address": "lucile.shanahan@example.org",
+            "home_phone": "+02(1)0259033559",
+            "cell_number": "889-940-2676"
+          },
+          {
+            "professional_id": 3,
+            "role_code": "Employee",
+            "first_name": "Olaf",
+            "street": "68589 Bradly Manor\nNew Audrey, IN 91497",
+            "city": "Jaceton",
+            "state": "Wisconsin",
+            "zip_code": "77129",
+            "last_name": "Watsica",
+            "email_address": "uboehm@example.org",
+            "home_phone": "325-155-0801x7005",
+            "cell_number": "(369)908-7311x065"
+          }
+        ]
+      },
+      {
+        "table_name": "Treatments",
+        "columns": [
+          {
+            "name": "treatment_id",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "dog_id",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "professional_id",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "treatment_type_code",
+            "type": "VARCHAR(10)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "date_of_treatment",
+            "type": "DATETIME",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "cost_of_treatment",
+            "type": "DECIMAL(19,4)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 15,
+        "sample_rows": [
+          {
+            "treatment_id": 1,
+            "dog_id": 14,
+            "professional_id": 9,
+            "treatment_type_code": "WALK",
+            "date_of_treatment": "2018-03-19 04:39:54",
+            "cost_of_treatment": 567
+          },
+          {
+            "treatment_id": 2,
+            "dog_id": 4,
+            "professional_id": 10,
+            "treatment_type_code": "VAC",
+            "date_of_treatment": "2018-03-15 20:25:34",
+            "cost_of_treatment": 147
+          },
+          {
+            "treatment_id": 3,
+            "dog_id": 14,
+            "professional_id": 4,
+            "treatment_type_code": "EXAM",
+            "date_of_treatment": "2018-03-08 05:26:23",
+            "cost_of_treatment": 429
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "Dogs",
+        "from_column": "owner_id",
+        "to_table": "Owners",
+        "to_column": "owner_id"
+      },
+      {
+        "from_table": "Dogs",
+        "from_column": "owner_id",
+        "to_table": "Owners",
+        "to_column": "owner_id"
+      },
+      {
+        "from_table": "Dogs",
+        "from_column": "size_code",
+        "to_table": "Sizes",
+        "to_column": "size_code"
+      },
+      {
+        "from_table": "Dogs",
+        "from_column": "breed_code",
+        "to_table": "Breeds",
+        "to_column": "breed_code"
+      },
+      {
+        "from_table": "Treatments",
+        "from_column": "dog_id",
+        "to_table": "Dogs",
+        "to_column": "dog_id"
+      },
+      {
+        "from_table": "Treatments",
+        "from_column": "professional_id",
+        "to_table": "Professionals",
+        "to_column": "professional_id"
+      },
+      {
+        "from_table": "Treatments",
+        "from_column": "treatment_type_code",
+        "to_table": "Treatment_Types",
+        "to_column": "treatment_type_code"
+      }
+    ]
+  },
+  "descriptions": {
+    "Breeds": "Lưu trữ thông tin về các giống loài chó, bao gồm mã giống và tên giống.",
+    "Charges": "Lưu trữ thông tin về các loại phí phát sinh, bao gồm mã phí, loại phí và số tiền.",
+    "Sizes": "Lưu trữ thông tin về các kích cỡ của chó, bao gồm mã kích cỡ và mô tả kích cỡ.",
+    "Treatment_Types": "Lưu trữ thông tin về các loại hình điều trị cho chó, bao gồm mã loại điều trị và mô tả chi tiết.",
+    "Owners": "Lưu trữ thông tin chi tiết về chủ sở hữu của chó, bao gồm thông tin cá nhân và liên lạc.",
+    "Dogs": "Lưu trữ thông tin về từng chú chó, bao gồm thông tin cá nhân, giống loài, kích cỡ, chủ sở hữu và các trạng thái liên quan đến việc nuôi dưỡng.",
+    "Professionals": "Lưu trữ thông tin về các chuyên gia (ví dụ: bác sĩ thú y, nhân viên chăm sóc) làm việc tại cơ sở, bao gồm thông tin cá nhân và liên lạc.",
+    "Treatments": "Lưu trữ thông tin về các liệu trình điều trị đã được thực hiện cho chó, bao gồm chó được điều trị, chuyên gia thực hiện, loại điều trị, ngày thực hiện và chi phí."
+  }
+}

@@ -1,0 +1,198 @@
+{
+  "hash": "8930eec4f57a",
+  "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\pets_1\\pets_1.sqlite",
+  "schema": {
+    "tables": [
+      {
+        "table_name": "Student",
+        "columns": [
+          {
+            "name": "StuID",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "LName",
+            "type": "VARCHAR(12)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Fname",
+            "type": "VARCHAR(12)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Age",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Sex",
+            "type": "VARCHAR(1)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Major",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Advisor",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "city_code",
+            "type": "VARCHAR(3)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 34,
+        "sample_rows": [
+          {
+            "StuID": 1001,
+            "LName": "Smith",
+            "Fname": "Linda",
+            "Age": 18,
+            "Sex": "F",
+            "Major": 600,
+            "Advisor": 1121,
+            "city_code": "BAL"
+          },
+          {
+            "StuID": 1002,
+            "LName": "Kim",
+            "Fname": "Tracy",
+            "Age": 19,
+            "Sex": "F",
+            "Major": 600,
+            "Advisor": 7712,
+            "city_code": "HKG"
+          },
+          {
+            "StuID": 1003,
+            "LName": "Jones",
+            "Fname": "Shiela",
+            "Age": 21,
+            "Sex": "F",
+            "Major": 600,
+            "Advisor": 7792,
+            "city_code": "WAS"
+          }
+        ]
+      },
+      {
+        "table_name": "Has_Pet",
+        "columns": [
+          {
+            "name": "StuID",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "PetID",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 3,
+        "sample_rows": [
+          {
+            "StuID": 1001,
+            "PetID": 2001
+          },
+          {
+            "StuID": 1002,
+            "PetID": 2002
+          },
+          {
+            "StuID": 1002,
+            "PetID": 2003
+          }
+        ]
+      },
+      {
+        "table_name": "Pets",
+        "columns": [
+          {
+            "name": "PetID",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "PetType",
+            "type": "VARCHAR(20)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "pet_age",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "weight",
+            "type": "REAL",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 3,
+        "sample_rows": [
+          {
+            "PetID": 2001,
+            "PetType": "cat",
+            "pet_age": 3,
+            "weight": 12.0
+          },
+          {
+            "PetID": 2002,
+            "PetType": "dog",
+            "pet_age": 2,
+            "weight": 13.4
+          },
+          {
+            "PetID": 2003,
+            "PetType": "dog",
+            "pet_age": 1,
+            "weight": 9.3
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "Has_Pet",
+        "from_column": "StuID",
+        "to_table": "Student",
+        "to_column": "StuID"
+      },
+      {
+        "from_table": "Has_Pet",
+        "from_column": "PetID",
+        "to_table": "Pets",
+        "to_column": "PetID"
+      }
+    ]
+  },
+  "descriptions": {
+    "Student": "Bảng lưu trữ thông tin chi tiết của từng sinh viên, bao gồm ID, tên, tuổi, giới tính, chuyên ngành, người cố vấn và mã thành phố.",
+    "Has_Pet": "Bảng trung gian thể hiện mối quan hệ nhiều-nhiều giữa sinh viên và thú cưng, cho biết sinh viên nào sở hữu thú cưng nào.",
+    "Pets": "Bảng lưu trữ thông tin về các loại thú cưng, bao gồm ID, loại thú cưng, tuổi và cân nặng."
+  }
+}

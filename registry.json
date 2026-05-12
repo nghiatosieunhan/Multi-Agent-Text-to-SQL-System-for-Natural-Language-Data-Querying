@@ -1,0 +1,6 @@
+{
+    "bird": "Cơ sở dữ liệu đa lĩnh vực dùng để chấm điểm benchmark.",
+    "chinook": "Cơ sở dữ liệu cửa hàng bán nhạc số.",
+    "debit_card_specializing": "Cơ sở dữ liệu về thẻ ghi nợ, tiêu thụ xăng dầu.",
+    "chinook_vn": "Cơ sở dữ liệu quản lý doanh thu, nhân sự và khách hàng của một chuỗi cửa hàng bán lẻ nhạc số tại Việt Nam. Chứa các bảng: HoaDon, ChiTietHoaDon, KhachHang, NhanVien, BaiHat..."
+}

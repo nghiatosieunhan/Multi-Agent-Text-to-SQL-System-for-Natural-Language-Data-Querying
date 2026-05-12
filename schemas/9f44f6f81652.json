@@ -1,0 +1,830 @@
+{
+  "hash": "9f44f6f81652",
+  "db_path": "I:\\AI\\text_to_sql\\data\\chinook\\Chinook_Sqlite.sqlite",
+  "schema": {
+    "tables": [
+      {
+        "table_name": "Album",
+        "columns": [
+          {
+            "name": "AlbumId",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "Title",
+            "type": "NVARCHAR(160)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "ArtistId",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 347,
+        "sample_rows": [
+          {
+            "AlbumId": 1,
+            "Title": "For Those About To Rock We Salute You",
+            "ArtistId": 1
+          },
+          {
+            "AlbumId": 2,
+            "Title": "Balls to the Wall",
+            "ArtistId": 2
+          },
+          {
+            "AlbumId": 3,
+            "Title": "Restless and Wild",
+            "ArtistId": 2
+          }
+        ]
+      },
+      {
+        "table_name": "Artist",
+        "columns": [
+          {
+            "name": "ArtistId",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "Name",
+            "type": "NVARCHAR(120)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 275,
+        "sample_rows": [
+          {
+            "ArtistId": 1,
+            "Name": "AC/DC"
+          },
+          {
+            "ArtistId": 2,
+            "Name": "Accept"
+          },
+          {
+            "ArtistId": 3,
+            "Name": "Aerosmith"
+          }
+        ]
+      },
+      {
+        "table_name": "Customer",
+        "columns": [
+          {
+            "name": "CustomerId",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "FirstName",
+            "type": "NVARCHAR(40)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "LastName",
+            "type": "NVARCHAR(20)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "Company",
+            "type": "NVARCHAR(80)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Address",
+            "type": "NVARCHAR(70)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "City",
+            "type": "NVARCHAR(40)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "State",
+            "type": "NVARCHAR(40)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Country",
+            "type": "NVARCHAR(40)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "PostalCode",
+            "type": "NVARCHAR(10)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Phone",
+            "type": "NVARCHAR(24)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Fax",
+            "type": "NVARCHAR(24)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Email",
+            "type": "NVARCHAR(60)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "SupportRepId",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 59,
+        "sample_rows": [
+          {
+            "CustomerId": 1,
+            "FirstName": "Luís",
+            "LastName": "Gonçalves",
+            "Company": "Embraer - Empresa Brasileira de Aeronáutica S.A.",
+            "Address": "Av. Brigadeiro Faria Lima, 2170",
+            "City": "São José dos Campos",
+            "State": "SP",
+            "Country": "Brazil",
+            "PostalCode": "12227-000",
+            "Phone": "+55 (12) 3923-5555",
+            "Fax": "+55 (12) 3923-5566",
+            "Email": "luisg@embraer.com.br",
+            "SupportRepId": 3
+          },
+          {
+            "CustomerId": 2,
+            "FirstName": "Leonie",
+            "LastName": "Köhler",
+            "Company": null,
+            "Address": "Theodor-Heuss-Straße 34",
+            "City": "Stuttgart",
+            "State": null,
+            "Country": "Germany",
+            "PostalCode": "70174",
+            "Phone": "+49 0711 2842222",
+            "Fax": null,
+            "Email": "leonekohler@surfeu.de",
+            "SupportRepId": 5
+          },
+          {
+            "CustomerId": 3,
+            "FirstName": "François",
+            "LastName": "Tremblay",
+            "Company": null,
+            "Address": "1498 rue Bélanger",
+            "City": "Montréal",
+            "State": "QC",
+            "Country": "Canada",
+            "PostalCode": "H2G 1A7",
+            "Phone": "+1 (514) 721-4711",
+            "Fax": null,
+            "Email": "ftremblay@gmail.com",
+            "SupportRepId": 3
+          }
+        ]
+      },
+      {
+        "table_name": "Employee",
+        "columns": [
+          {
+            "name": "EmployeeId",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "LastName",
+            "type": "NVARCHAR(20)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "FirstName",
+            "type": "NVARCHAR(20)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "Title",
+            "type": "NVARCHAR(30)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "ReportsTo",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "BirthDate",
+            "type": "DATETIME",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "HireDate",
+            "type": "DATETIME",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Address",
+            "type": "NVARCHAR(70)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "City",
+            "type": "NVARCHAR(40)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "State",
+            "type": "NVARCHAR(40)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Country",
+            "type": "NVARCHAR(40)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "PostalCode",
+            "type": "NVARCHAR(10)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Phone",
+            "type": "NVARCHAR(24)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Fax",
+            "type": "NVARCHAR(24)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Email",
+            "type": "NVARCHAR(60)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 8,
+        "sample_rows": [
+          {
+            "EmployeeId": 1,
+            "LastName": "Adams",
+            "FirstName": "Andrew",
+            "Title": "General Manager",
+            "ReportsTo": null,
+            "BirthDate": "1962-02-18 00:00:00",
+            "HireDate": "2002-08-14 00:00:00",
+            "Address": "11120 Jasper Ave NW",
+            "City": "Edmonton",
+            "State": "AB",
+            "Country": "Canada",
+            "PostalCode": "T5K 2N1",
+            "Phone": "+1 (780) 428-9482",
+            "Fax": "+1 (780) 428-3457",
+            "Email": "andrew@chinookcorp.com"
+          },
+          {
+            "EmployeeId": 2,
+            "LastName": "Edwards",
+            "FirstName": "Nancy",
+            "Title": "Sales Manager",
+            "ReportsTo": 1,
+            "BirthDate": "1958-12-08 00:00:00",
+            "HireDate": "2002-05-01 00:00:00",
+            "Address": "825 8 Ave SW",
+            "City": "Calgary",
+            "State": "AB",
+            "Country": "Canada",
+            "PostalCode": "T2P 2T3",
+            "Phone": "+1 (403) 262-3443",
+            "Fax": "+1 (403) 262-3322",
+            "Email": "nancy@chinookcorp.com"
+          },
+          {
+            "EmployeeId": 3,
+            "LastName": "Peacock",
+            "FirstName": "Jane",
+            "Title": "Sales Support Agent",
+            "ReportsTo": 2,
+            "BirthDate": "1973-08-29 00:00:00",
+            "HireDate": "2002-04-01 00:00:00",
+            "Address": "1111 6 Ave SW",
+            "City": "Calgary",
+            "State": "AB",
+            "Country": "Canada",
+            "PostalCode": "T2P 5M5",
+            "Phone": "+1 (403) 262-3443",
+            "Fax": "+1 (403) 262-6712",
+            "Email": "jane@chinookcorp.com"
+          }
+        ]
+      },
+      {
+        "table_name": "Genre",
+        "columns": [
+          {
+            "name": "GenreId",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "Name",
+            "type": "NVARCHAR(120)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 25,
+        "sample_rows": [
+          {
+            "GenreId": 1,
+            "Name": "Rock"
+          },
+          {
+            "GenreId": 2,
+            "Name": "Jazz"
+          },
+          {
+            "GenreId": 3,
+            "Name": "Metal"
+          }
+        ]
+      },
+      {
+        "table_name": "Invoice",
+        "columns": [
+          {
+            "name": "InvoiceId",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "CustomerId",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "InvoiceDate",
+            "type": "DATETIME",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "BillingAddress",
+            "type": "NVARCHAR(70)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "BillingCity",
+            "type": "NVARCHAR(40)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "BillingState",
+            "type": "NVARCHAR(40)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "BillingCountry",
+            "type": "NVARCHAR(40)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "BillingPostalCode",
+            "type": "NVARCHAR(10)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Total",
+            "type": "NUMERIC(10,2)",
+            "nullable": false,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 412,
+        "sample_rows": [
+          {
+            "InvoiceId": 1,
+            "CustomerId": 2,
+            "InvoiceDate": "2021-01-01 00:00:00",
+            "BillingAddress": "Theodor-Heuss-Straße 34",
+            "BillingCity": "Stuttgart",
+            "BillingState": null,
+            "BillingCountry": "Germany",
+            "BillingPostalCode": "70174",
+            "Total": 1.98
+          },
+          {
+            "InvoiceId": 2,
+            "CustomerId": 4,
+            "InvoiceDate": "2021-01-02 00:00:00",
+            "BillingAddress": "Ullevålsveien 14",
+            "BillingCity": "Oslo",
+            "BillingState": null,
+            "BillingCountry": "Norway",
+            "BillingPostalCode": "0171",
+            "Total": 3.96
+          },
+          {
+            "InvoiceId": 3,
+            "CustomerId": 8,
+            "InvoiceDate": "2021-01-03 00:00:00",
+            "BillingAddress": "Grétrystraat 63",
+            "BillingCity": "Brussels",
+            "BillingState": null,
+            "BillingCountry": "Belgium",
+            "BillingPostalCode": "1000",
+            "Total": 5.94
+          }
+        ]
+      },
+      {
+        "table_name": "InvoiceLine",
+        "columns": [
+          {
+            "name": "InvoiceLineId",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "InvoiceId",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "TrackId",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "UnitPrice",
+            "type": "NUMERIC(10,2)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "Quantity",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 2240,
+        "sample_rows": [
+          {
+            "InvoiceLineId": 1,
+            "InvoiceId": 1,
+            "TrackId": 2,
+            "UnitPrice": 0.99,
+            "Quantity": 1
+          },
+          {
+            "InvoiceLineId": 2,
+            "InvoiceId": 1,
+            "TrackId": 4,
+            "UnitPrice": 0.99,
+            "Quantity": 1
+          },
+          {
+            "InvoiceLineId": 3,
+            "InvoiceId": 2,
+            "TrackId": 6,
+            "UnitPrice": 0.99,
+            "Quantity": 1
+          }
+        ]
+      },
+      {
+        "table_name": "MediaType",
+        "columns": [
+          {
+            "name": "MediaTypeId",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "Name",
+            "type": "NVARCHAR(120)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 5,
+        "sample_rows": [
+          {
+            "MediaTypeId": 1,
+            "Name": "MPEG audio file"
+          },
+          {
+            "MediaTypeId": 2,
+            "Name": "Protected AAC audio file"
+          },
+          {
+            "MediaTypeId": 3,
+            "Name": "Protected MPEG-4 video file"
+          }
+        ]
+      },
+      {
+        "table_name": "Playlist",
+        "columns": [
+          {
+            "name": "PlaylistId",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "Name",
+            "type": "NVARCHAR(120)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 18,
+        "sample_rows": [
+          {
+            "PlaylistId": 1,
+            "Name": "Music"
+          },
+          {
+            "PlaylistId": 2,
+            "Name": "Movies"
+          },
+          {
+            "PlaylistId": 3,
+            "Name": "TV Shows"
+          }
+        ]
+      },
+      {
+        "table_name": "PlaylistTrack",
+        "columns": [
+          {
+            "name": "PlaylistId",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "TrackId",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          }
+        ],
+        "description": null,
+        "row_count": 8715,
+        "sample_rows": [
+          {
+            "PlaylistId": 1,
+            "TrackId": 3402
+          },
+          {
+            "PlaylistId": 1,
+            "TrackId": 3389
+          },
+          {
+            "PlaylistId": 1,
+            "TrackId": 3390
+          }
+        ]
+      },
+      {
+        "table_name": "Track",
+        "columns": [
+          {
+            "name": "TrackId",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": true
+          },
+          {
+            "name": "Name",
+            "type": "NVARCHAR(200)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "AlbumId",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "MediaTypeId",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "GenreId",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Composer",
+            "type": "NVARCHAR(220)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Milliseconds",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "Bytes",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "UnitPrice",
+            "type": "NUMERIC(10,2)",
+            "nullable": false,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 3503,
+        "sample_rows": [
+          {
+            "TrackId": 1,
+            "Name": "For Those About To Rock (We Salute You)",
+            "AlbumId": 1,
+            "MediaTypeId": 1,
+            "GenreId": 1,
+            "Composer": "Angus Young, Malcolm Young, Brian Johnson",
+            "Milliseconds": 343719,
+            "Bytes": 11170334,
+            "UnitPrice": 0.99
+          },
+          {
+            "TrackId": 2,
+            "Name": "Balls to the Wall",
+            "AlbumId": 2,
+            "MediaTypeId": 2,
+            "GenreId": 1,
+            "Composer": "U. Dirkschneider, W. Hoffmann, H. Frank, P. Baltes, S. Kaufmann, G. Hoffmann",
+            "Milliseconds": 342562,
+            "Bytes": 5510424,
+            "UnitPrice": 0.99
+          },
+          {
+            "TrackId": 3,
+            "Name": "Fast As a Shark",
+            "AlbumId": 3,
+            "MediaTypeId": 2,
+            "GenreId": 1,
+            "Composer": "F. Baltes, S. Kaufman, U. Dirkscneider & W. Hoffman",
+            "Milliseconds": 230619,
+            "Bytes": 3990994,
+            "UnitPrice": 0.99
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "Album",
+        "from_column": "ArtistId",
+        "to_table": "Artist",
+        "to_column": "ArtistId"
+      },
+      {
+        "from_table": "Customer",
+        "from_column": "SupportRepId",
+        "to_table": "Employee",
+        "to_column": "EmployeeId"
+      },
+      {
+        "from_table": "Employee",
+        "from_column": "ReportsTo",
+        "to_table": "Employee",
+        "to_column": "EmployeeId"
+      },
+      {
+        "from_table": "Invoice",
+        "from_column": "CustomerId",
+        "to_table": "Customer",
+        "to_column": "CustomerId"
+      },
+      {
+        "from_table": "InvoiceLine",
+        "from_column": "TrackId",
+        "to_table": "Track",
+        "to_column": "TrackId"
+      },
+      {
+        "from_table": "InvoiceLine",
+        "from_column": "InvoiceId",
+        "to_table": "Invoice",
+        "to_column": "InvoiceId"
+      },
+      {
+        "from_table": "PlaylistTrack",
+        "from_column": "TrackId",
+        "to_table": "Track",
+        "to_column": "TrackId"
+      },
+      {
+        "from_table": "PlaylistTrack",
+        "from_column": "PlaylistId",
+        "to_table": "Playlist",
+        "to_column": "PlaylistId"
+      },
+      {
+        "from_table": "Track",
+        "from_column": "MediaTypeId",
+        "to_table": "MediaType",
+        "to_column": "MediaTypeId"
+      },
+      {
+        "from_table": "Track",
+        "from_column": "GenreId",
+        "to_table": "Genre",
+        "to_column": "GenreId"
+      },
+      {
+        "from_table": "Track",
+        "from_column": "AlbumId",
+        "to_table": "Album",
+        "to_column": "AlbumId"
+      }
+    ]
+  },
+  "descriptions": {
+    "Album": "Lưu trữ thông tin về các album nhạc, bao gồm tiêu đề và nghệ sĩ.",
+    "Artist": "Lưu trữ thông tin về các nghệ sĩ âm nhạc.",
+    "Customer": "Lưu trữ thông tin chi tiết về khách hàng, bao gồm thông tin liên hệ và địa chỉ.",
+    "Employee": "Lưu trữ thông tin về nhân viên, bao gồm chức vụ và người quản lý trực tiếp.",
+    "Genre": "Lưu trữ các thể loại nhạc khác nhau.",
+    "Invoice": "Lưu trữ thông tin về các hóa đơn, bao gồm ngày lập, tổng tiền và thông tin khách hàng.",
+    "InvoiceLine": "Lưu trữ chi tiết các mặt hàng trong mỗi hóa đơn, bao gồm bài hát, đơn giá và số lượng.",
+    "MediaType": "Lưu trữ các định dạng phương tiện truyền thông khác nhau cho các bài hát.",
+    "Playlist": "Lưu trữ thông tin về các danh sách phát nhạc.",
+    "PlaylistTrack": "Liên kết các bài hát với các danh sách phát nhạc mà chúng thuộc về.",
+    "Track": "Lưu trữ thông tin chi tiết về từng bài hát, bao gồm tên, album, thể loại, định dạng và giá."
+  }
+}

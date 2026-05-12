@@ -1,0 +1,445 @@
+{
+  "hash": "aea9e5202d55",
+  "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\real_estate_properties\\real_estate_properties.sqlite",
+  "schema": {
+    "tables": [
+      {
+        "table_name": "Ref_Feature_Types",
+        "columns": [
+          {
+            "name": "feature_type_code",
+            "type": "VARCHAR(20)",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "feature_type_name",
+            "type": "VARCHAR(80)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 2,
+        "sample_rows": [
+          {
+            "feature_type_code": "Amenity",
+            "feature_type_name": "Amenity, eg Pool."
+          },
+          {
+            "feature_type_code": "Security",
+            "feature_type_name": "Securiyt, eg Burglar Alarm."
+          }
+        ]
+      },
+      {
+        "table_name": "Ref_Property_Types",
+        "columns": [
+          {
+            "name": "property_type_code",
+            "type": "VARCHAR(20)",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "property_type_description",
+            "type": "VARCHAR(80)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 5,
+        "sample_rows": [
+          {
+            "property_type_code": "House",
+            "property_type_description": "House, Bungalow, etc."
+          },
+          {
+            "property_type_code": "Apartment",
+            "property_type_description": "Apartment, Flat, Condo, etc."
+          },
+          {
+            "property_type_code": "Field",
+            "property_type_description": "Field, Meadow."
+          }
+        ]
+      },
+      {
+        "table_name": "Other_Available_Features",
+        "columns": [
+          {
+            "name": "feature_id",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "feature_type_code",
+            "type": "VARCHAR(20)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "feature_name",
+            "type": "VARCHAR(80)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "feature_description",
+            "type": "VARCHAR(80)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 3,
+        "sample_rows": [
+          {
+            "feature_id": 2,
+            "feature_type_code": "Amenity",
+            "feature_name": "AirCon",
+            "feature_description": "Air Conditioning."
+          },
+          {
+            "feature_id": 3,
+            "feature_type_code": "Amenity",
+            "feature_name": "Pool",
+            "feature_description": "Swimming Pool."
+          },
+          {
+            "feature_id": 4,
+            "feature_type_code": "Security",
+            "feature_name": "BurglarAlarm",
+            "feature_description": "Burglar Alarm"
+          }
+        ]
+      },
+      {
+        "table_name": "Properties",
+        "columns": [
+          {
+            "name": "property_id",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "property_type_code",
+            "type": "VARCHAR(20)",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "date_on_market",
+            "type": "DATETIME",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "date_sold",
+            "type": "DATETIME",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "property_name",
+            "type": "VARCHAR(80)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "property_address",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "room_count",
+            "type": "INTEGER",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "vendor_requested_price",
+            "type": "DECIMAL(19,4)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "buyer_offered_price",
+            "type": "DECIMAL(19,4)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "agreed_selling_price",
+            "type": "DECIMAL(19,4)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "apt_feature_1",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "apt_feature_2",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "apt_feature_3",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "fld_feature_1",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "fld_feature_2",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "fld_feature_3",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "hse_feature_1",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "hse_feature_2",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "hse_feature_3",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "oth_feature_1",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "oth_feature_2",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "oth_feature_3",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "shp_feature_1",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "shp_feature_2",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "shp_feature_3",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "other_property_details",
+            "type": "VARCHAR(255)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 15,
+        "sample_rows": [
+          {
+            "property_id": 1,
+            "property_type_code": "House",
+            "date_on_market": "1991-06-21 23:52:10",
+            "date_sold": "1979-05-13 16:58:06",
+            "property_name": "park",
+            "property_address": "4745 Emerson Stravenue Suite 829\nSouth Garret, IN 16772-5682",
+            "room_count": 7,
+            "vendor_requested_price": 372652.2909,
+            "buyer_offered_price": 1.68,
+            "agreed_selling_price": 4201.8,
+            "apt_feature_1": "aut",
+            "apt_feature_2": "suscipit",
+            "apt_feature_3": null,
+            "fld_feature_1": null,
+            "fld_feature_2": null,
+            "fld_feature_3": null,
+            "hse_feature_1": null,
+            "hse_feature_2": null,
+            "hse_feature_3": null,
+            "oth_feature_1": null,
+            "oth_feature_2": null,
+            "oth_feature_3": null,
+            "shp_feature_1": null,
+            "shp_feature_2": null,
+            "shp_feature_3": null,
+            "other_property_details": null
+          },
+          {
+            "property_id": 2,
+            "property_type_code": "House",
+            "date_on_market": "1990-05-25 23:01:51",
+            "date_sold": "1990-11-14 19:16:38",
+            "property_name": "the cole",
+            "property_address": "098 Tremaine Highway Suite 569\nSouth Wilford, NJ 46587-3537",
+            "room_count": 1,
+            "vendor_requested_price": 661536468.4429,
+            "buyer_offered_price": 8.7122,
+            "agreed_selling_price": 21769471.8328,
+            "apt_feature_1": "est",
+            "apt_feature_2": "est",
+            "apt_feature_3": null,
+            "fld_feature_1": null,
+            "fld_feature_2": null,
+            "fld_feature_3": null,
+            "hse_feature_1": null,
+            "hse_feature_2": null,
+            "hse_feature_3": null,
+            "oth_feature_1": null,
+            "oth_feature_2": null,
+            "oth_feature_3": null,
+            "shp_feature_1": null,
+            "shp_feature_2": null,
+            "shp_feature_3": null,
+            "other_property_details": null
+          },
+          {
+            "property_id": 3,
+            "property_type_code": "Other",
+            "date_on_market": "1986-11-26 04:12:18",
+            "date_sold": "1981-06-26 21:28:28",
+            "property_name": "prism",
+            "property_address": "062 Micaela Court Apt. 707\nMargretville, WV 51628-3617",
+            "room_count": 8,
+            "vendor_requested_price": 1337,
+            "buyer_offered_price": 11375259.502,
+            "agreed_selling_price": 5,
+            "apt_feature_1": "ut",
+            "apt_feature_2": "et",
+            "apt_feature_3": null,
+            "fld_feature_1": null,
+            "fld_feature_2": null,
+            "fld_feature_3": null,
+            "hse_feature_1": null,
+            "hse_feature_2": null,
+            "hse_feature_3": null,
+            "oth_feature_1": null,
+            "oth_feature_2": null,
+            "oth_feature_3": null,
+            "shp_feature_1": null,
+            "shp_feature_2": null,
+            "shp_feature_3": null,
+            "other_property_details": null
+          }
+        ]
+      },
+      {
+        "table_name": "Other_Property_Features",
+        "columns": [
+          {
+            "name": "property_id",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "feature_id",
+            "type": "INTEGER",
+            "nullable": false,
+            "pk": false
+          },
+          {
+            "name": "property_feature_description",
+            "type": "VARCHAR(80)",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 15,
+        "sample_rows": [
+          {
+            "property_id": 15,
+            "feature_id": 3,
+            "property_feature_description": "dolorem"
+          },
+          {
+            "property_id": 12,
+            "feature_id": 4,
+            "property_feature_description": "earum"
+          },
+          {
+            "property_id": 6,
+            "feature_id": 2,
+            "property_feature_description": "illo"
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "Other_Available_Features",
+        "from_column": "feature_type_code",
+        "to_table": "Ref_Feature_Types",
+        "to_column": "feature_type_code"
+      },
+      {
+        "from_table": "Properties",
+        "from_column": "property_type_code",
+        "to_table": "Ref_Property_Types",
+        "to_column": "property_type_code"
+      },
+      {
+        "from_table": "Other_Property_Features",
+        "from_column": "property_id",
+        "to_table": "Properties",
+        "to_column": "property_id"
+      },
+      {
+        "from_table": "Other_Property_Features",
+        "from_column": "feature_id",
+        "to_table": "Other_Available_Features",
+        "to_column": "feature_id"
+      }
+    ]
+  },
+  "descriptions": {
+    "Ref_Feature_Types": "Bảng tham chiếu định nghĩa các loại đặc điểm có thể có của bất động sản (ví dụ: 'Tiện ích', 'An ninh').",
+    "Ref_Property_Types": "Bảng tham chiếu định nghĩa các loại hình bất động sản khác nhau (ví dụ: 'Căn hộ', 'Nhà phố', 'Cửa hàng').",
+    "Other_Available_Features": "Bảng lưu trữ danh sách các đặc điểm cụ thể có sẵn, được phân loại theo loại đặc điểm.",
+    "Properties": "Bảng chính lưu trữ thông tin chi tiết về từng bất động sản, bao gồm loại hình, giá cả, địa chỉ và các đặc điểm riêng biệt.",
+    "Other_Property_Features": "Bảng trung gian liên kết các bất động sản với các đặc điểm có sẵn, cho phép mô tả chi tiết hơn về cách đặc điểm đó áp dụng cho bất động sản cụ thể."
+  }
+}

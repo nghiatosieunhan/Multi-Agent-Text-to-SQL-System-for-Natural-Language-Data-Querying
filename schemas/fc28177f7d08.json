@@ -1,0 +1,247 @@
+{
+  "hash": "fc28177f7d08",
+  "db_path": "I:\\AI\\text_to_sql\\spider\\spider_data\\database\\employee_hire_evaluation\\employee_hire_evaluation.sqlite",
+  "schema": {
+    "tables": [
+      {
+        "table_name": "employee",
+        "columns": [
+          {
+            "name": "Employee_ID",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "Name",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Age",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "City",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 10,
+        "sample_rows": [
+          {
+            "Employee_ID": 1,
+            "Name": "George Chuter",
+            "Age": 23,
+            "City": "Bristol"
+          },
+          {
+            "Employee_ID": 2,
+            "Name": "Lee Mears",
+            "Age": 29,
+            "City": "Bath"
+          },
+          {
+            "Employee_ID": 3,
+            "Name": "Mark Regan",
+            "Age": 43,
+            "City": "Bristol"
+          }
+        ]
+      },
+      {
+        "table_name": "shop",
+        "columns": [
+          {
+            "name": "Shop_ID",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "Name",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Location",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "District",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Number_products",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Manager_name",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 9,
+        "sample_rows": [
+          {
+            "Shop_ID": 1,
+            "Name": "FC Haka",
+            "Location": "Valkeakoski",
+            "District": "Tehtaan kenttä",
+            "Number_products": 3516,
+            "Manager_name": "Olli Huttunen"
+          },
+          {
+            "Shop_ID": 2,
+            "Name": "HJK",
+            "Location": "Helsinki",
+            "District": "Finnair Stadium",
+            "Number_products": 10770,
+            "Manager_name": "Antti Muurinen"
+          },
+          {
+            "Shop_ID": 3,
+            "Name": "FC Honka",
+            "Location": "Espoo",
+            "District": "Tapiolan Urheilupuisto",
+            "Number_products": 6000,
+            "Manager_name": "Mika Lehkosuo"
+          }
+        ]
+      },
+      {
+        "table_name": "hiring",
+        "columns": [
+          {
+            "name": "Shop_ID",
+            "type": "INT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Employee_ID",
+            "type": "INT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "Start_from",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": false
+          },
+          {
+            "name": "Is_full_time",
+            "type": "bool",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 7,
+        "sample_rows": [
+          {
+            "Shop_ID": 1,
+            "Employee_ID": 1,
+            "Start_from": "2009",
+            "Is_full_time": "T"
+          },
+          {
+            "Shop_ID": 1,
+            "Employee_ID": 2,
+            "Start_from": "2003",
+            "Is_full_time": "T"
+          },
+          {
+            "Shop_ID": 8,
+            "Employee_ID": 3,
+            "Start_from": "2011",
+            "Is_full_time": "F"
+          }
+        ]
+      },
+      {
+        "table_name": "evaluation",
+        "columns": [
+          {
+            "name": "Employee_ID",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "Year_awarded",
+            "type": "TEXT",
+            "nullable": true,
+            "pk": true
+          },
+          {
+            "name": "Bonus",
+            "type": "REAL",
+            "nullable": true,
+            "pk": false
+          }
+        ],
+        "description": null,
+        "row_count": 6,
+        "sample_rows": [
+          {
+            "Employee_ID": "1",
+            "Year_awarded": "2011",
+            "Bonus": 3000.0
+          },
+          {
+            "Employee_ID": "2",
+            "Year_awarded": "2015",
+            "Bonus": 3200.0
+          },
+          {
+            "Employee_ID": "1",
+            "Year_awarded": "2016",
+            "Bonus": 2900.0
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "hiring",
+        "from_column": "Employee_ID",
+        "to_table": "employee",
+        "to_column": "Employee_ID"
+      },
+      {
+        "from_table": "hiring",
+        "from_column": "Shop_ID",
+        "to_table": "shop",
+        "to_column": "Shop_ID"
+      },
+      {
+        "from_table": "evaluation",
+        "from_column": "Employee_ID",
+        "to_table": "employee",
+        "to_column": "Employee_ID"
+      }
+    ]
+  },
+  "descriptions": {
+    "employee": "Bảng lưu trữ thông tin cơ bản của nhân viên, bao gồm ID, tên, tuổi và thành phố.",
+    "shop": "Bảng lưu trữ thông tin về các cửa hàng, bao gồm ID, tên, địa điểm, quận, số lượng sản phẩm và tên quản lý.",
+    "hiring": "Bảng ghi lại thông tin tuyển dụng của nhân viên vào các cửa hàng, bao gồm ID cửa hàng, ID nhân viên, ngày bắt đầu làm việc và trạng thái làm việc toàn thời gian.",
+    "evaluation": "Bảng lưu trữ kết quả đánh giá nhân viên hàng năm, bao gồm ID nhân viên, năm đánh giá và mức thưởng."
+  }
+}
