@@ -2,181 +2,106 @@
 
 > 📖 **Tài liệu chi tiết:** [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — Giải thích toàn bộ code, kiến trúc, luồng dữ liệu.
 
-Hệ thống **Multi-Agent Text-to-SQL** sử dụng LangGraph, cho phép truy vấn database bằng ngôn ngữ tự nhiên (tiếng Việt).
+Hệ thống **Multi-Agent Text-to-SQL** sử dụng LangGraph, cho phép truy vấn cơ sở dữ liệu bằng ngôn ngữ tự nhiên (tiếng Việt & tiếng Anh). Hệ thống hỗ trợ nạp linh hoạt nhiều cơ sở dữ liệu (Chinook, BIRD, Spider...) thông qua cơ chế Registry.
 
 ## Kiến trúc
 
-```
+```text
 User Question
      │
      ▼
 ┌─────────────────┐
-│  Orchestrator   │ ← Phân tích intent, route agents
+│   Route Node    │ ← Xác định Database mục tiêu từ câu hỏi
+└────────┬────────┘
+         ▼
+┌─────────────────┐
+│  Orchestrator   │ ← Phân tích intent, route tới agent phù hợp
 └────────┬────────┘
          │
-         ├─ [Cache Hit?] ─→ Result Formatter → Answer
+         ├─ [Simple] ──────→ SQL Generator → Validator → Executor → Formatter
          │
-         ├─ [Simple] ──────→ SQL Generator → Executor → Formatter
-         │
-         └─ [Complex] ─────→ Query Planner → SQL Generator → Executor → Formatter
+         └─ [Complex] ─────→ Query Planner → SQL Generator → Validator → Executor → Formatter
 ```
 
-### Agents
+### LangGraph Agents
 
-| Agent | Vai trò | Model |
-|-------|---------|-------|
-| **Orchestrator** | Điều phối pipeline, phân tích intent | `llama-3.3-70b-versatile` |
-| **QueryPlanner** | Lên kế hoạch query phức tạp | `qwen3-32b` |
-| **SQLGenerator** | Sinh SQL từ câu hỏi + schema | `llama-3.3-70b-versatile` |
-| **Executor** | Thực thi SQL trên SQLite | — |
-| **ResultFormatter** | Format kết quả + visualization | `llama-3.1-8b-instant` |
+| Agent | Vai trò | Trạng thái / Model |
+|-------|---------|------------|
+| **Route Node** | Xác định đúng cơ sở dữ liệu cần truy vấn từ `registry.json` | Llama 3.3 70B (Groq) |
+| **Orchestrator** | Điều phối pipeline, phân tích độ phức tạp (intent) | Llama 3.3 70B (Groq) |
+| **QueryPlanner** | Lên kế hoạch query phức tạp (JOIN, CTE, Aggregations) | Llama 3.3 70B (Groq) |
+| **SQLGenerator** | Sinh SQL dựa trên schema context và kinh nghiệm (few-shots) | Llama 3.3 70B (Groq) |
+| **Validator** | Kiểm tra cú pháp SQL, chặn câu lệnh độc hại (DROP/DELETE) | Rule-based & DB Native |
+| **Executor** | Thực thi SQL an toàn trên database SQLite | Python `sqlite3` |
+| **ResultFormatter**| Format data thô thành câu trả lời tự nhiên cho người dùng | Llama 3.3 70B (Groq) |
 
-## Tính năng
+*Ngoài ra hệ thống còn tích hợp `table_selector.py`, `column_pruner.py` và `auto_fewshot.py` giúp tối ưu hóa Context Window để tiết kiệm token cho LLM.*
 
-- ✅ Text-to-SQL bằng tiếng Việt
-- ✅ Multi-agent pipeline với LangGraph
-- ✅ Structured prompting + query templates
-- ✅ Semantic caching (Mistral embedding)
-- ✅ Schema RAG (ChromaDB)
-- ✅ Data pipeline (CSV, JSON, Web crawl → SQLite)
-- ✅ Data visualization (bar, line, pie charts)
-- ✅ Safety: chỉ SELECT queries được phép
+## Tính năng nổi bật
+
+- ✅ **Dynamic Multi-DB**: KHÔNG sử dụng prompt hardcode. Tự động đọc và sinh metadata (introspect) cho bất kỳ DB SQLite nào.
+- ✅ **Groq LLM**: Sử dụng model `llama-3.3-70b-versatile` qua Langchain-Groq API cho tốc độ phản hồi siêu tốc.
+- ✅ **Auto Few-shot**: Tự động sinh kinh nghiệm ảo (synthetic few-shots) qua FAISS để cải thiện độ chính xác khi sinh SQL.
+- ✅ **Cơ chế tự sửa lỗi**: LLM có khả năng nhận phản hồi lỗi từ Validator/Executor và tự viết lại câu lệnh SQL.
+- ✅ **Giao diện hiện đại**: Sử dụng Streamlit với CSS tuỳ chỉnh đem lại trải nghiệm tương đương các chatbot AI cao cấp.
 
 ## Cài đặt
 
 ```bash
 # 1. Clone / cd vào project
-cd i:/AI/text_to_sql
+cd text_to_sql
 
 # 2. Tạo virtual environment
 python -m venv venv
 source venv/Scripts/activate  # Windows
-# source venv/bin/activate   # Linux/Mac
+# source venv/bin/activate    # Linux/Mac
 
 # 3. Cài dependencies
 pip install -r requirements.txt
 
 # 4. Copy và chỉnh sửa .env
 cp .env.example .env
-# Thêm GROQ_API_KEY_1 và MISTRAL_API_KEY vào .env
+# Chỉnh sửa file .env và thêm GROQ_API_KEY
 ```
 
-## API Keys
+## Cấu trúc Project chính
 
-Lấy keys tại:
-- **Groq**: https://console.groq.com/keys
-- **Mistral**: https://console.mistral.ai/
+```text
+text_to_sql/
+├── src/
+│   ├── agents/          # LangGraph agents
+│   │   ├── auto_fewshot.py
+│   │   ├── column_pruner.py
+│   │   ├── executor.py
+│   │   ├── groq_llm.py   # Groq LLM client wrapper (Thay cho Gemini)
+│   │   ├── onboard.py    # Multi-DB onboarding & semantic cache
+│   │   ├── orchestrator.py
+│   │   ├── query_planner.py
+│   │   ├── result_formatter.py
+│   │   ├── route_node.py
+│   │   ├── sql_generator.py
+│   │   ├── state.py      # LangGraph Pydantic State schema
+│   │   ├── table_selector.py
+│   │   └── validator.py
+│   ├── db/              # Database interaction & utils
+│   ├── rag/             # RAG (FAISS/ChromaDB/Embedder)
+│   └── config.py        # Quản lý cấu hình
+├── registry.json       # Danh sách các Databases đang được quản lý
+├── main.py             # CLI entry point
+├── app.py              # Streamlit Web UI chính
+└── .env                # Biến môi trường
+```
 
 ## Chạy hệ thống
 
-### 1. Khởi tạo (một lần)
-```bash
-python main.py --init
-```
-Lệnh này:
-- Tạo database SQLite với sample data (5 bảng kinh doanh)
-- Index schema vào ChromaDB
-- Kiểm tra API keys
-
-### 2. Chế độ tương tác (CLI)
-```bash
-python main.py
-```
-Chat liên tục với hệ thống. Gõ `exit` để thoát, `clear` để xóa cache, `stats` để xem cache stats.
-
-### 3. Single query
-```bash
-python main.py --query "Tổng số đơn hàng theo khách hàng"
-```
-
-### 4. Batch queries
-```bash
-python main.py --batch queries.txt
-```
-
-### 5. Web UI (Streamlit)
+### Web UI (Streamlit)
 ```bash
 streamlit run app.py
 ```
-Mở http://localhost:8501
+*Mở `http://localhost:8501` trên trình duyệt để trải nghiệm.*
 
-## Cấu trúc Project
-
-```
-text_to_sql/
-├── src/
-│   ├── agents/          # LangGraph agents + prompts
-│   │   ├── orchestrator.py
-│   │   ├── query_planner.py
-│   │   ├── sql_generator.py
-│   │   ├── executor.py
-│   │   ├── result_formatter.py
-│   │   ├── state.py      # LangGraph state schema
-│   │   ├── groq_llm.py   # Groq LLM wrapper
-│   │   └── prompts.py    # System prompts
-│   ├── db/              # Database management
-│   │   ├── database.py   # SQLite manager
-│   │   └── data_pipeline.py  # Crawl→Clean→Load
-│   ├── rag/             # RAG components
-│   │   ├── embedder.py    # Mistral batch embedding
-│   │   ├── chroma_store.py # ChromaDB vector store
-│   │   └── schema_indexer.py
-│   ├── memory/          # Semantic cache
-│   │   └── semantic_cache.py
-│   ├── tools/           # Visualization
-│   │   └── visualizer.py
-│   ├── config.py        # Cấu hình từ .env
-│   ├── schema.py        # Pydantic models
-│   └── graph.py         # LangGraph workflow
-├── main.py             # CLI entry point
-├── app.py              # Streamlit web UI
-├── requirements.txt
-├── .env.example
-└── README.md
-```
-
-## Sample Data
-
-Hệ thống tự động tạo 5 bảng demo:
-
-| Bảng | Mô tả | Rows |
-|------|-------|------|
-| `products` | Sản phẩm công nghệ | 20 |
-| `customers` | Khách hàng | 15 |
-| `orders` | Đơn hàng | 50 |
-| `suppliers` | Nhà cung cấp | 9 |
-| `reviews` | Đánh giá sản phẩm | 30 |
-
-## Test
-
+### Đánh giá (Evaluation)
+Để kiểm tra độ chính xác trên bộ dataset (BIRD, Spider, Chinook):
 ```bash
-pytest tests/ -v
-```
-
-## Giới hạn Free Tier
-
-| API | Limit | Strategy |
-|-----|-------|----------|
-| **Mistral** (embed) | 2 RPM | Batch + ChromaDB cache |
-| **Groq** (LLM) | 6K-30K tokens/phút | Sequential flow, model tiering |
-
-## Ví dụ Queries
-
-```sql
--- Q: Tổng số sản phẩm theo danh mục?
-SELECT category, COUNT(*) as count FROM products GROUP BY category;
-
--- Q: Top 5 khách hàng có nhiều đơn hàng nhất?
-SELECT c.customer_name, COUNT(o.order_id) as order_count
-FROM customers c
-JOIN orders o ON c.customer_id = o.customer_id
-GROUP BY c.customer_name
-ORDER BY order_count DESC LIMIT 5;
-
--- Q: Sản phẩm nào được đánh giá cao nhất?
-SELECT p.product_name, AVG(r.rating) as avg_rating
-FROM products p
-JOIN reviews r ON p.product_id = r.product_id
-GROUP BY p.product_name
-ORDER BY avg_rating DESC LIMIT 3;
+python evaluate.py
 ```
