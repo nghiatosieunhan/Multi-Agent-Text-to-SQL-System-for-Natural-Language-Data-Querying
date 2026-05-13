@@ -1,13 +1,17 @@
 import json
 import structlog
 from src.agents.state import AgentState
-from src.agents.groq_llm import invoke
+from src.agents.llm_router import invoke
 from src.config import config
 
 log = structlog.get_logger("router_node")
 
 def router_node(state: AgentState) -> dict:
     """Xác định Database dựa trên câu hỏi của người dùng và config."""
+    # Nếu DB đã được set rõ ràng từ UI hoặc script evaluate, không ghi đè
+    if state.current_db_path:
+        return {"next_agent": "orchestrator"}
+        
     question = state.user_question
     
     registry_path = config.BASE_DIR / "registry.json"

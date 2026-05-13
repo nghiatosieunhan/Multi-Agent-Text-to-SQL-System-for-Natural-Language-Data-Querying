@@ -41,7 +41,7 @@ User Question
 
 - ✅ **Dynamic Multi-DB**: KHÔNG sử dụng prompt hardcode. Tự động đọc và sinh metadata (introspect) cho bất kỳ DB SQLite nào.
 - ✅ **Groq LLM**: Sử dụng model `llama-3.3-70b-versatile` qua Langchain-Groq API cho tốc độ phản hồi siêu tốc.
-- ✅ **Auto Few-shot**: Tự động sinh kinh nghiệm ảo (synthetic few-shots) qua FAISS để cải thiện độ chính xác khi sinh SQL.
+- ✅ **Auto Few-shot**: Tự động sinh kinh nghiệm ảo (synthetic few-shots) bằng FAISS và Google Cloud Vertex AI Embeddings (tốc độ cao, không bị giới hạn Rate Limit như Mistral) để cải thiện độ chính xác khi sinh SQL.
 - ✅ **Cơ chế tự sửa lỗi**: LLM có khả năng nhận phản hồi lỗi từ Validator/Executor và tự viết lại câu lệnh SQL.
 - ✅ **Giao diện hiện đại**: Sử dụng Streamlit với CSS tuỳ chỉnh đem lại trải nghiệm tương đương các chatbot AI cao cấp.
 
@@ -59,9 +59,15 @@ source venv/Scripts/activate  # Windows
 # 3. Cài dependencies
 pip install -r requirements.txt
 
-# 4. Copy và chỉnh sửa .env
+# 4. Cấu hình .env
 cp .env.example .env
-# Chỉnh sửa file .env và thêm GROQ_API_KEY
+# Chỉnh sửa file .env và thêm:
+# - GROQ_API_KEY
+# - GOOGLE_CLOUD_PROJECT
+# - GOOGLE_CLOUD_LOCATION
+
+# 5. Xác thực Google Cloud (Để dùng Embeddings)
+gcloud auth application-default login
 ```
 
 ## Cấu trúc Project chính
@@ -84,7 +90,7 @@ text_to_sql/
 │   │   ├── table_selector.py
 │   │   └── validator.py
 │   ├── db/              # Database interaction & utils
-│   ├── rag/             # RAG (FAISS/ChromaDB/Embedder)
+│   ├── rag/             # RAG (FAISS/VertexAI Embeddings)
 │   └── config.py        # Quản lý cấu hình
 ├── registry.json       # Danh sách các Databases đang được quản lý
 ├── main.py             # CLI entry point

@@ -258,3 +258,28 @@ def run_query(
             return asyncio.run(arun_query(question, session_id, db_path, override_schema_context, dataset_type))
     except RuntimeError:
         return asyncio.run(arun_query(question, session_id, db_path, override_schema_context))
+
+def stream_query(
+    question: str,
+    session_id: str = "default",
+    db_path: str = "",
+    override_schema_context: str = None,
+    dataset_type: str = None,
+):
+    if db_path or override_schema_context is None:
+        resolved_db_path = _ensure_db(db_path)
+    else:
+        resolved_db_path = ""
+
+    initial_state = AgentState(
+        user_question=question,
+        session_id=session_id,
+        current_step="start",
+        current_db_path=resolved_db_path,
+        override_schema_context=override_schema_context,
+        dataset_type=dataset_type,
+    )
+
+    workflow = get_workflow()
+    for output in workflow.stream(initial_state):
+        yield output

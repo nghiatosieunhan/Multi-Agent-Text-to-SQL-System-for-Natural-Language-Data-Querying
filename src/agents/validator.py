@@ -46,9 +46,10 @@ def _get_db(db_path: str = ""):
 def _extract_table_names(sql: str) -> list[str]:
     """Extract table names from FROM/JOIN (case-insensitive, unique)."""
     tables = set()
-    for m in re.finditer(r'\b(FROM|JOIN)\s+([A-Za-z_][A-Za-z0-9_]*)', sql, re.IGNORECASE):
-        t = m.group(2)
-        if t.upper() not in ("SELECT", "WITH"):
+    # Hỗ trợ cả bảng không ngoặc và bảng có ngoặc kép/backticks/brackets (ví dụ: "Order Details")
+    for m in re.finditer(r'\b(?:FROM|JOIN)\s+(?:`([^`]+)`|"([^"]+)"|\[([^\]]+)\]|([A-Za-z_][A-Za-z0-9_]*))', sql, re.IGNORECASE):
+        t = m.group(1) or m.group(2) or m.group(3) or m.group(4)
+        if t and t.upper() not in ("SELECT", "WITH"):
             tables.add(t.lower())
     return list(tables)
 
@@ -57,6 +58,9 @@ def _validate_tables(sql: str, db) -> list[str]:
     """Verify all tables exist in DB."""
     issues = []
     tables = _extract_table_names(sql)
+    import structlog
+    log = structlog.get_logger("validator")
+    log.info("validate_tables_start", tables=tables, db_path=db.db_path)
     for t in tables:
         if not db.table_exists(t):
             issues.append(f"Table '{t}' does not exist in database")

@@ -4,7 +4,7 @@ Result Formatter Agent — format kết quả thành câu trả lời dễ hiể
 import json
 import structlog
 from src.agents.state import AgentState
-from src.agents.groq_llm import invoke
+from src.agents.llm_router import invoke
 from src.config import config
 
 log = structlog.get_logger("formatter")

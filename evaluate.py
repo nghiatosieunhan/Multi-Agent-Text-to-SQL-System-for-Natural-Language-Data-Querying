@@ -65,13 +65,18 @@ def execution_match(gold_sql: str, gen_sql: str, db_path: str) -> bool:
         conn = sqlite3.connect(db_path)
         conn.row_factory = sqlite3.Row
         cur = conn.cursor()
+        
+        def sort_key(row):
+            return tuple(str(v) if v is not None else "" for v in row)
+            
         cur.execute(gold_norm)
-        gold = sorted(tuple(r) for r in cur.fetchall())
+        gold = sorted((tuple(r) for r in cur.fetchall()), key=sort_key)
         cur.execute(gen_norm)
-        gen = sorted(tuple(r) for r in cur.fetchall())
+        gen = sorted((tuple(r) for r in cur.fetchall()), key=sort_key)
         conn.close()
         return gold == gen
-    except Exception:
+    except Exception as e:
+        print(f"Exec Match Error: {e}")
         return False
 
 def print_progress(current: int, total: int, status: str, latency_ms: float):

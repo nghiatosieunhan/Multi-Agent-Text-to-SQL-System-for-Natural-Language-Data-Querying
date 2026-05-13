@@ -9,6 +9,21 @@ import time
 import json
 import tempfile
 from pathlib import Path
+import logging
+import structlog
+
+# Fix cho Streamlit: Chuyển structlog sang dùng native logging của Python
+# để tránh lỗi "I/O operation on closed file" khi Streamlit tái tạo (rerun) sys.stdout
+logging.basicConfig(level=logging.INFO, format="%(message)s")
+structlog.configure(
+    processors=[
+        structlog.stdlib.add_log_level,
+        structlog.dev.ConsoleRenderer()
+    ],
+    logger_factory=structlog.stdlib.LoggerFactory(),
+    wrapper_class=structlog.stdlib.BoundLogger,
+    cache_logger_on_first_use=False
+)
 
 import streamlit as st
 import pandas as pd
@@ -18,7 +33,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from src.config import config
 from src.db import get_db_manager
 from src.rag import rebuild_schema_index
-from src.graph import run_query
+from src.graph import run_query, stream_query
 from src.memory import get_semantic_cache
 # from src.tools.visualizer import plot_chart, render_table_ascii
 from src.agents.onboard import get_current_db_schema, list_databases as onboard_list_dbs
@@ -48,12 +63,10 @@ h1 { font-size: 24px !important; font-weight: 600 !important; }
 h2 { font-size: 20px !important; font-weight: 600 !important; }
 h3 { font-size: 16px !important; font-weight: 600 !important; }
 
-/* 3. Tinh chỉnh khung tin nhắn Chat (Chat Bubbles) */
+/* 3. Tinh chỉnh khung tin nhắn Chat (Chat Bubbles) - Hỗ trợ Dark Mode */
 .stChatMessage {
     padding: 1rem !important;
     border-radius: 12px !important;
-    background-color: #f8f9fa; /* Màu xám nhạt thanh lịch */
-    border: 1px solid #eaebed;
     margin-bottom: 15px;
 }
 
@@ -67,10 +80,9 @@ h3 { font-size: 16px !important; font-weight: 600 !important; }
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.05) !important;
 }
 
-/* 5. Ẩn các thành phần mặc định của Streamlit */
+/* 5. Ẩn các thành phần mặc định của Streamlit (giữ lại header để có nút mở Sidebar) */
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
-header {visibility: hidden;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -216,9 +228,15 @@ with st.sidebar:
 
     # Schema viewer
     st.subheader("📋 Schema")
+    
+    @st.cache_data(ttl=3600)
+    def _cached_get_schema(path: str):
+        db_sidebar = get_db_manager(path)
+        # convert to dict or just return since pydantic/dataclass can be cached
+        return db_sidebar.get_schema()
+
     try:
-        db_sidebar = get_db_manager(_get_db_path())
-        schema_sidebar = db_sidebar.get_schema()
+        schema_sidebar = _cached_get_schema(_get_db_path())
         for t in schema_sidebar.tables:
             with st.expander(f"📋 {t.table_name}"):
                 st.caption(f"Rows: {t.row_count or '?'}")
@@ -343,81 +361,112 @@ if prompt := st.chat_input("Đặt câu hỏi về dữ liệu..."):
         with st.status("✨ Đang suy luận và xử lý dữ liệu...", expanded=True) as status:
             st.write("Đang đọc schema và phân tích ngữ cảnh...")
             db_path = _get_db_path()
-            result, elapsed = _run_query(prompt, db_path)
+            
+            start_time = time.time()
+            final_state = None
+            try:
+                for step_output in stream_query(prompt, session_id=f"ui_{int(start_time)}", db_path=db_path):
+                    for node_name, state in step_output.items():
+                        if node_name == "router":
+                            st.write("🔄 Đã định tuyến xong cơ sở dữ liệu")
+                        elif node_name == "orchestrator":
+                            st.write(f"🧠 Đã phân tích ý định...")
+                        elif node_name == "query_planner":
+                            st.write("📝 Đang lập kế hoạch truy vấn phức tạp (Query Plan)...")
+                        elif node_name == "sql_generator":
+                            st.write("⚡ Đang sinh câu lệnh SQL...")
+                        elif node_name == "validator":
+                            st.write("🔍 Đang kiểm tra tính an toàn của SQL (Validate)...")
+                        elif node_name == "executor":
+                            st.write("🚀 Đang thực thi SQL trên Database...")
+                        elif node_name == "result_formatter":
+                            st.write("✍️ Đang tổng hợp câu trả lời...")
+                        final_state = state
+            except Exception as e:
+                st.error(f"Lỗi hệ thống: {e}")
+                st.stop()
+            
+            from src.agents.state import AgentState
+            if isinstance(final_state, dict):
+                result = AgentState(**final_state)
+            else:
+                result = final_state
+                
+            elapsed = time.time() - start_time
             status.update(label=f"Hoàn tất xử lý trong {elapsed:.2f}s", state="complete", expanded=False)
             
-            answer_content = ""
-            df = None
-            sql = result.generated_sql if hasattr(result, 'generated_sql') else None
-            
-            # Phân tích kết quả trả về
-            if hasattr(result, 'error') and result.error and not (hasattr(result, 'formatted_answer') and result.formatted_answer):
-                answer_content = f"❌ **Lỗi:** {result.error}"
-            elif hasattr(result, 'formatted_answer') and result.formatted_answer:
-                fa = result.formatted_answer
-                if "chat_response" in fa:
-                    answer_content += fa["chat_response"]
-                else:
-                    answer_content += f"**{fa.get('summary', '')}**\n\n"
-                    if fa.get("detailed_answer"):
-                        answer_content += f"{fa['detailed_answer']}\n\n"
-                    if fa.get("insights"):
-                        answer_content += "💡 **Insights:**\n"
-                        for insight in fa["insights"]:
-                            answer_content += f"- {insight}\n"
-            elif hasattr(result, 'query_result') and result.query_result:
-                answer_content = f"✅ Truy vấn thành công ({result.query_result.get('row_count', 0)} dòng dữ liệu)."
+        answer_content = ""
+        df = None
+        sql = result.generated_sql if hasattr(result, 'generated_sql') else None
+        
+        # Phân tích kết quả trả về
+        if hasattr(result, 'error') and result.error and not (hasattr(result, 'formatted_answer') and result.formatted_answer):
+            answer_content = f"❌ **Lỗi:** {result.error}"
+        elif hasattr(result, 'formatted_answer') and result.formatted_answer:
+            fa = result.formatted_answer
+            if "chat_response" in fa:
+                answer_content += fa["chat_response"]
+            else:
+                answer_content += f"**{fa.get('summary', '')}**\n\n"
+                if fa.get("detailed_answer"):
+                    answer_content += f"{fa['detailed_answer']}\n\n"
+                if fa.get("insights"):
+                    answer_content += "💡 **Insights:**\n"
+                    for insight in fa["insights"]:
+                        answer_content += f"- {insight}\n"
+        elif hasattr(result, 'query_result') and result.query_result:
+            answer_content = f"✅ Truy vấn thành công ({result.query_result.get('row_count', 0)} dòng dữ liệu)."
 
-            # In câu trả lời chính
-            st.markdown(answer_content)
+        # In câu trả lời chính
+        st.markdown(answer_content)
+        
+        # Tạo Expander cho SQL
+        if sql:
+            with st.expander("🔍 Xem câu lệnh SQL"):
+                st.code(sql, language="sql")
+        
+        # Lấy cấu hình biểu đồ từ LLM
+        viz = {}
+        if hasattr(result, 'formatted_answer') and result.formatted_answer:
+            viz = result.formatted_answer.get("visualization", {})
             
-            # Tạo Expander cho SQL
-            if sql:
-                with st.expander("🔍 Xem câu lệnh SQL"):
-                    st.code(sql, language="sql")
-            
-            # Lấy cấu hình biểu đồ từ LLM
-            viz = {}
-            if hasattr(result, 'formatted_answer') and result.formatted_answer:
-                viz = result.formatted_answer.get("visualization", {})
-                
-            # Tạo Expander cho bảng dữ liệu Pandas và vẽ biểu đồ
-            if hasattr(result, 'query_result') and result.query_result and result.query_result.get("rows"):
-                rows = result.query_result["rows"]
-                cols = result.query_result["columns"]
-                try:
-                    df = pd.DataFrame(rows, columns=cols)
-                    with st.expander("📊 Xem bảng dữ liệu"):
-                        st.dataframe(df, use_container_width=True, hide_index=True)
-                        
-                    # Tự động vẽ biểu đồ bằng thư viện native của Streamlit
-                    if viz.get("recommended"):
-                        chart_type = viz.get("chart_type", "bar")
-                        with st.expander(f"📈 Biểu đồ trực quan ({chart_type.upper()})"):
-                            try:
-                                # Lấy cột đầu tiên làm trục X, các cột còn lại làm giá trị Y
-                                df_chart = df.set_index(df.columns[0])
-                                if chart_type in ["bar", "pie"]:
-                                    st.bar_chart(df_chart)
-                                elif chart_type == "line":
-                                    st.line_chart(df_chart)
-                                elif chart_type == "area":
-                                    st.area_chart(df_chart)
-                                else:
-                                    st.bar_chart(df_chart)
-                            except Exception as e:
-                                st.caption("Dữ liệu không phù hợp để vẽ biểu đồ.")
-                except Exception as e:
-                    st.warning(f"Không thể hiển thị bảng: {e}")
+        # Tạo Expander cho bảng dữ liệu Pandas và vẽ biểu đồ
+        if hasattr(result, 'query_result') and result.query_result and result.query_result.get("rows"):
+            rows = result.query_result["rows"]
+            cols = result.query_result["columns"]
+            try:
+                df = pd.DataFrame(rows, columns=cols)
+                with st.expander("📊 Xem bảng dữ liệu"):
+                    st.dataframe(df, use_container_width=True, hide_index=True)
+                    
+                # Tự động vẽ biểu đồ bằng thư viện native của Streamlit
+                if viz.get("recommended"):
+                    chart_type = viz.get("chart_type", "bar")
+                    with st.expander(f"📈 Biểu đồ trực quan ({chart_type.upper()})"):
+                        try:
+                            # Lấy cột đầu tiên làm trục X, các cột còn lại làm giá trị Y
+                            df_chart = df.set_index(df.columns[0])
+                            if chart_type in ["bar", "pie"]:
+                                st.bar_chart(df_chart)
+                            elif chart_type == "line":
+                                st.line_chart(df_chart)
+                            elif chart_type == "area":
+                                st.area_chart(df_chart)
+                            else:
+                                st.bar_chart(df_chart)
+                        except Exception as e:
+                            st.caption("Dữ liệu không phù hợp để vẽ biểu đồ.")
+            except Exception as e:
+                st.warning(f"Không thể hiển thị bảng: {e}")
 
-            # Lưu lại câu trả lời vào lịch sử
-            st.session_state.messages.append({
-                "role": "assistant", 
-                "content": answer_content,
-                "sql": sql,
-                "df": df,
-                "viz": viz,
-                "user_prompt": prompt,
-                "is_trained": False
-            })
+        # Lưu lại câu trả lời vào lịch sử
+        st.session_state.messages.append({
+            "role": "assistant", 
+            "content": answer_content,
+            "sql": sql,
+            "df": df,
+            "viz": viz,
+            "user_prompt": prompt,
+            "is_trained": False
+        })
 

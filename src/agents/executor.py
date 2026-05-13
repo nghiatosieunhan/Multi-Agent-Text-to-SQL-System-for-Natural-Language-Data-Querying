@@ -54,6 +54,8 @@ def executor_node(state: AgentState) -> dict:
             'execution_time_ms': result.execution_time_ms
         }
         state.execution_time_ms = result.execution_time_ms
+        state.execution_error = None
+        state.error = None
         state.current_step = 'execution_success'
         state.next_agent = 'formatter'
         

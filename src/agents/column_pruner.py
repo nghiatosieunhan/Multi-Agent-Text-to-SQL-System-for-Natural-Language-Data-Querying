@@ -7,7 +7,7 @@ Column Pruner Agent (Idea B: Column Pruning)
 import json
 import re
 import structlog
-from src.agents.groq_llm import invoke
+from src.agents.llm_router import invoke
 from src.config import config
 from src.db import DatabaseManager
 

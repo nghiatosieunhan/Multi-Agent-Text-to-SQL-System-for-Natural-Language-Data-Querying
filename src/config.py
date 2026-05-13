@@ -31,6 +31,7 @@ class Config:
     GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 
     # LLM Models — đọc từ .env hoặc dùng default
+    LLM_PROVIDER = os.getenv("LLM_PROVIDER", "groq").lower()
     LLM_MODEL = os.getenv("LLM_MODEL", "llama-3.3-70b-versatile")
     LLM_MODEL_FALLBACK = os.getenv("LLM_MODEL_FALLBACK", "llama-3.1-8b-instant")
 

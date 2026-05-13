@@ -4,7 +4,7 @@ from pathlib import Path
 import structlog
 from src.config import config
 from src.db import DatabaseManager
-from src.agents.groq_llm import invoke
+from src.agents.llm_router import invoke
 
 log = structlog.get_logger("onboard")
 

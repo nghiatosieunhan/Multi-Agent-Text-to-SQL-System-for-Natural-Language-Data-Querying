@@ -5,7 +5,7 @@ import json
 import re
 import structlog
 from src.agents.state import AgentState
-from src.agents.groq_llm import invoke
+from src.agents.llm_router import invoke
 from src.config import config
 
 log = structlog.get_logger("query_planner")

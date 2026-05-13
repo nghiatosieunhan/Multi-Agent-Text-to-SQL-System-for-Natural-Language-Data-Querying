@@ -7,7 +7,7 @@ Table Selector Agent (Idea A: Two-Stage Table Selection)
 import json
 import re
 import structlog
-from src.agents.groq_llm import invoke
+from src.agents.llm_router import invoke
 from src.config import config
 from src.db import DatabaseManager
 
@@ -95,9 +95,12 @@ def select_tables_for_query(question: str, db: DatabaseManager, semantic_descrip
         
         result = _safe_json_parse(raw_resp)
         selected = result.get('selected_tables', [])
-        
-        valid_tables = [t.table_name for t in schema.tables]
-        selected_valid = [t for t in selected if t in valid_tables]
+        valid_tables_map = {t.table_name.lower(): t.table_name for t in schema.tables}
+        selected_valid = []
+        for t in selected:
+            t_lower = t.lower()
+            if t_lower in valid_tables_map and valid_tables_map[t_lower] not in selected_valid:
+                selected_valid.append(valid_tables_map[t_lower])
         
         log.info('table_selector_success', selected_tables=selected_valid, total_tables=len(schema.tables))
         return selected_valid

@@ -177,7 +177,12 @@ def get_schema_context_for_query(query: str, db: Optional[DatabaseManager] = Non
     # --- BƯỚC ĐỘT PHÁ 2: COLUMN PRUNER AGENT (Ý tưởng B) ---
     from src.agents.column_pruner import prune_columns_for_query
     pruned_columns_map = prune_columns_for_query(query, db, selected_table_names)
-    
+    # Chuẩn hóa pruned_columns_map về lowercase để tránh lỗi case-sensitive từ LLM
+    pruned_lower_map = {}
+    if pruned_columns_map:
+        for t, cols in pruned_columns_map.items():
+            pruned_lower_map[t.lower()] = set(c.lower() for c in cols)
+
     parts = []
     for table in schema.tables:
         if table.table_name not in selected_table_names:
@@ -187,9 +192,10 @@ def get_schema_context_for_query(query: str, db: Optional[DatabaseManager] = Non
         
         # Cắt tỉa cột theo kết quả của Column Pruner (nếu có)
         filtered_cols = table.columns
-        if pruned_columns_map and table.table_name in pruned_columns_map:
-            allowed_cols = set(pruned_columns_map[table.table_name])
-            filtered_cols = [c for c in table.columns if c['name'] in allowed_cols]
+        table_lower = table.table_name.lower()
+        if table_lower in pruned_lower_map:
+            allowed_cols = pruned_lower_map[table_lower]
+            filtered_cols = [c for c in table.columns if c['name'].lower() in allowed_cols]
             # Nếu lỡ cắt hết thì lấy lại toàn bộ để an toàn
             if not filtered_cols:
                 filtered_cols = table.columns
