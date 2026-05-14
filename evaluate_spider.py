@@ -93,13 +93,18 @@ def execution_match(gold_sql: str, gen_sql: str, db_path: str) -> bool:
         conn = sqlite3.connect(db_path)
         conn.row_factory = sqlite3.Row
         cur = conn.cursor()
+        
+        def sort_key(row):
+            return tuple(str(v) if v is not None else "" for v in row)
+            
         cur.execute(gold_norm)
-        gold = sorted(tuple(r) for r in cur.fetchall())
+        gold = sorted((tuple(r) for r in cur.fetchall()), key=sort_key)
         cur.execute(gen_norm)
-        gen = sorted(tuple(r) for r in cur.fetchall())
+        gen = sorted((tuple(r) for r in cur.fetchall()), key=sort_key)
         conn.close()
         return gold == gen
-    except Exception:
+    except Exception as e:
+        print(f"Exec Match Error: {e}")
         return False
 
 def print_progress(current: int, total: int, status: str, latency_ms: float):
@@ -110,18 +115,20 @@ def print_progress(current: int, total: int, status: str, latency_ms: float):
     print(f"\r[{bar}] {pct:.0f}% ({current}/{total}) {status} {latency_ms:.0f}ms", end="", flush=True)
 
 # ── Main Evaluation Logic ──────────────────────────────────────────────────
-def run_spider_evaluation(limit: int = None, db_dir: str = "spider/spider_data/database", output_path: str = "test/spider_results.json", clear_checkpoint: bool = False):
+def run_spider_evaluation(data_file: str, limit: int = None, db_dir: str = "data/spider/spider_data/database", output_path: str = "test/spider_results.json", clear_checkpoint: bool = False):
     
-    print("[1/3] Loading Spider dev dataset (Local JSON)...")
-    
-    # Đường dẫn chính xác tới file dev.json dựa trên cấu trúc thư mục của bạn
-    local_dev_file = "spider/spider_data/dev.json" 
+    print(f"[1/3] Loading Spider dataset from {data_file}...")
     
     try:
-        with open(local_dev_file, 'r', encoding='utf-8') as f:
+        with open(data_file, 'r', encoding='utf-8') as f:
             data = json.load(f)
+            
+        # Nắm bắt dạng cấu trúc JSON (Spider gốc là danh sách thẳng, custom có "questions")
+        if isinstance(data, dict) and "questions" in data:
+            data = data["questions"]
+            
     except FileNotFoundError:
-        print(f"\nLỗi: Không tìm thấy file {local_dev_file}.")
+        print(f"\nLỗi: Không tìm thấy file {data_file}.")
         print("Hãy chắc chắn bạn đang chạy lệnh từ thư mục gốc của project.")
         return
 
@@ -149,9 +156,9 @@ def run_spider_evaluation(limit: int = None, db_dir: str = "spider/spider_data/d
 
     for i, row in df.iterrows():
         qid = f"{row['db_id']}_{i}"
-        question = row["question"]
-        gold_sql = row["query"]
-        db_id = row["db_id"]
+        question = row.get("question", "")
+        gold_sql = row.get("gold_sql") or row.get("query", "")
+        db_id = row.get("db_id", "")
 
         if qid in checkpoint_data:
             eval_res = checkpoint_data[qid]
@@ -282,10 +289,11 @@ def run_spider_evaluation(limit: int = None, db_dir: str = "spider/spider_data/d
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Spider Evaluation (Local JSON)")
+    parser.add_argument("--data", type=str, default="data/spider_custom_data.json", help="Path to Spider JSON file")
     parser.add_argument("--limit", type=int, default=None)
-    parser.add_argument("--db-dir", type=str, default="spider/spider_data/database")
+    parser.add_argument("--db-dir", type=str, default="data/spider/spider_data/database", help="Path to Spider database directory")
     parser.add_argument("--output", type=str, default="test/spider_results.json")
     parser.add_argument("--clear-checkpoint", action="store_true")
     args = parser.parse_args()
 
-    run_spider_evaluation(args.limit, args.db_dir, args.output, args.clear_checkpoint)
+    run_spider_evaluation(args.data, args.limit, args.db_dir, args.output, args.clear_checkpoint)

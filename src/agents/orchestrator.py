@@ -79,7 +79,10 @@ def orchestrator_node(state: AgentState) -> AgentState:
         state.cache_checked = True
 
     # Step 2: Retrieve schema context
-    schema_context = _retrieve_schema(state.user_question)
+    if state.override_schema_context:
+        schema_context = state.override_schema_context
+    else:
+        schema_context = _retrieve_schema(state.user_question)
     state.schema_context = schema_context
 
     # Step 4: LLM Decision

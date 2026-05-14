@@ -15,7 +15,7 @@ if PROVIDER == "google":
     from src.agents.gemini_llm import invoke, ainvoke, get_llm
     log.info("llm_provider_initialized", provider="google_vertex_ai")
 else:
-    from src.agents.llm_router import invoke, ainvoke, get_llm
+    from src.agents.groq_llm import invoke, ainvoke, get_llm
     log.info("llm_provider_initialized", provider="groq")
 
 __all__ = ["invoke", "ainvoke", "get_llm"]

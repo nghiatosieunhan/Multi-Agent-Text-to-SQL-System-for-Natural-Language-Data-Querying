@@ -27,16 +27,16 @@ load_dotenv(BASE_DIR / ".env")
 
 from src.agents.gemini_llm import invoke
 from src.config import config
-from src.agents.onboard import get_current_db_schema, _build_schema_text, _build_fk_text
+from src.db import DatabaseManager
 
 def generate_batch(db_path: str, existing_questions: list[str], batch_num: int, batch_target: int = 25) -> list[dict]:
     """Gọi Gemini sinh 1 batch câu hỏi."""
     print(f"\n  Batch {batch_num}: gọi Gemini...")
 
-    # Tự động đọc schema từ Database (giống hệt Onboard)
-    schema, _ = get_current_db_schema(db_path)
-    schema_text = _build_schema_text(schema)
-    fk_text = _build_fk_text(schema)
+    db = DatabaseManager(db_path=db_path)
+    schema = db.get_schema()
+    schema_text = "\n".join([f"Table {t.table_name}: " + ", ".join([c.name for c in t.columns]) for t in schema.tables])
+    fk_text = "\n".join([f"{fk['from_table']}.{fk['from_column']} -> {fk['to_table']}.{fk['to_column']}" for fk in schema.relationships])
 
     # Đưa existing vào prompt để Gemini tránh trùng
     existing_str = "\n".join(f"- {q}" for q in existing_questions[-100:])

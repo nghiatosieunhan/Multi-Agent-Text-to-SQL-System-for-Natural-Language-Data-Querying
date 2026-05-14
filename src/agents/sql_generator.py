@@ -170,6 +170,8 @@ LƯU Ý QUAN TRỌNG ĐỂ VƯỢ QUA ĐÁNH GIÁ (EVALUATION):
 4. KIỂM TRA DISTINCT: Đọc kĩ xem câu hỏi có chữ "khác nhau" hay "riêng biệt" (distinct) không.
 5. KIỂM TRA ROUND: Cân nhắc sử dụng ROUND nếu ví dụ yêu cầu, hoặc làm tròn khi tính giá trị tiền tệ.
 6. KHI JOIN, cẩn thận tránh nhầm lẫn cột (ví dụ ShipRegion của Orders vs RegionDescription của Regions).
+7. PROJECTION MATCHING (CỰC KỲ QUAN TRỌNG): Chỉ SELECT chính xác các cột mà câu hỏi yêu cầu. KHÔNG SELECT thừa (VD: hỏi Tên thì chỉ SELECT Name/Title, KHÔNG SELECT thêm ID). Đừng tự ý select bảng (*) nếu không được yêu cầu.
+8. CHỌN ĐÚNG BẢNG/CỘT: Chú ý kỹ bảng nào chứa thông tin đúng nhất (Ví dụ hỏi "bài hát" thì dùng bảng Track thay vì InvoiceLine). Nếu câu hỏi nói "doanh thu", hãy chú ý các cột UnitPrice * Quantity.
 
 Hãy dựa vào SCHEMA, BUSINESS RULES (nếu có) và cấu trúc của các ví dụ trên để viết SQL chính xác nhất. Chỉ trả về JSON."""
 

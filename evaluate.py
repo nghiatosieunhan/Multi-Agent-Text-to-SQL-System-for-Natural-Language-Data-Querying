@@ -23,11 +23,11 @@ sys.path.insert(0, str(Path(__file__).parent))
 from src.graph import run_query
 from src.memory import get_semantic_cache
 
-DEFAULT_DATA_PATH = "data/northwind_massive_100.json"
-DEFAULT_DB_PATH = "data/northwind/northwind.sqlite"
+DEFAULT_DATA_PATH = "data/data.json"
+DEFAULT_DB_PATH = "data/chinook/Chinook_Sqlite.sqlite"
 
 # ── Checkpoint Manager ───────────────────────────────────────────────────────
-class CheckpointManager:
+class CheckpointManager: 
     def __init__(self, checkpoint_dir: str = "test/eval_checkpoints"):
         self.checkpoint_dir = Path(checkpoint_dir)
         self.checkpoint_dir.mkdir(parents=True, exist_ok=True)
@@ -290,12 +290,12 @@ def run_evaluation(limit: int = None, clear_checkpoint: bool = False, dataset_ty
     print(f"✅ Đã lưu data JSON theo chuẩn mới vào file: {report_json_path}")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Evaluation for Chinook VN")
+    parser = argparse.ArgumentParser(description="Evaluation")
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--clear-checkpoint", action="store_true")
     parser.add_argument("--data", type=str, default=DEFAULT_DATA_PATH, help="Path to JSON dataset")
     parser.add_argument("--db", type=str, default=DEFAULT_DB_PATH, help="Path to SQLite DB")
-    parser.add_argument("--dataset-type", type=str, default="northwind", help="Type of dataset (used for checkpointing and RAG filtering)")
+    parser.add_argument("--dataset-type", type=str, default="chinook_en", help="Type of dataset (used for checkpointing and RAG filtering)")
     args = parser.parse_args()
 
     # Cập nhật đường dẫn mặc định theo tham số truyền vào
