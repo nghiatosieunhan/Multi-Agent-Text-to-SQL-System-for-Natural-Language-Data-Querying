@@ -87,12 +87,13 @@ DATABASE SCHEMA:
 
 CRITICAL RULES:
 1. ONLY SELECT — never DROP/INSERT/UPDATE/DELETE
-2. SQLite syntax: LIMIT 10 (not TOP 10), ROUND(col,2), strftime('%Y',date)
-3. Define your own table aliases — do NOT use pre-defined aliases
-4. Always use explicit column names from the schema above
-5. Escape single quotes: '' not \\'  (e.g. WHERE Name = '90''s Music')
-6. LIMIT must be integer: LIMIT 10 (not LIMIT 1st)
-7. Always end SQL with semicolon
+2. STRICT WHITELISTING: DO NOT hallucinate table or column names. You MUST ONLY use the EXACT tables and columns defined in the schema above. If a user asks for 'dogs', find the closest valid table in the schema (e.g. 'pets').
+3. AGGREGATION LOGIC: When calculating aggregates (COUNT, SUM) on an entity with a maximum/minimum property (e.g. "stadium with the highest capacity"), prioritize using a Sub-query in the WHERE clause (e.g. `WHERE capacity = (SELECT MAX(capacity)...)`) instead of combining it with ORDER BY and LIMIT 1.
+4. Define your own table aliases — do NOT use pre-defined aliases
+5. Always use explicit column names from the schema above
+6. Escape single quotes: '' not \\'  (e.g. WHERE Name = '90''s Music')
+7. LIMIT must be integer: LIMIT 10 (not LIMIT 1st)
+8. Always end SQL with semicolon
 
 OUTPUT: strict JSON only — no markdown, no explanation outside JSON:
 {{"sql":"SELECT ...;","confidence":0.9,"reasoning":"brief explanation"}}

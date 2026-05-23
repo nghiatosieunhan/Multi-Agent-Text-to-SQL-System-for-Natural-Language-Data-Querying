@@ -254,6 +254,14 @@ def validator_node(state: AgentState) -> AgentState:
 
     result = hard_validate(sql, db)
 
+    # Missing Joins Check (Soft warning to avoid failing on plural/singular mismatch like pet vs pets)
+    tables_in_sql = _extract_table_names(sql)
+    planned_tables = state.tables_identified if hasattr(state, 'tables_identified') and state.tables_identified else []
+    missing_tables = [pt for pt in planned_tables if pt.lower() not in tables_in_sql and pt.lower() != '']
+    if missing_tables:
+        result.setdefault("issues", []).append(f"Notice: The Query Planner mentioned {planned_tables}, but SQL used {tables_in_sql}. (Might be singular/plural difference)")
+        # We DO NOT set result["valid"] = False here because of false positives!
+
     if result["valid"]:
         state.next_agent = "executor"
         state.current_step = "validated"

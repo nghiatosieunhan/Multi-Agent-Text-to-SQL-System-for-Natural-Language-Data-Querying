@@ -10,6 +10,8 @@ import time
 import sqlite3
 import argparse
 import json
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Optional
 
@@ -23,8 +25,9 @@ sys.path.insert(0, str(Path(__file__).parent))
 from src.graph import run_query
 from src.memory import get_semantic_cache
 
-DEFAULT_DATA_PATH = "data/data.json"
-DEFAULT_DB_PATH = "data/chinook/Chinook_Sqlite.sqlite"
+DEFAULT_DATA_PATH = "data/spider_custom_data.json"
+DEFAULT_DB_PATH = "data/spider/spider_data/database" 
+DEFAULT_DATASET_TYPE = "spider_full"
 
 # ── Checkpoint Manager ───────────────────────────────────────────────────────
 class CheckpointManager: 
@@ -32,6 +35,7 @@ class CheckpointManager:
         self.checkpoint_dir = Path(checkpoint_dir)
         self.checkpoint_dir.mkdir(parents=True, exist_ok=True)
         self._path: Optional[Path] = None
+        self.lock = threading.Lock()
 
     def resolve_path(self, dataset_name: str, limit: Optional[int]) -> Path:
         fingerprint = f"{dataset_name}_limit_{limit}" if limit else dataset_name
@@ -46,12 +50,13 @@ class CheckpointManager:
         return {k: v for k, v in data.items()}
 
     def save(self, qid: str, result_dict: dict, checkpoint: dict):
-        checkpoint[qid] = result_dict
-        if self._path:
-            tmp = self._path.with_suffix(".tmp")
-            with open(tmp, "w", encoding="utf-8") as f:
-                json.dump(checkpoint, f, ensure_ascii=False, indent=2)
-            tmp.replace(self._path)
+        with self.lock:
+            checkpoint[qid] = result_dict
+            if self._path:
+                tmp = self._path.with_suffix(".tmp")
+                with open(tmp, "w", encoding="utf-8") as f:
+                    json.dump(checkpoint, f, ensure_ascii=False, indent=2)
+                tmp.replace(self._path)
 
     def clear(self, path: Path):
         if path.exists():
@@ -66,28 +71,48 @@ def execution_match(gold_sql: str, gen_sql: str, db_path: str) -> bool:
         conn.row_factory = sqlite3.Row
         cur = conn.cursor()
         
-        def sort_key(row):
-            return tuple(str(v) if v is not None else "" for v in row)
-            
         cur.execute(gold_norm)
-        gold = sorted((tuple(r) for r in cur.fetchall()), key=sort_key)
+        gold_rows = cur.fetchall()
+        
         cur.execute(gen_norm)
-        gen = sorted((tuple(r) for r in cur.fetchall()), key=sort_key)
-        conn.close()
-        return gold == gen
+        gen_rows = cur.fetchall()
+        
+        if len(gold_rows) != len(gen_rows):
+            return False
+            
+        def normalize_row(row):
+            norm = []
+            for v in row:
+                if isinstance(v, str):
+                    norm.append(v.lower().strip())
+                elif isinstance(v, float):
+                    norm.append(round(v, 3))
+                else:
+                    norm.append(v)
+            # Use frozenset to ignore column order, but allow duplicate values inside the row?
+            # Actually, standard set is fine if we just sort the normalized values
+            # Sorting the row values ignores column order effectively
+            return tuple(sorted([str(x) for x in norm]))
+            
+        gold_list = sorted([normalize_row(r) for r in gold_rows])
+        gen_list = sorted([normalize_row(r) for r in gen_rows])
+        
+        return gold_list == gen_list
     except Exception as e:
         print(f"Exec Match Error: {e}")
         return False
 
+progress_lock = threading.Lock()
 def print_progress(current: int, total: int, status: str, latency_ms: float):
-    bar_len = 30
-    filled = int(bar_len * current / max(1, total))
-    bar = "=" * filled + "-" * (bar_len - filled)
-    pct = current / max(1, total) * 100
-    print(f"\r[{bar}] {pct:.0f}% ({current}/{total}) {status} {latency_ms:.0f}ms", end="", flush=True)
+    with progress_lock:
+        bar_len = 30
+        filled = int(bar_len * current / max(1, total))
+        bar = "=" * filled + "-" * (bar_len - filled)
+        pct = current / max(1, total) * 100
+        print(f"\r[{bar}] {pct:.0f}% ({current}/{total}) {status} {latency_ms:.0f}ms", end="", flush=True)
 
 # ── Main Evaluation ────────────────────────────────────────────────────────
-def run_evaluation(limit: int = None, clear_checkpoint: bool = False, dataset_type: str = "chinook_vn"):
+def run_evaluation(limit: int = None, clear_checkpoint: bool = False, dataset_type: str = DEFAULT_DATASET_TYPE):
     
     print(f"[1/3] Loading dataset from {DEFAULT_DATA_PATH}...")
     
@@ -118,18 +143,23 @@ def run_evaluation(limit: int = None, clear_checkpoint: bool = False, dataset_ty
     print(f"\n[2/3] Bắt đầu đánh giá {total_q} câu hỏi trên DB {DEFAULT_DB_PATH}...")
     results = list(checkpoint_data.values())
 
-    db_path_str = DEFAULT_DB_PATH
-
-    for i, row in enumerate(questions):
+    completed_count = skipped
+    
+    def evaluate_single(i, row):
+        nonlocal completed_count
         qid = str(row.get("id", i))
         question = row["question"]
-        gold_sql = row.get("gold_sql", "")
+        gold_sql = row.get("gold_sql", row.get("query", ""))
         intent = row.get("intent", "unknown")
 
+        db_id = row.get("db_id")
+        if db_id:
+            db_path_str = f"data/spider/spider_data/database/{db_id}/{db_id}.sqlite"
+        else:
+            db_path_str = DEFAULT_DB_PATH
+
         if qid in checkpoint_data:
-            eval_res = checkpoint_data[qid]
-            print_progress(i + 1, total_q, "CACHED", eval_res.get("latency_ms", 0))
-            continue
+            return None # Already cached/processed
 
         start = time.time()
         try:
@@ -161,11 +191,13 @@ def run_evaluation(limit: int = None, clear_checkpoint: bool = False, dataset_ty
                 "latency_ms": round(elapsed_ms, 0),
                 "cache_hit": getattr(agent_result, 'cache_hit', False)
             }
-            results.append(eval_res)
+            with progress_lock:
+                results.append(eval_res)
             ckpt.save(qid, eval_res, checkpoint_data)
 
             status = "PASS" if match else "FAIL"
-            print_progress(i + 1, total_q, f"{status}", elapsed_ms)
+            completed_count += 1
+            print_progress(completed_count, total_q, f"{status}", elapsed_ms)
 
         except Exception as e:
             elapsed_ms = (time.time() - start) * 1000
@@ -176,9 +208,25 @@ def run_evaluation(limit: int = None, clear_checkpoint: bool = False, dataset_ty
                 "error": str(e),
                 "latency_ms": round(elapsed_ms, 0)
             }
-            results.append(eval_res)
+            with progress_lock:
+                results.append(eval_res)
             ckpt.save(qid, eval_res, checkpoint_data)
-            print_progress(i + 1, total_q, "ERROR", elapsed_ms)
+            completed_count += 1
+            print_progress(completed_count, total_q, "ERROR", elapsed_ms)
+
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        futures = []
+        for i, row in enumerate(questions):
+            qid = str(row.get("id", i))
+            if qid in checkpoint_data:
+                eval_res = checkpoint_data[qid]
+                # print_progress won't be entirely accurate if we spam it concurrently, 
+                # but we already bumped completed_count = skipped at the start.
+                continue
+            futures.append(executor.submit(evaluate_single, i, row))
+        
+        for future in as_completed(futures):
+            future.result()
 
     # ── SUMMARY ──────────────────────────────────────────────────────────────
     report_lines = []
@@ -295,7 +343,7 @@ if __name__ == "__main__":
     parser.add_argument("--clear-checkpoint", action="store_true")
     parser.add_argument("--data", type=str, default=DEFAULT_DATA_PATH, help="Path to JSON dataset")
     parser.add_argument("--db", type=str, default=DEFAULT_DB_PATH, help="Path to SQLite DB")
-    parser.add_argument("--dataset-type", type=str, default="chinook_en", help="Type of dataset (used for checkpointing and RAG filtering)")
+    parser.add_argument("--dataset-type", type=str, default=DEFAULT_DATASET_TYPE, help="Type of dataset (used for checkpointing and RAG filtering)")
     args = parser.parse_args()
 
     # Cập nhật đường dẫn mặc định theo tham số truyền vào

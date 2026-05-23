@@ -1,0 +1,21 @@
+﻿MaNV,TenNV,ChucVu,MaNQL,NgayVaoLam,Luong
+NV001,Chị Chi Phạm,Giám Đốc,,2020-01-01,"50,000,000"
+NV002,Khoa Đức Bùi,Trưởng Phòng Sale,NV001,2020-05-15,"30,000,000"
+NV003,Vi Đặng,Nhân viên Sale,NV002,2024-11-22,9000000
+NV004,Linh Nguyễn,Nhân viên Sale,NV002,2024/07/23,17000000
+NV005,Tùng Trí Lê,Nhân viên Sale,NV002,2023-07-02,18000000
+NV006,Ông Trọng Hoàng,Nhân viên Sale,NV002,2025-12-14,15000000
+NV007,Bà Thành Trần,Nhân viên Sale,NV002,2025-11-22,11000000
+NV008,Bà Dương Lê,Nhân viên Sale,NV002,2024-10-29,19000000
+NV009,Quý cô Nhật Dương,Nhân viên Sale,NV002,2024/09/22,8000000
+NV010,Quý ông Tú Phạm,Nhân viên Sale,NV002,2024-01-26,13000000 VNĐ
+NV011,Bác Bảo Vũ,Nhân viên Sale,NV002,2024-03-01,13000000
+NV012,Thảo Trần,Nhân viên Sale,NV002,2024-01-27,17000000
+NV013,Minh Xuân Dương,Nhân viên Sale,NV002,2025/12/31,20000000
+NV014,Bác Trung Đặng,Nhân viên Sale,NV002,2024-11-21,11000000
+NV015,Vi Dương,Nhân viên Sale,NV002,2026-01-15,18000000
+NV016,Chị Duyên Đặng,Nhân viên Sale,NV002,2024/02/10,10000000
+NV017,Chị Khoa Đặng,Nhân viên Sale,NV002,2025-08-25,20000000
+NV018,Bà Hạnh Lê,Nhân viên Sale,NV002,2024-12-04,9000000
+NV019,Bà Chi Phạm,Nhân viên Sale,NV002,2023-11-11,8000000 VNĐ
+NV020,Quang Hữu Nguyễn,Nhân viên Sale,NV002,2023/12/11,20000000

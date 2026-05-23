@@ -1,0 +1,4057 @@
+{
+  "metadata": {
+    "dataset": "spider_sales_vn (Generated)",
+    "total_questions": 300,
+    "generated_by": "Gemini"
+  },
+  "questions": [
+    {
+      "id": 1,
+      "question": "Liệt kê tất cả danh mục sản phẩm",
+      "intent": "simple",
+      "gold_sql": "SELECT TenDM FROM DanhMuc;",
+      "hint": "Chỉ lấy tên danh mục.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 2,
+      "question": "Hiển thị danh sách khách hàng có loại thẻ là VIP",
+      "intent": "simple",
+      "gold_sql": "SELECT TenKH, SoDienThoai FROM KhachHang WHERE LoaiThe = 'VIP';",
+      "hint": "",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 3,
+      "question": "Tính tổng số lượng nhân viên hiện có",
+      "intent": "aggregate",
+      "gold_sql": "SELECT COUNT(MaNV) FROM NhanVien;",
+      "hint": "",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 4,
+      "question": "Mức lương trung bình của nhân viên là bao nhiêu?",
+      "intent": "aggregate",
+      "gold_sql": "SELECT AVG(Luong) FROM NhanVien;",
+      "hint": "",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 5,
+      "question": "Có bao nhiêu đơn hàng được tạo vào ngày 2023-05-15?",
+      "intent": "aggregate",
+      "gold_sql": "SELECT COUNT(MaDH) FROM DonHang WHERE NgayMua LIKE '2023-05-15%';",
+      "hint": "NgayMua chứa cả thời gian nên cần dùng LIKE.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 6,
+      "question": "Liệt kê tên sản phẩm và tên danh mục của nó",
+      "intent": "join",
+      "gold_sql": "SELECT SanPham.TenSP, DanhMuc.TenDM FROM SanPham INNER JOIN DanhMuc ON SanPham.MaDM = DanhMuc.MaDM;",
+      "hint": "Cần join bảng SanPham và DanhMuc.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 7,
+      "question": "Hiển thị chi tiết đơn hàng (Mã ĐH, Tên SP, Số Lượng, Mức Giảm Giá) của đơn hàng DH001",
+      "intent": "join",
+      "gold_sql": "SELECT ChiTietDonHang.MaDH, SanPham.TenSP, ChiTietDonHang.SoLuong, ChiTietDonHang.MucGiamGia FROM ChiTietDonHang INNER JOIN SanPham ON ChiTietDonHang.MaSP = SanPham.MaSP WHERE ChiTietDonHang.MaDH = 'DH001';",
+      "hint": "",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 8,
+      "question": "Tên khách hàng đã mua đơn hàng DH005 là gì?",
+      "intent": "join",
+      "gold_sql": "SELECT KhachHang.TenKH FROM KhachHang INNER JOIN DonHang ON KhachHang.MaKH = DonHang.MaKH WHERE DonHang.MaDH = 'DH005';",
+      "hint": "",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 9,
+      "question": "Nhân viên nào phụ trách nhiều khách hàng nhất?",
+      "intent": "complex",
+      "gold_sql": "SELECT NhanVien.TenNV FROM NhanVien INNER JOIN KhachHang ON NhanVien.MaNV = KhachHang.MaNV_PhuTrach GROUP BY NhanVien.MaNV ORDER BY COUNT(KhachHang.MaKH) DESC LIMIT 1;",
+      "hint": "Sử dụng GROUP BY và ORDER BY COUNT() DESC LIMIT 1.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 10,
+      "question": "Sản phẩm nào có tổng số lượng bán ra cao nhất?",
+      "intent": "complex",
+      "gold_sql": "SELECT SanPham.TenSP FROM SanPham INNER JOIN ChiTietDonHang ON SanPham.MaSP = ChiTietDonHang.MaSP GROUP BY SanPham.MaSP ORDER BY SUM(ChiTietDonHang.SoLuong) DESC LIMIT 1;",
+      "hint": "Sử dụng SUM(SoLuong) và nhóm theo Sản Phẩm.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 11,
+      "question": "Tổng doanh thu (Số lượng * Đơn giá * (1 - Mức giảm giá)) của tất cả các đơn hàng là bao nhiêu?",
+      "intent": "complex",
+      "gold_sql": "SELECT SUM(ChiTietDonHang.SoLuong * SanPham.DonGia * (1 - ChiTietDonHang.MucGiamGia)) AS TongDoanhThu FROM ChiTietDonHang INNER JOIN SanPham ON ChiTietDonHang.MaSP = SanPham.MaSP;",
+      "hint": "Chú ý công thức tính doanh thu: SoLuong * DonGia * (1 - MucGiamGia).",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 12,
+      "question": "Cửa hàng nào có số lượng đơn hàng nhiều nhất?",
+      "intent": "complex",
+      "gold_sql": "SELECT CuaHang.TenCH FROM CuaHang INNER JOIN DonHang ON CuaHang.MaCH = DonHang.MaCH GROUP BY CuaHang.MaCH ORDER BY COUNT(DonHang.MaDH) DESC LIMIT 1;",
+      "hint": "",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 13,
+      "question": "Tìm các khách hàng chưa từng mua hàng",
+      "intent": "complex",
+      "gold_sql": "SELECT TenKH FROM KhachHang WHERE MaKH NOT IN (SELECT MaKH FROM DonHang);",
+      "hint": "Có thể dùng LEFT JOIN hoặc NOT IN.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 14,
+      "question": "Hiển thị trạng thái các đơn hàng của khách hàng tên là Nguyễn Văn A",
+      "intent": "join",
+      "gold_sql": "SELECT DonHang.TrangThai FROM DonHang INNER JOIN KhachHang ON DonHang.MaKH = KhachHang.MaKH WHERE KhachHang.TenKH = 'Nguyễn Văn A';",
+      "hint": "",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 15,
+      "question": "Tổng số lượng sản phẩm của danh mục Điện thoại đã được bán là bao nhiêu?",
+      "intent": "complex",
+      "gold_sql": "SELECT SUM(ChiTietDonHang.SoLuong) FROM ChiTietDonHang INNER JOIN SanPham ON ChiTietDonHang.MaSP = SanPham.MaSP INNER JOIN DanhMuc ON SanPham.MaDM = DanhMuc.MaDM WHERE DanhMuc.TenDM = 'Điện thoại';",
+      "hint": "Cần kết hợp bảng ChiTietDonHang, SanPham và DanhMuc.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 16,
+      "question": "Doanh thu của mỗi cửa hàng trong tháng 5 năm 2023 là bao nhiêu?",
+      "intent": "complex",
+      "sql_keywords": [
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham",
+        "CuaHang"
+      ],
+      "gold_sql": "SELECT T2.TenCH, SUM(T1.SoLuong * T3.DonGia * (1 - T1.MucGiamGia)) AS DoanhThu FROM ChiTietDonHang AS T1 JOIN DonHang AS T4 ON T1.MaDH = T4.MaDH JOIN CuaHang AS T2 ON T4.MaCH = T2.MaCH JOIN SanPham AS T3 ON T1.MaSP = T3.MaSP WHERE STRFTIME('%Y-%m', T4.NgayMua) = '2023-05' GROUP BY T2.TenCH;",
+      "hint": "Kết hợp thông tin đơn hàng, chi tiết đơn hàng, sản phẩm và cửa hàng. Lọc theo tháng và năm, sau đó tính tổng doanh thu cho từng cửa hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 17,
+      "question": "Liệt kê tên các nhân viên và tên người quản lý trực tiếp của họ.",
+      "intent": "join",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT nv1.TenNV, nv2.TenNV AS TenNguoiQuanLy FROM NhanVien AS nv1 LEFT JOIN NhanVien AS nv2 ON nv1.MaNQL = nv2.MaNV;",
+      "hint": "Sử dụng self-join trên bảng NhanVien để liên kết nhân viên với người quản lý của họ.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 18,
+      "question": "Những khách hàng nào có loại thẻ 'Silver' và đã thực hiện ít nhất một đơn hàng trong quý 3 năm 2023?",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT DISTINCT T1.TenKH FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH WHERE T1.LoaiThe = 'Silver' AND STRFTIME('%Y-%q', T2.NgayMua) = '2023-3';",
+      "hint": "Kết hợp bảng KhachHang và DonHang. Lọc theo loại thẻ và quý của ngày mua hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 19,
+      "question": "Số lượng đơn hàng đã được giao trong từng khu vực của cửa hàng là bao nhiêu?",
+      "intent": "complex",
+      "sql_keywords": [
+        "DonHang",
+        "CuaHang"
+      ],
+      "gold_sql": "SELECT T2.KhuVuc, COUNT(T1.MaDH) AS SoLuongDonHangGiao FROM DonHang AS T1 JOIN CuaHang AS T2 ON T1.MaCH = T2.MaCH WHERE T1.TrangThai = 'Hoàn thành' GROUP BY T2.KhuVuc;",
+      "hint": "Kết hợp bảng DonHang và CuaHang. Lọc đơn hàng có trạng thái 'Đã giao' và đếm theo khu vực.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 20,
+      "question": "Top 5 danh mục sản phẩm có tổng doanh thu cao nhất là gì?",
+      "intent": "complex",
+      "sql_keywords": [
+        "DanhMuc",
+        "SanPham",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT T1.TenDM, SUM(T2.SoLuong * T3.DonGia * (1 - T2.MucGiamGia)) AS TongDoanhThu FROM DanhMuc AS T1 JOIN SanPham AS T3 ON T1.MaDM = T3.MaDM JOIN ChiTietDonHang AS T2 ON T3.MaSP = T2.MaSP GROUP BY T1.TenDM ORDER BY TongDoanhThu DESC LIMIT 5;",
+      "hint": "Kết hợp Danh mục, Sản phẩm và Chi tiết đơn hàng. Tính tổng doanh thu cho từng danh mục và xếp hạng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 21,
+      "question": "Tính tổng lương của tất cả nhân viên thuộc quyền quản lý của 'Trần Minh Anh'.",
+      "intent": "complex",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT SUM(Luong) FROM NhanVien WHERE MaNQL = (SELECT MaNV FROM NhanVien WHERE TenNV = 'Trần Minh Anh');",
+      "hint": "Tìm mã nhân viên của 'Trần Minh Anh', sau đó tính tổng lương của những nhân viên có MaNQL tương ứng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 22,
+      "question": "Hiển thị danh sách các khách hàng ở khu vực 'Miền Bắc' và chi tiết các đơn hàng của họ.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "CuaHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenKH, T3.MaDH, T3.NgayMua, T3.TrangThai FROM KhachHang AS T1 JOIN CuaHang AS T2 ON T1.MaKH = T2.MaCH JOIN DonHang AS T3 ON T1.MaKH = T3.MaKH WHERE T2.KhuVuc = 'Miền Bắc';",
+      "hint": "Kết hợp KhachHang, CuaHang và DonHang. Lọc theo khu vực của cửa hàng liên quan đến khách hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 23,
+      "question": "Doanh thu trung bình của mỗi sản phẩm là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T2.TenSP, AVG(T1.SoLuong * T1.MucGiamGia) AS DoanhThuTrungBinh FROM ChiTietDonHang AS T1 JOIN SanPham AS T2 ON T1.MaSP = T2.MaSP GROUP BY T2.TenSP;",
+      "hint": "Tính trung bình doanh thu cho từng sản phẩm dựa trên chi tiết đơn hàng và thông tin sản phẩm.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 24,
+      "question": "Liệt kê các nhân viên có ngày vào làm trong năm 2022.",
+      "intent": "simple",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT TenNV FROM NhanVien WHERE STRFTIME('%Y', NgayVaoLam) = '2022';",
+      "hint": "Lọc bảng NhanVien dựa trên năm của cột NgayVaoLam.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 25,
+      "question": "Tìm khách hàng đã mua sản phẩm có tên 'Laptop XYZ' và đơn hàng của họ có mức giảm giá trên 10%.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT DISTINCT T1.TenKH FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP WHERE T4.TenSP = 'Laptop XYZ' AND T3.MucGiamGia > 0.1;",
+      "hint": "Kết hợp nhiều bảng để lọc khách hàng dựa trên tên sản phẩm mua và mức giảm giá.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 26,
+      "question": "Hiển thị số lượng đơn hàng chờ xử lý cho từng nhân viên.",
+      "intent": "complex",
+      "sql_keywords": [
+        "DonHang",
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT T2.TenNV, COUNT(T1.MaDH) AS SoLuongDonHangChoXuLy FROM DonHang AS T1 JOIN NhanVien AS T2 ON T1.MaNV = T2.MaNV WHERE T1.TrangThai = 'Chờ xử lý' GROUP BY T2.TenNV;",
+      "hint": "Kết hợp DonHang và NhanVien. Lọc đơn hàng 'Chờ xử lý' và đếm theo nhân viên.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 27,
+      "question": "Doanh thu của các sản phẩm thuộc danh mục 'Thiết bị điện tử' trong tháng 6 năm 2023?",
+      "intent": "complex",
+      "sql_keywords": [
+        "DanhMuc",
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T3.TenSP, SUM(T2.SoLuong * T2.DonGia * (1 - T2.MucGiamGia)) AS DoanhThu FROM DanhMuc AS T1 JOIN SanPham AS T3 ON T1.MaDM = T3.MaDM JOIN ChiTietDonHang AS T2 ON T3.MaSP = T2.MaSP JOIN DonHang AS T4 ON T2.MaDH = T4.MaDH WHERE T1.TenDM = 'Thiết bị điện tử' AND STRFTIME('%Y-%m', T4.NgayMua) = '2023-06' GROUP BY T3.TenSP;",
+      "hint": "Kết hợp nhiều bảng, lọc theo danh mục và tháng/năm, sau đó tính tổng doanh thu cho từng sản phẩm.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 28,
+      "question": "Liệt kê tên các khách hàng và tổng giá trị các đơn hàng mà họ đã thực hiện.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T1.TenKH, SUM(T3.SoLuong * T4.DonGia * (1 - T3.MucGiamGia)) AS TongGiaTriDonHang FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP GROUP BY T1.TenKH;",
+      "hint": "Kết hợp KhachHang, DonHang, ChiTietDonHang và SanPham. Tính tổng giá trị đơn hàng cho mỗi khách hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 29,
+      "question": "Những nhân viên nào đã từng quản lý đơn hàng nhưng không có cấp dưới trực tiếp?",
+      "intent": "complex",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT DISTINCT T1.TenNV FROM NhanVien AS T1 JOIN DonHang AS T2 ON T1.MaNV = T2.MaNV LEFT JOIN NhanVien AS T3 ON T1.MaNV = T3.MaNQL WHERE T3.MaNV IS NULL;",
+      "hint": "Tìm những nhân viên có trong bảng DonHang nhưng không xuất hiện ở cột MaNQL của bảng NhanVien.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 30,
+      "question": "Tỷ lệ đơn hàng bị hủy so với tổng số đơn hàng là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DonHang"
+      ],
+      "gold_sql": "SELECT CAST(SUM(CASE WHEN TrangThai = 'Đã hủy' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(MaDH) FROM DonHang;",
+      "hint": "Sử dụng CASE WHEN để đếm đơn hàng 'Đã hủy' và chia cho tổng số đơn hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 31,
+      "question": "Hiển thị thông tin chi tiết của các đơn hàng được đặt bởi khách hàng 'Nguyễn Thị Bích' trong tháng 11 năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T3.* FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH WHERE T1.TenKH = 'Nguyễn Thị Bích' AND STRFTIME('%Y-%m', T2.NgayMua) = '2023-11';",
+      "hint": "Kết hợp KhachHang, DonHang, ChiTietDonHang. Lọc theo tên khách hàng và tháng/năm của ngày mua.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 32,
+      "question": "Sản phẩm nào chưa từng được bán ra?",
+      "intent": "complex",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT TenSP FROM SanPham WHERE MaSP NOT IN (SELECT MaSP FROM ChiTietDonHang);",
+      "hint": "Tìm các sản phẩm không có trong bảng ChiTietDonHang.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 33,
+      "question": "Tổng số tiền giảm giá đã được áp dụng cho tất cả các đơn hàng là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "ChiTietDonHang",
+        "SanPham",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT SUM(T1.SoLuong * T2.DonGia * T1.MucGiamGia) FROM ChiTietDonHang AS T1 JOIN SanPham AS T2 ON T1.MaSP = T2.MaSP;",
+      "hint": "Tính tổng số tiền giảm giá dựa trên số lượng, đơn giá và mức giảm giá.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 34,
+      "question": "Hiển thị tên các nhân viên và số lượng đơn hàng mà mỗi người đã hoàn thành.",
+      "intent": "complex",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenNV, COUNT(T2.MaDH) AS SoLuongDonHangHoanThanh FROM NhanVien AS T1 JOIN DonHang AS T2 ON T1.MaNV = T2.MaNV WHERE T2.TrangThai = 'Hoàn thành' GROUP BY T1.TenNV;",
+      "hint": "Kết hợp NhanVien và DonHang. Lọc đơn hàng 'Đã giao' và đếm theo nhân viên.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 35,
+      "question": "Tìm các danh mục sản phẩm không có sản phẩm nào được bán ra trong quý 2 năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "DanhMuc",
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenDM FROM DanhMuc AS T1 WHERE T1.MaDM NOT IN (SELECT T2.MaDM FROM SanPham AS T3 JOIN ChiTietDonHang AS T4 ON T3.MaSP = T4.MaSP JOIN DonHang AS T5 ON T4.MaDH = T5.MaDH WHERE STRFTIME('%Y-%q', T5.NgayMua) = '2023-2');",
+      "hint": "Tìm các danh mục mà mã danh mục của chúng không xuất hiện trong các đơn hàng của quý 2 năm 2023.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 36,
+      "question": "Doanh thu của cửa hàng 'Chợ Lớn' trong năm 2023 là bao nhiêu?",
+      "intent": "complex",
+      "sql_keywords": [
+        "CuaHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT SUM(T3.SoLuong * T4.DonGia * (1 - T3.MucGiamGia)) AS DoanhThu FROM CuaHang AS T1 JOIN DonHang AS T2 ON T1.MaCH = T2.MaCH JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP WHERE T1.TenCH = 'Chợ Lớn' AND STRFTIME('%Y', T2.NgayMua) = '2023';",
+      "hint": "Kết hợp CuaHang, DonHang, ChiTietDonHang, SanPham. Lọc theo tên cửa hàng và năm, sau đó tính tổng doanh thu.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 37,
+      "question": "Liệt kê tên khách hàng và số điện thoại của những khách hàng đã mua ít nhất 3 sản phẩm khác nhau trong một đơn hàng.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT T1.TenKH, T1.SoDienThoai FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH GROUP BY T2.MaDH HAVING COUNT(DISTINCT T3.MaSP) >= 3;",
+      "hint": "Kết hợp KhachHang, DonHang, ChiTietDonHang. Nhóm theo đơn hàng và đếm số lượng sản phẩm khác nhau.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 38,
+      "question": "Hiển thị tên sản phẩm và tổng số lượng đã bán của các sản phẩm có đơn giá trên 500,000 VND.",
+      "intent": "complex",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT T1.TenSP, SUM(T2.SoLuong) AS TongSoLuongBan FROM SanPham AS T1 JOIN ChiTietDonHang AS T2 ON T1.MaSP = T2.MaSP WHERE T1.DonGia > 500000 GROUP BY T1.TenSP;",
+      "hint": "Kết hợp SanPham và ChiTietDonHang. Lọc sản phẩm theo đơn giá và tính tổng số lượng bán.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 39,
+      "question": "Tìm những nhân viên có mức lương cao hơn mức lương trung bình của toàn công ty.",
+      "intent": "complex",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT TenNV FROM NhanVien WHERE Luong > (SELECT AVG(Luong) FROM NhanVien);",
+      "hint": "Sử dụng subquery để tính lương trung bình, sau đó lọc nhân viên có lương cao hơn.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 40,
+      "question": "Doanh thu theo quý trong năm 2023 của tất cả các đơn hàng là bao nhiêu?",
+      "intent": "complex",
+      "sql_keywords": [
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT STRFTIME('%Y-%q', NgayMua) AS Quy, SUM(T2.SoLuong * T3.DonGia * (1 - T2.MucGiamGia)) AS DoanhThu FROM DonHang AS T1 JOIN ChiTietDonHang AS T2 ON T1.MaDH = T2.MaDH JOIN SanPham AS T3 ON T2.MaSP = T3.MaSP WHERE STRFTIME('%Y', T1.NgayMua) = '2023' GROUP BY Quy;",
+      "hint": "Kết hợp DonHang, ChiTietDonHang, SanPham. Lọc theo năm, nhóm theo quý và tính tổng doanh thu.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 41,
+      "question": "Doanh thu của từng danh mục sản phẩm trong quý 1 năm 2023 là bao nhiêu?",
+      "intent": "complex",
+      "sql_keywords": [
+        "DanhMuc",
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T2.TenDM, SUM(T1.SoLuong * T3.DonGia * (1 - T1.MucGiamGia)) AS DoanhThuQuy1_2023 FROM ChiTietDonHang AS T1 INNER JOIN SanPham AS T3 ON T1.MaSP = T3.MaSP INNER JOIN DanhMuc AS T2 ON T3.MaDM = T2.MaDM INNER JOIN DonHang AS T4 ON T1.MaDH = T4.MaDH WHERE STRFTIME('%Y-%Q', T4.NgayMua) = '2023-1' GROUP BY T2.TenDM;",
+      "hint": "Kết hợp bảng ChiTietDonHang, SanPham, DanhMuc và DonHang. Lọc theo quý và năm. Tính tổng doanh thu cho từng danh mục.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 42,
+      "question": "Liệt kê những nhân viên được quản lý bởi 'nguyễn văn b' và có chức vụ là 'trưởng phòng'.",
+      "intent": "join",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT TenNV FROM NhanVien WHERE MaNQL = (SELECT MaNV FROM NhanVien WHERE TenNV = 'nguyễn văn b') AND ChucVu = 'trưởng phòng';",
+      "hint": "Sử dụng truy vấn con để tìm MaNV của 'nguyễn văn b', sau đó lọc các nhân viên có MaNQL tương ứng và chức vụ 'trưởng phòng'.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 43,
+      "question": "Tìm tổng số lượng sản phẩm đã bán ra cho mỗi khách hàng trong tháng 12 năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT T1.TenKH, SUM(T3.SoLuong) AS TongSoLuongSanPham FROM KhachHang AS T1 INNER JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH INNER JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH WHERE STRFTIME('%Y-%m', T2.NgayMua) = '2023-12' GROUP BY T1.TenKH;",
+      "hint": "Kết hợp bảng KhachHang, DonHang và ChiTietDonHang. Lọc đơn hàng trong tháng 12 năm 2023 và tính tổng số lượng sản phẩm theo từng khách hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 44,
+      "question": "Hiển thị tên cửa hàng và tổng giá trị đơn hàng (doanh thu) của mỗi cửa hàng trong năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "CuaHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T1.TenCH, SUM(T3.SoLuong * T4.DonGia * (1 - T3.MucGiamGia)) AS TongDoanhThu FROM CuaHang AS T1 INNER JOIN DonHang AS T2 ON T1.MaCH = T2.MaCH INNER JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH INNER JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP WHERE STRFTIME('%Y', T2.NgayMua) = '2023' GROUP BY T1.TenCH;",
+      "hint": "Join CuaHang, DonHang, ChiTietDonHang, SanPham. Lọc theo năm 2023. Tính tổng doanh thu cho mỗi cửa hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 45,
+      "question": "Những khách hàng nào đã mua sản phẩm thuộc danh mục 'đồ gia dụng' với số lượng trên 5 trong một đơn hàng?",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham",
+        "DanhMuc"
+      ],
+      "gold_sql": "SELECT DISTINCT T1.TenKH FROM KhachHang AS T1 INNER JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH INNER JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH INNER JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP INNER JOIN DanhMuc AS T5 ON T4.MaDM = T5.MaDM WHERE T5.TenDM = 'đồ gia dụng' AND T3.SoLuong > 5;",
+      "hint": "Kết hợp các bảng KhachHang, DonHang, ChiTietDonHang, SanPham, DanhMuc. Lọc theo tên danh mục và số lượng sản phẩm.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 46,
+      "question": "Liệt kê tên các sản phẩm và tổng số lượng đã bán của chúng, chỉ bao gồm các sản phẩm có tổng số lượng bán ra trên 100.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT T1.TenSP, SUM(T2.SoLuong) AS TongSoLuongBan FROM SanPham AS T1 INNER JOIN ChiTietDonHang AS T2 ON T1.MaSP = T2.MaSP GROUP BY T1.TenSP HAVING SUM(T2.SoLuong) > 100;",
+      "hint": "Join SanPham và ChiTietDonHang. Tính tổng số lượng bán cho mỗi sản phẩm. Sử dụng HAVING để lọc kết quả.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 47,
+      "question": "Tìm những nhân viên có chức vụ 'nhân viên bán hàng' và đã thực hiện ít nhất 20 đơn hàng.",
+      "intent": "complex",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenNV FROM NhanVien AS T1 INNER JOIN DonHang AS T2 ON T1.MaNV = T2.MaNV WHERE T1.ChucVu = 'nhân viên bán hàng' GROUP BY T1.TenNV HAVING COUNT(T2.MaDH) >= 20;",
+      "hint": "Join NhanVien và DonHang. Lọc theo chức vụ. Đếm số lượng đơn hàng cho mỗi nhân viên và sử dụng HAVING để lọc.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 48,
+      "question": "Hiển thị tên khách hàng và ngày mua hàng của những đơn hàng có trạng thái 'đã giao' trong tháng 1 năm 2023.",
+      "intent": "join",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenKH, T2.NgayMua FROM KhachHang AS T1 INNER JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH WHERE T2.TrangThai = 'đã giao' AND STRFTIME('%Y-%m', T2.NgayMua) = '2023-01';",
+      "hint": "Join KhachHang và DonHang. Lọc theo trạng thái 'đã giao' và tháng/năm.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 49,
+      "question": "Tính tổng doanh thu cho mỗi nhân viên trong quý 4 năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T1.TenNV, SUM(T3.SoLuong * T4.DonGia * (1 - T3.MucGiamGia)) AS DoanhThuQuy4_2023 FROM NhanVien AS T1 INNER JOIN DonHang AS T2 ON T1.MaNV = T2.MaNV INNER JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH INNER JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP WHERE STRFTIME('%Y-%Q', T2.NgayMua) = '2023-4' GROUP BY T1.TenNV;",
+      "hint": "Kết hợp các bảng NhanVien, DonHang, ChiTietDonHang, SanPham. Lọc theo quý và năm. Tính tổng doanh thu cho từng nhân viên.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 50,
+      "question": "Liệt kê các sản phẩm chưa từng được thêm vào bất kỳ đơn hàng nào.",
+      "intent": "complex",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT TenSP FROM SanPham WHERE MaSP NOT IN (SELECT MaSP FROM ChiTietDonHang);",
+      "hint": "Sử dụng truy vấn con NOT IN để tìm các sản phẩm không có trong bảng ChiTietDonHang.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 51,
+      "question": "Hiển thị tên khách hàng và tổng số tiền họ đã chi tiêu trong năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T1.TenKH, SUM(T3.SoLuong * T4.DonGia * (1 - T3.MucGiamGia)) AS TongTienChiTieu FROM KhachHang AS T1 INNER JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH INNER JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH INNER JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP WHERE STRFTIME('%Y', T2.NgayMua) = '2023' GROUP BY T1.TenKH ORDER BY TongTienChiTieu DESC;",
+      "hint": "Join KhachHang, DonHang, ChiTietDonHang, SanPham. Lọc theo năm 2023. Tính tổng chi tiêu cho mỗi khách hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 52,
+      "question": "Đếm số lượng đơn hàng theo từng trạng thái ('chờ xử lý', 'đã giao', 'đã hủy').",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DonHang"
+      ],
+      "gold_sql": "SELECT TrangThai, COUNT(MaDH) AS SoLuongDonHang FROM DonHang GROUP BY TrangThai;",
+      "hint": "Group by TrangThai và đếm số lượng MaDH.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 53,
+      "question": "Tìm những khách hàng đã mua ít nhất 3 sản phẩm khác nhau trong cùng một đơn hàng.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT T1.TenKH FROM KhachHang AS T1 INNER JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH INNER JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH GROUP BY T2.MaDH, T1.TenKH HAVING COUNT(DISTINCT T3.MaSP) >= 3;",
+      "hint": "Join KhachHang, DonHang, ChiTietDonHang. Group by MaDH và TenKH. Sử dụng HAVING để đếm số lượng sản phẩm khác nhau trong mỗi đơn hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 54,
+      "question": "Hiển thị tên của các quản lý (MaNQL) và số lượng nhân viên mà họ đang quản lý.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT T1.TenNV AS TenNguoiQuanLy, COUNT(T2.MaNV) AS SoLuongNhanVien FROM NhanVien AS T1 INNER JOIN NhanVien AS T2 ON T1.MaNV = T2.MaNQL GROUP BY T1.TenNV;",
+      "hint": "Join bảng NhanVien với chính nó. Group by TenNV của người quản lý và đếm số lượng nhân viên thuộc quyền quản lý.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 55,
+      "question": "Top 3 cửa hàng có doanh thu cao nhất trong tháng 7 năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "CuaHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T1.TenCH, SUM(T3.SoLuong * T4.DonGia * (1 - T3.MucGiamGia)) AS DoanhThuThang7_2023 FROM CuaHang AS T1 INNER JOIN DonHang AS T2 ON T1.MaCH = T2.MaCH INNER JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH INNER JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP WHERE STRFTIME('%Y-%m', T2.NgayMua) = '2023-07' GROUP BY T1.TenCH ORDER BY DoanhThuThang7_2023 DESC LIMIT 3;",
+      "hint": "Kết hợp các bảng CuaHang, DonHang, ChiTietDonHang, SanPham. Lọc theo tháng và năm. Tính tổng doanh thu cho mỗi cửa hàng và lấy top 3.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 56,
+      "question": "Liệt kê tên các danh mục sản phẩm và số lượng sản phẩm thuộc mỗi danh mục.",
+      "intent": "join",
+      "sql_keywords": [
+        "DanhMuc",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T1.TenDM, COUNT(T2.MaSP) AS SoLuongSanPham FROM DanhMuc AS T1 LEFT JOIN SanPham AS T2 ON T1.MaDM = T2.MaDM GROUP BY T1.TenDM;",
+      "hint": "Join DanhMuc và SanPham. Group by TenDM và đếm số lượng MaSP. Sử dụng LEFT JOIN để bao gồm cả danh mục không có sản phẩm.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 57,
+      "question": "Tìm những khách hàng chưa từng mua bất kỳ sản phẩm nào thuộc danh mục 'thời trang'.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham",
+        "DanhMuc"
+      ],
+      "gold_sql": "SELECT DISTINCT T1.TenKH FROM KhachHang AS T1 LEFT JOIN (SELECT T2.MaKH FROM DonHang AS T2 INNER JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH INNER JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP INNER JOIN DanhMuc AS T5 ON T4.MaDM = T5.MaDM WHERE T5.TenDM = 'thời trang') AS KhachHangMuaThoiTrang ON T1.MaKH = KhachHangMuaThoiTrang.MaKH WHERE KhachHangMuaThoiTrang.MaKH IS NULL;",
+      "hint": "Tạo một tập hợp khách hàng đã mua sản phẩm 'thời trang', sau đó tìm những khách hàng không thuộc tập hợp đó.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 58,
+      "question": "Hiển thị tên nhân viên, chức vụ và ngày vào làm của những nhân viên được tuyển dụng trong năm 2021.",
+      "intent": "simple",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT TenNV, ChucVu, NgayVaoLam FROM NhanVien WHERE STRFTIME('%Y', NgayVaoLam) = '2021';",
+      "hint": "Lọc bảng NhanVien theo năm của cột NgayVaoLam.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 59,
+      "question": "Tính tổng số tiền giảm giá đã áp dụng cho từng đơn hàng.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "ChiTietDonHang",
+        "SanPham",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.MaDH, SUM(T2.SoLuong * T3.DonGia * T2.MucGiamGia) AS TongTienGiamGia FROM DonHang AS T1 INNER JOIN ChiTietDonHang AS T2 ON T1.MaDH = T2.MaDH INNER JOIN SanPham AS T3 ON T2.MaSP = T3.MaSP GROUP BY T1.MaDH;",
+      "hint": "Join ChiTietDonHang, SanPham, DonHang. Group by MaDH và tính tổng tiền giảm giá.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 60,
+      "question": "Những khách hàng nào đã đặt đơn hàng vào ngày 2023-03-10?",
+      "intent": "join",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenKH FROM KhachHang AS T1 INNER JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH WHERE T2.NgayMua = '2023-03-10';",
+      "hint": "Join KhachHang và DonHang. Lọc theo ngày mua hàng cụ thể.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 61,
+      "question": "Hiển thị tên sản phẩm, đơn giá và tên danh mục của tất cả các sản phẩm.",
+      "intent": "join",
+      "sql_keywords": [
+        "SanPham",
+        "DanhMuc"
+      ],
+      "gold_sql": "SELECT T1.TenSP, T1.DonGia, T2.TenDM FROM SanPham AS T1 INNER JOIN DanhMuc AS T2 ON T1.MaDM = T2.MaDM;",
+      "hint": "Join SanPham và DanhMuc theo MaDM.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 62,
+      "question": "Tìm những nhân viên có mức lương trên 10,000,000 VND.",
+      "intent": "simple",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT TenNV FROM NhanVien WHERE Luong > 10000000;",
+      "hint": "Lọc bảng NhanVien theo cột Luong.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 63,
+      "question": "Doanh thu của từng nhân viên trong tháng 2 năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T1.TenNV, SUM(T3.SoLuong * T4.DonGia * (1 - T3.MucGiamGia)) AS DoanhThuThang2_2023 FROM NhanVien AS T1 INNER JOIN DonHang AS T2 ON T1.MaNV = T2.MaNV INNER JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH INNER JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP WHERE STRFTIME('%Y-%m', T2.NgayMua) = '2023-02' GROUP BY T1.TenNV;",
+      "hint": "Kết hợp các bảng NhanVien, DonHang, ChiTietDonHang, SanPham. Lọc theo tháng và năm. Tính tổng doanh thu cho từng nhân viên.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 64,
+      "question": "Liệt kê tên các khách hàng và số lượng đơn hàng mà mỗi người đã thực hiện.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenKH, COUNT(T2.MaDH) AS SoLuongDonHang FROM KhachHang AS T1 INNER JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH GROUP BY T1.TenKH ORDER BY SoLuongDonHang DESC;",
+      "hint": "Join KhachHang và DonHang. Group by TenKH và đếm số lượng MaDH.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 65,
+      "question": "Tìm những sản phẩm có đơn giá cao hơn giá trung bình của tất cả các sản phẩm.",
+      "intent": "complex",
+      "sql_keywords": [
+        "SanPham"
+      ],
+      "gold_sql": "SELECT TenSP FROM SanPham WHERE DonGia > (SELECT AVG(DonGia) FROM SanPham);",
+      "hint": "Sử dụng truy vấn con để tính giá trung bình của tất cả sản phẩm, sau đó lọc các sản phẩm có đơn giá cao hơn giá trị đó.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 66,
+      "question": "Những nhân viên nào có ngày vào làm trong tháng 1 năm 2023?",
+      "intent": "simple",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT TenNV FROM NhanVien WHERE STRFTIME('%Y-%m', NgayVaoLam) = '2023-01';",
+      "hint": "Sử dụng hàm STRFTIME để trích xuất tháng và năm từ ngày.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 67,
+      "question": "Liệt kê tên các sản phẩm và số lượng tồn kho của chúng (giả sử số lượng tồn kho có thể suy ra từ tổng số lượng đã bán).",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT T1.TenSP, SUM(T1.DonGia) AS TongGiaTri FROM SanPham AS T1 JOIN ChiTietDonHang AS T2 ON T1.MaSP = T2.MaSP GROUP BY T1.TenSP;",
+      "hint": "Cần làm rõ cách tính 'số lượng tồn kho'. Câu hỏi này có thể cần thông tin bổ sung hoặc diễn giải lại.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 68,
+      "question": "Hiển thị tên các cửa hàng và tổng số đơn hàng đã xử lý tại mỗi cửa hàng trong quý 1 năm 2023.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "CuaHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenCH, COUNT(T2.MaDH) FROM CuaHang AS T1 JOIN DonHang AS T2 ON T1.MaCH = T2.MaCH WHERE STRFTIME('%Y-%m-%d', T2.NgayMua) BETWEEN '2023-01-01' AND '2023-03-31' GROUP BY T1.TenCH;",
+      "hint": "Sử dụng hàm STRFTIME để lọc theo quý và COUNT để đếm đơn hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 69,
+      "question": "Tìm các khách hàng đã mua sản phẩm thuộc danh mục 'Công nghệ' với tổng giá trị đơn hàng trên 10,000,000 VND.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham",
+        "DanhMuc"
+      ],
+      "gold_sql": "SELECT DISTINCT T1.TenKH FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP JOIN DanhMuc AS T5 ON T4.MaDM = T5.MaDM WHERE T5.TenDM = 'Công nghệ' GROUP BY T1.MaKH HAVING SUM(T3.SoLuong * T4.DonGia * (1 - T3.MucGiamGia)) > 10000000;",
+      "hint": "Kết hợp nhiều bảng, sử dụng GROUP BY và HAVING để lọc theo tổng giá trị đơn hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 70,
+      "question": "Doanh thu của từng nhân viên trong năm 2023, phân loại theo từng tháng.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T1.TenNV, STRFTIME('%m', T2.NgayMua) AS Thang, SUM(T3.SoLuong * T4.DonGia * (1 - T3.MucGiamGia)) AS DoanhThuThang FROM NhanVien AS T1 JOIN DonHang AS T2 ON T1.MaNV = T2.MaNV JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP WHERE STRFTIME('%Y', T2.NgayMua) = '2023' GROUP BY T1.TenNV, Thang ORDER BY T1.TenNV, Thang;",
+      "hint": "Sử dụng STRFTIME để trích xuất tháng và SUM để tính doanh thu.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 71,
+      "question": "Hiển thị tên các sản phẩm có đơn giá cao nhất trong mỗi danh mục.",
+      "intent": "complex",
+      "sql_keywords": [
+        "SanPham",
+        "DanhMuc"
+      ],
+      "gold_sql": "SELECT T1.TenSP, T1.DonGia, T2.TenDM FROM SanPham AS T1 JOIN DanhMuc AS T2 ON T1.MaDM = T2.MaDM WHERE T1.DonGia = (SELECT MAX(DonGia) FROM SanPham WHERE MaDM = T1.MaDM);",
+      "hint": "Sử dụng subquery để tìm giá cao nhất trong từng danh mục.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 72,
+      "question": "Số lượng khách hàng mới (tức là những người chưa từng mua hàng trước đó) trong từng tháng của năm 2023 là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT STRFTIME('%m', MIN(T2.NgayMua)) AS Thang, COUNT(T1.MaKH) FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH WHERE STRFTIME('%Y', T2.NgayMua) = '2023' GROUP BY T1.MaKH HAVING MIN(T2.NgayMua) BETWEEN '2023-01-01' AND '2023-12-31';",
+      "hint": "Cần xác định khách hàng mới dựa trên ngày mua hàng đầu tiên.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 73,
+      "question": "Liệt kê tên các nhân viên và chức vụ của họ, chỉ những người có lương trên 8,000,000 VND.",
+      "intent": "simple",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT TenNV, ChucVu FROM NhanVien WHERE Luong > 8000000;",
+      "hint": "Truy vấn trực tiếp từ bảng NhanVien với điều kiện lọc.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 74,
+      "question": "Top 3 danh mục sản phẩm có số lượng sản phẩm bán ra nhiều nhất trong tháng 10 năm 2023 là gì?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DanhMuc",
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenDM, SUM(T2.SoLuong) AS TongSoLuong FROM DanhMuc AS T1 JOIN SanPham AS T3 ON T1.MaDM = T3.MaDM JOIN ChiTietDonHang AS T2 ON T3.MaSP = T2.MaSP JOIN DonHang AS T4 ON T2.MaDH = T4.MaDH WHERE STRFTIME('%Y-%m', T4.NgayMua) = '2023-10' GROUP BY T1.TenDM ORDER BY TongSoLuong DESC LIMIT 3;",
+      "hint": "Kết hợp các bảng, sử dụng SUM và LIMIT để tìm top 3.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 75,
+      "question": "Những nhân viên nào chưa từng được phân công phụ trách khách hàng nào?",
+      "intent": "join",
+      "sql_keywords": [
+        "NhanVien",
+        "KhachHang"
+      ],
+      "gold_sql": "SELECT T1.TenNV FROM NhanVien AS T1 LEFT JOIN KhachHang AS T2 ON T1.MaNV = T2.MaNV_PhuTrach WHERE T2.MaKH IS NULL;",
+      "hint": "Sử dụng LEFT JOIN và kiểm tra giá trị NULL.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 76,
+      "question": "Hiển thị tên các đơn hàng có mức giảm giá trung bình trên 15%.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.MaDH FROM ChiTietDonHang AS T1 WHERE T1.MucGiamGia > 0.15 GROUP BY T1.MaDH HAVING AVG(T1.MucGiamGia) > 0.15;",
+      "hint": "Sử dụng AVG và HAVING để lọc theo mức giảm giá trung bình.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 77,
+      "question": "Doanh thu của các cửa hàng thuộc khu vực 'miền trung' trong quý 2 năm 2023.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "CuaHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T1.TenCH, SUM(T3.SoLuong * T4.DonGia * (1 - T3.MucGiamGia)) AS DoanhThu FROM CuaHang AS T1 JOIN DonHang AS T2 ON T1.MaCH = T2.MaCH JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP WHERE T1.KhuVuc = 'miền trung' AND STRFTIME('%Y-%m-%d', T2.NgayMua) BETWEEN '2023-04-01' AND '2023-06-30' GROUP BY T1.TenCH;",
+      "hint": "Kết hợp CuaHang, DonHang, ChiTietDonHang, SanPham và lọc theo khu vực và thời gian.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 78,
+      "question": "Liệt kê tên các nhân viên đã thực hiện ít nhất 5 đơn hàng trong tháng 8 năm 2023.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenNV FROM NhanVien AS T1 JOIN DonHang AS T2 ON T1.MaNV = T2.MaNV WHERE STRFTIME('%Y-%m', T2.NgayMua) = '2023-08' GROUP BY T1.TenNV HAVING COUNT(T2.MaDH) >= 5;",
+      "hint": "Sử dụng COUNT và HAVING để đếm số đơn hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 79,
+      "question": "Tìm những khách hàng đã mua cả sản phẩm 'Bàn phím' và 'Chuột'.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T1.TenKH FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP WHERE T4.TenSP = 'Bàn phím' INTERSECT SELECT T1.TenKH FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP WHERE T4.TenSP = 'Chuột';",
+      "hint": "Sử dụng INTERSECT để tìm những khách hàng có trong cả hai tập kết quả.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 80,
+      "question": "Hiển thị tên các danh mục sản phẩm không có bất kỳ sản phẩm nào được bán ra trong tháng 11 năm 2023.",
+      "intent": "join",
+      "sql_keywords": [
+        "DanhMuc",
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenDM FROM DanhMuc AS T1 WHERE T1.MaDM NOT IN (SELECT T2.MaDM FROM SanPham AS T2 JOIN ChiTietDonHang AS T3 ON T2.MaSP = T3.MaSP JOIN DonHang AS T4 ON T3.MaDH = T4.MaDH WHERE STRFTIME('%Y-%m', T4.NgayMua) = '2023-11');",
+      "hint": "Sử dụng NOT IN với một subquery.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 81,
+      "question": "Tỷ lệ phần trăm doanh thu từ các đơn hàng có mức giảm giá trên 10% so với tổng doanh thu toàn bộ là bao nhiêu?",
+      "intent": "complex",
+      "sql_keywords": [
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT CAST(SUM(CASE WHEN T2.MucGiamGia > 0.1 THEN T2.SoLuong * T3.DonGia * (1 - T2.MucGiamGia) ELSE 0 END) AS REAL) * 100 / SUM(T2.SoLuong * T3.DonGia * (1 - T2.MucGiamGia)) FROM DonHang AS T1 JOIN ChiTietDonHang AS T2 ON T1.MaDH = T2.MaDH JOIN SanPham AS T3 ON T2.MaSP = T3.MaSP;",
+      "hint": "Sử dụng CASE WHEN để tính tổng doanh thu có điều kiện và chia cho tổng doanh thu.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 82,
+      "question": "Liệt kê tên các khách hàng đã đặt đơn hàng trong ngày 25 tháng 12 năm 2023 và nhân viên đã xử lý đơn hàng đó.",
+      "intent": "join",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT T1.TenKH, T3.TenNV FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH JOIN NhanVien AS T3 ON T2.MaNV = T3.MaNV WHERE T2.NgayMua = '2023-12-25';",
+      "hint": "Join KhachHang, DonHang và NhanVien.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 83,
+      "question": "Hiển thị tên các sản phẩm và tổng doanh thu mà mỗi sản phẩm mang lại, chỉ tính những sản phẩm có doanh thu trên 5,000,000 VND.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT T1.TenSP, SUM(T2.SoLuong * T1.DonGia * (1 - T2.MucGiamGia)) AS TongDoanhThu FROM SanPham AS T1 JOIN ChiTietDonHang AS T2 ON T1.MaSP = T2.MaSP GROUP BY T1.TenSP HAVING TongDoanhThu > 5000000;",
+      "hint": "Sử dụng SUM, GROUP BY và HAVING để lọc theo tổng doanh thu.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 84,
+      "question": "Những khách hàng nào đã mua sản phẩm của cửa hàng 'chợ lớn' và thuộc loại thẻ 'gold'?",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "CuaHang"
+      ],
+      "gold_sql": "SELECT DISTINCT T1.TenKH FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH JOIN CuaHang AS T3 ON T2.MaCH = T3.MaCH WHERE T3.TenCH = 'chợ lớn' AND T1.LoaiThe = 'gold';",
+      "hint": "Kết hợp KhachHang, DonHang, CuaHang và lọc theo tên cửa hàng và loại thẻ.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 85,
+      "question": "Tổng số lượng sản phẩm đã bán cho từng nhân viên trong tháng 2 năm 2023 là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT T1.TenNV, SUM(T3.SoLuong) AS TongSoLuongBan FROM NhanVien AS T1 JOIN DonHang AS T2 ON T1.MaNV = T2.MaNV JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH WHERE STRFTIME('%Y-%m', T2.NgayMua) = '2023-02' GROUP BY T1.TenNV;",
+      "hint": "Sử dụng SUM để tính tổng số lượng và lọc theo tháng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 86,
+      "question": "Hiển thị tên quản lý và số lượng nhân viên cấp dưới trực tiếp của họ, chỉ những quản lý có từ 5 nhân viên trở lên.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT T1.TenNV AS TenQuanLy, COUNT(T2.MaNV) AS SoNhanVien FROM NhanVien AS T1 JOIN NhanVien AS T2 ON T1.MaNV = T2.MaNQL GROUP BY T1.TenNV HAVING COUNT(T2.MaNV) >= 5;",
+      "hint": "Sử dụng self-join trên bảng NhanVien và HAVING để lọc.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 87,
+      "question": "Những khách hàng nào đã từng mua sản phẩm thuộc danh mục 'Đồ dùng văn phòng' và cũng đã mua sản phẩm thuộc danh mục 'Thiết bị công nghiệp'?",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham",
+        "DanhMuc"
+      ],
+      "gold_sql": "SELECT T1.TenKH FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP JOIN DanhMuc AS T5 ON T4.MaDM = T5.MaDM WHERE T5.TenDM = 'Đồ dùng văn phòng' INTERSECT SELECT T1.TenKH FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP JOIN DanhMuc AS T5 ON T4.MaDM = T5.MaDM WHERE T5.TenDM = 'Thiết bị công nghiệp';",
+      "hint": "Sử dụng INTERSECT để tìm khách hàng có trong cả hai điều kiện.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 88,
+      "question": "Hiển thị tên các sản phẩm có đơn giá nằm trong khoảng từ 50,000 VND đến 200,000 VND.",
+      "intent": "simple",
+      "sql_keywords": [
+        "SanPham"
+      ],
+      "gold_sql": "SELECT TenSP FROM SanPham WHERE DonGia BETWEEN 50000 AND 200000;",
+      "hint": "Sử dụng toán tử BETWEEN để lọc theo khoảng giá.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 89,
+      "question": "Doanh thu trung bình của các đơn hàng trong từng khu vực cửa hàng là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "CuaHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T1.KhuVuc, AVG(T3.SoLuong * T4.DonGia * (1 - T3.MucGiamGia)) AS DoanhThuTrungBinh FROM CuaHang AS T1 JOIN DonHang AS T2 ON T1.MaCH = T2.MaCH JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP GROUP BY T1.KhuVuc;",
+      "hint": "Kết hợp các bảng, tính doanh thu cho từng đơn hàng rồi lấy trung bình theo khu vực.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 90,
+      "question": "Tổng doanh thu của mỗi cửa hàng trong năm 2023 là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham",
+        "CuaHang"
+      ],
+      "gold_sql": "SELECT T2.TenCH, SUM(T1.SoLuong * T3.DonGia * (1 - T1.MucGiamGia)) AS DoanhThu FROM ChiTietDonHang AS T1 JOIN DonHang AS T4 ON T1.MaDH = T4.MaDH JOIN CuaHang AS T2 ON T4.MaCH = T2.MaCH JOIN SanPham AS T3 ON T1.MaSP = T3.MaSP WHERE STRFTIME('%Y', T4.NgayMua) = '2023' GROUP BY T2.TenCH;",
+      "hint": "Cần kết hợp bảng ChiTietDonHang, DonHang, SanPham và CuaHang để tính doanh thu theo từng cửa hàng trong năm 2023.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 91,
+      "question": "Liệt kê tên các nhân viên và tổng số lượng sản phẩm họ đã bán trong mỗi tháng của năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T1.TenNV, STRFTIME('%m', T2.NgayMua) AS Thang, SUM(T3.SoLuong) AS TongSoLuong FROM NhanVien AS T1 JOIN DonHang AS T2 ON T1.MaNV = T2.MaNV JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH WHERE STRFTIME('%Y', T2.NgayMua) = '2023' GROUP BY T1.TenNV, Thang ORDER BY T1.TenNV, Thang;",
+      "hint": "Sử dụng các bảng NhanVien, DonHang, ChiTietDonHang để nhóm theo nhân viên và tháng, sau đó tính tổng số lượng sản phẩm.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 92,
+      "question": "Hiển thị tên khách hàng, số điện thoại và tổng giá trị đơn hàng của những khách hàng đã chi tiêu trên 15,000,000 VNĐ trong năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T1.TenKH, T1.SoDienThoai, SUM(T3.SoLuong * T4.DonGia * (1 - T3.MucGiamGia)) AS TongGiaTriDonHang FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP WHERE STRFTIME('%Y', T2.NgayMua) = '2023' GROUP BY T1.MaKH, T1.TenKH, T1.SoDienThoai HAVING TongGiaTriDonHang > 15000000;",
+      "hint": "Tính tổng giá trị đơn hàng cho mỗi khách hàng trong năm 2023, sau đó lọc ra những khách hàng có tổng chi tiêu vượt ngưỡng quy định.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 93,
+      "question": "Liệt kê các sản phẩm thuộc danh mục 'Thiết bị văn phòng' có số lượng bán ra trong tháng 9 năm 2023 ít hơn 50 đơn vị.",
+      "intent": "complex",
+      "sql_keywords": [
+        "SanPham",
+        "DanhMuc",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenSP FROM SanPham AS T1 JOIN DanhMuc AS T2 ON T1.MaDM = T2.MaDM JOIN ChiTietDonHang AS T3 ON T1.MaSP = T3.MaSP JOIN DonHang AS T4 ON T3.MaDH = T4.MaDH WHERE T2.TenDM = 'Thiết bị văn phòng' AND STRFTIME('%Y-%m', T4.NgayMua) = '2023-09' GROUP BY T1.TenSP HAVING SUM(T3.SoLuong) < 50;",
+      "hint": "Kết hợp các bảng SanPham, DanhMuc, ChiTietDonHang, DonHang, lọc theo danh mục và tháng, sau đó nhóm theo sản phẩm và đếm số lượng bán ra.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 94,
+      "question": "Tìm những nhân viên mà cấp quản lý trực tiếp của họ (MaNQL) cũng là nhân viên trong công ty.",
+      "intent": "join",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT NV1.TenNV FROM NhanVien AS NV1 JOIN NhanVien AS NV2 ON NV1.MaNQL = NV2.MaNV;",
+      "hint": "Sử dụng self-join trên bảng NhanVien để so sánh MaNV của người quản lý với MaNV của nhân viên.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 95,
+      "question": "Hiển thị tên các sản phẩm, đơn giá và tổng số lượng đã bán của chúng, sắp xếp theo số lượng bán giảm dần.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT T1.TenSP, T1.DonGia, SUM(T2.SoLuong) AS TongSoLuongBan FROM SanPham AS T1 JOIN ChiTietDonHang AS T2 ON T1.MaSP = T2.MaSP GROUP BY T1.MaSP, T1.TenSP, T1.DonGia ORDER BY TongSoLuongBan DESC;",
+      "hint": "Kết hợp bảng SanPham và ChiTietDonHang, nhóm theo sản phẩm và tính tổng số lượng bán.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 96,
+      "question": "Liệt kê tên các khách hàng đã đặt ít nhất 3 đơn hàng trong tháng 11 năm 2023.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenKH FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH WHERE STRFTIME('%Y-%m', T2.NgayMua) = '2023-11' GROUP BY T1.MaKH, T1.TenKH HAVING COUNT(T2.MaDH) >= 3;",
+      "hint": "Nhóm khách hàng theo tháng 11 năm 2023 và đếm số lượng đơn hàng, sau đó lọc những người có ít nhất 3 đơn hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 97,
+      "question": "Số lượng đơn hàng chưa được xử lý (TrangThai = 'Chờ xử lý') theo từng nhân viên phụ trách là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DonHang",
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT T2.TenNV, COUNT(T1.MaDH) AS SoLuongDonHangChoXuLy FROM DonHang AS T1 JOIN NhanVien AS T2 ON T1.MaNV = T2.MaNV WHERE T1.TrangThai = 'Chờ xử lý' GROUP BY T2.TenNV;",
+      "hint": "Lọc các đơn hàng có trạng thái 'Chờ xử lý', sau đó nhóm theo nhân viên phụ trách và đếm số lượng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 98,
+      "question": "Hiển thị tên các sản phẩm có tổng số lượng bán ra trong năm 2023 cao hơn 200 đơn vị.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenSP FROM SanPham AS T1 JOIN ChiTietDonHang AS T2 ON T1.MaSP = T2.MaSP JOIN DonHang AS T3 ON T2.MaDH = T3.MaDH WHERE STRFTIME('%Y', T3.NgayMua) = '2023' GROUP BY T1.MaSP, T1.TenSP HAVING SUM(T2.SoLuong) > 200;",
+      "hint": "Tính tổng số lượng bán cho từng sản phẩm trong năm 2023, sau đó lọc ra những sản phẩm có tổng số lượng bán lớn hơn 200.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 99,
+      "question": "Những khách hàng nào đã mua sản phẩm có đơn giá trên 1,000,000 VNĐ và cũng đã mua sản phẩm có đơn giá dưới 100,000 VNĐ?",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT DISTINCT T1.TenKH FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP WHERE T4.DonGia > 1000000 INTERSECT SELECT DISTINCT T1.TenKH FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP WHERE T4.DonGia < 100000;",
+      "hint": "Sử dụng INTERSECT để tìm những khách hàng thỏa mãn cả hai điều kiện về mua sản phẩm giá cao và sản phẩm giá thấp.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 100,
+      "question": "Tính tổng lương của tất cả nhân viên trong năm 2023.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT SUM(Luong) FROM NhanVien;",
+      "hint": "Tính tổng cột Lương từ bảng NhanVien.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 101,
+      "question": "Liệt kê tên các cửa hàng và số lượng đơn hàng đã được giao (TrangThai = 'Đã giao') tại mỗi cửa hàng trong quý 3 năm 2023.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "CuaHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenCH, COUNT(T2.MaDH) AS SoLuongDonHangDaGiao FROM CuaHang AS T1 JOIN DonHang AS T2 ON T1.MaCH = T2.MaCH WHERE T2.TrangThai = 'Hoàn thành' AND T2.NgayMua BETWEEN '2023-07-01' AND '2023-09-30' GROUP BY T1.TenCH;",
+      "hint": "Lọc các đơn hàng đã giao trong quý 3 năm 2023, sau đó nhóm theo cửa hàng và đếm số lượng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 102,
+      "question": "Hiển thị tên nhân viên, chức vụ và lương của những nhân viên được quản lý bởi 'Nguyễn Văn B'.",
+      "intent": "join",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT T1.TenNV, T1.ChucVu, T1.Luong FROM NhanVien AS T1 JOIN NhanVien AS T2 ON T1.MaNQL = T2.MaNV WHERE T2.TenNV = 'Nguyễn Văn B';",
+      "hint": "Sử dụng self-join trên bảng NhanVien, lọc theo tên người quản lý.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 103,
+      "question": "Tỷ lệ phần trăm các đơn hàng bị hủy (TrangThai = 'Đã hủy') so với tổng số đơn hàng trong năm 2023 là bao nhiêu?",
+      "intent": "complex",
+      "sql_keywords": [
+        "DonHang"
+      ],
+      "gold_sql": "SELECT CAST(SUM(CASE WHEN TrangThai = 'Đã hủy' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(MaDH) FROM DonHang WHERE STRFTIME('%Y', NgayMua) = '2023';",
+      "hint": "Tính tỷ lệ phần trăm bằng cách lấy số lượng đơn hàng đã hủy chia cho tổng số lượng đơn hàng trong năm 2023.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 104,
+      "question": "Liệt kê tên khách hàng và số lượng sản phẩm khác nhau mà họ đã mua trong tháng 12 năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT T1.TenKH, COUNT(DISTINCT T3.MaSP) AS SoLuongSPKhacNhau FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH WHERE STRFTIME('%Y-%m', T2.NgayMua) = '2023-12' GROUP BY T1.MaKH, T1.TenKH;",
+      "hint": "Kết hợp các bảng KhachHang, DonHang, ChiTietDonHang, lọc theo tháng 12 năm 2023, sau đó đếm số lượng sản phẩmDISTINCT cho mỗi khách hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 105,
+      "question": "Top 3 nhân viên có tổng doanh thu cao nhất trong quý 1 năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T1.TenNV, SUM(T3.SoLuong * T4.DonGia * (1 - T3.MucGiamGia)) AS TongDoanhThu FROM NhanVien AS T1 JOIN DonHang AS T2 ON T1.MaNV = T2.MaNV JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP WHERE T2.NgayMua BETWEEN '2023-01-01' AND '2023-03-31' GROUP BY T1.MaNV, T1.TenNV ORDER BY TongDoanhThu DESC LIMIT 3;",
+      "hint": "Tính tổng doanh thu do mỗi nhân viên tạo ra trong quý 1 năm 2023 và xếp hạng top 3.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 106,
+      "question": "Hiển thị tên các sản phẩm thuộc danh mục 'Đồ điện tử' có mức giảm giá trung bình trên 15% trong tất cả các đơn hàng.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "SanPham",
+        "DanhMuc",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT T1.TenSP FROM SanPham AS T1 JOIN DanhMuc AS T2 ON T1.MaDM = T2.MaDM JOIN ChiTietDonHang AS T3 ON T1.MaSP = T3.MaSP WHERE T2.TenDM = 'Đồ điện tử' GROUP BY T1.MaSP, T1.TenSP HAVING AVG(T3.MucGiamGia) > 0.15;",
+      "hint": "Lọc sản phẩm theo danh mục 'Đồ điện tử', tính giá trị giảm giá trung bình của từng sản phẩm và chọn những sản phẩm có giá trị trung bình > 15%.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 107,
+      "question": "Danh sách các khách hàng đã mua hàng tại cửa hàng 'Chợ Lớn' và cũng đã mua hàng tại cửa hàng 'Siêu thị Mini'.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "CuaHang"
+      ],
+      "gold_sql": "SELECT DISTINCT T1.TenKH FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH JOIN CuaHang AS T3 ON T2.MaCH = T3.MaCH WHERE T3.TenCH = 'Chợ Lớn' INTERSECT SELECT DISTINCT T1.TenKH FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH JOIN CuaHang AS T3 ON T2.MaCH = T3.MaCH WHERE T3.TenCH = 'Siêu thị Mini';",
+      "hint": "Sử dụng INTERSECT để tìm những khách hàng đã mua hàng ở cả hai cửa hàng được chỉ định.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 108,
+      "question": "Tổng số lượng sản phẩm của từng danh mục đã bán ra trong năm 2022 là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DanhMuc",
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenDM, SUM(T3.SoLuong) AS TongSoLuongBan FROM DanhMuc AS T1 JOIN SanPham AS T2 ON T1.MaDM = T2.MaDM JOIN ChiTietDonHang AS T3 ON T2.MaSP = T3.MaSP JOIN DonHang AS T4 ON T3.MaDH = T4.MaDH WHERE STRFTIME('%Y', T4.NgayMua) = '2022' GROUP BY T1.TenDM;",
+      "hint": "Tính tổng số lượng sản phẩm bán ra cho từng danh mục trong năm 2022.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 109,
+      "question": "Liệt kê tên nhân viên, ngày vào làm và số năm kinh nghiệm của những nhân viên có chức vụ 'Trưởng phòng'.",
+      "intent": "simple",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT TenNV, NgayVaoLam, STRFTIME('%Y', 'now') - STRFTIME('%Y', NgayVaoLam) AS SoNamKinhNghiem FROM NhanVien WHERE ChucVu = 'Trưởng phòng';",
+      "hint": "Lọc nhân viên theo chức vụ 'Trưởng phòng' và tính số năm kinh nghiệm dựa trên ngày vào làm.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 110,
+      "question": "Doanh thu trung bình của các đơn hàng được đặt vào ngày thứ 7 và chủ nhật trong năm 2023.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT AVG(DoanhThuDonHang) FROM (SELECT T1.MaDH, SUM(T2.SoLuong * T3.DonGia * (1 - T2.MucGiamGia)) AS DoanhThuDonHang FROM DonHang AS T1 JOIN ChiTietDonHang AS T2 ON T1.MaDH = T2.MaDH JOIN SanPham AS T3 ON T2.MaSP = T3.MaSP WHERE STRFTIME('%Y', T1.NgayMua) = '2023' AND (STRFTIME('%w', T1.NgayMua) = '6' OR STRFTIME('%w', T1.NgayMua) = '0') GROUP BY T1.MaDH);",
+      "hint": "Tính doanh thu cho từng đơn hàng được đặt vào cuối tuần trong năm 2023, sau đó tính giá trị trung bình của các doanh thu này.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 111,
+      "question": "Hiển thị tên khách hàng và tổng số lượng các mặt hàng khác nhau mà họ đã mua.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT T1.TenKH, COUNT(DISTINCT T3.MaSP) AS SoLuongMatHangKhacNhau FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH GROUP BY T1.MaKH, T1.TenKH;",
+      "hint": "Kết hợp các bảng KhachHang, DonHang, ChiTietDonHang, nhóm theo khách hàng và đếm số lượng sản phẩmDISTINCT.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 112,
+      "question": "Những khách hàng nào chưa từng thực hiện bất kỳ đơn hàng nào?",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT TenKH FROM KhachHang EXCEPT SELECT T1.TenKH FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH;",
+      "hint": "Sử dụng phép toán EXCEPT để tìm những khách hàng không có trong danh sách khách hàng đã đặt đơn hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 113,
+      "question": "Liệt kê tên các nhân viên và số lượng đơn hàng mà mỗi người đã thực hiện trong năm 2023.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenNV, COUNT(T2.MaDH) AS SoLuongDonHang FROM NhanVien AS T1 JOIN DonHang AS T2 ON T1.MaNV = T2.MaNV WHERE STRFTIME('%Y', T2.NgayMua) = '2023' GROUP BY T1.MaNV;",
+      "hint": "Nhóm các đơn hàng theo nhân viên và đếm số lượng đơn hàng cho mỗi nhân viên trong năm 2023.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 114,
+      "question": "Liệt kê tên các cửa hàng và tổng số đơn hàng đã xử lý tại mỗi cửa hàng trong quý 1 năm 2023.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "CuaHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenCH, COUNT(T2.MaDH) AS SoLuongDonHang FROM CuaHang AS T1 JOIN DonHang AS T2 ON T1.MaCH = T2.MaCH WHERE STRFTIME('%Y', T2.NgayMua) = '2023' AND CAST(STRFTIME('%W', T2.NgayMua) AS INTEGER) BETWEEN 1 AND 13 GROUP BY T1.MaCH;",
+      "hint": "Lọc các đơn hàng trong quý 1 năm 2023, sau đó nhóm theo cửa hàng và đếm số lượng đơn hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 115,
+      "question": "Hiển thị tên các sản phẩm và tổng số lượng đã bán của các sản phẩm có đơn giá trên 500,000 VNĐ.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT T1.TenSP, SUM(T2.SoLuong) AS TongSoLuongBan FROM SanPham AS T1 JOIN ChiTietDonHang AS T2 ON T1.MaSP = T2.MaSP WHERE T1.DonGia > 500000 GROUP BY T1.MaSP;",
+      "hint": "Lọc sản phẩm theo đơn giá và tính tổng số lượng đã bán cho từng sản phẩm.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 116,
+      "question": "Những sản phẩm nào thuộc danh mục 'Thực phẩm' có tổng số lượng bán ra trong năm 2023 vượt quá 50 đơn vị?",
+      "intent": "complex",
+      "sql_keywords": [
+        "SanPham",
+        "DanhMuc",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenSP FROM SanPham AS T1 INNER JOIN DanhMuc AS T2 ON T1.MaDM = T2.MaDM INNER JOIN ChiTietDonHang AS T3 ON T1.MaSP = T3.MaSP INNER JOIN DonHang AS T4 ON T3.MaDH = T4.MaDH WHERE T2.TenDM = 'Thực phẩm' AND STRFTIME('%Y', T4.NgayMua) = '2023' GROUP BY T1.MaSP HAVING SUM(T3.SoLuong) > 50;",
+      "hint": "Sử dụng JOIN để kết hợp thông tin sản phẩm, danh mục và đơn hàng. Lọc theo năm 2023 và danh mục 'Thực phẩm'. Sử dụng GROUP BY và HAVING để tính tổng số lượng bán.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 117,
+      "question": "Liệt kê tên các khách hàng đã thực hiện đơn hàng có tổng giá trị (sau giảm giá) trên 1,000,000 vnd trong tháng 11 năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT DISTINCT T1.TenKH FROM KhachHang AS T1 INNER JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH INNER JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH INNER JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP WHERE STRFTIME('%Y-%m', T2.NgayMua) = '2023-11' GROUP BY T1.MaKH, T2.MaDH HAVING SUM(T4.DonGia * T3.SoLuong * (1 - T3.MucGiamGia)) > 1000000;",
+      "hint": "Tính tổng giá trị đơn hàng sau giảm giá. Lọc theo tháng 11 năm 2023. Sử dụng DISTINCT để tránh lặp lại tên khách hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 118,
+      "question": "Doanh thu của từng khu vực cửa hàng trong quý 2 năm 2023 là bao nhiêu?",
+      "intent": "complex",
+      "sql_keywords": [
+        "CuaHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T1.KhuVuc, SUM(T3.SoLuong * T4.DonGia * (1 - T3.MucGiamGia)) AS DoanhThu FROM CuaHang AS T1 INNER JOIN DonHang AS T2 ON T1.MaCH = T2.MaCH INNER JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH INNER JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP WHERE STRFTIME('%Y-%m', T2.NgayMua) BETWEEN '2023-04' AND '2023-06' GROUP BY T1.KhuVuc;",
+      "hint": "Kết hợp thông tin cửa hàng, đơn hàng, chi tiết đơn hàng và sản phẩm. Lọc theo quý 2 năm 2023. Tính tổng doanh thu cho từng khu vực.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 119,
+      "question": "Những khách hàng nào có tổng chi tiêu (tính cả giảm giá) trong năm 2023 dưới 500,000 vnd?",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T1.TenKH FROM KhachHang AS T1 INNER JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH INNER JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH INNER JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP WHERE STRFTIME('%Y', T2.NgayMua) = '2023' GROUP BY T1.MaKH HAVING SUM(T4.DonGia * T3.SoLuong * (1 - T3.MucGiamGia)) < 500000;",
+      "hint": "Tính tổng chi tiêu của mỗi khách hàng trong năm 2023. Lọc những khách hàng có tổng chi tiêu dưới 500,000 vnd.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 120,
+      "question": "Hiển thị tên các danh mục sản phẩm và tổng số lượng sản phẩm đã bán của mỗi danh mục trong quý 4 năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "DanhMuc",
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenDM, SUM(T3.SoLuong) AS TongSoLuongBan FROM DanhMuc AS T1 INNER JOIN SanPham AS T2 ON T1.MaDM = T2.MaDM INNER JOIN ChiTietDonHang AS T3 ON T2.MaSP = T3.MaSP INNER JOIN DonHang AS T4 ON T3.MaDH = T4.MaDH WHERE STRFTIME('%Y-%m', T4.NgayMua) BETWEEN '2023-10' AND '2023-12' GROUP BY T1.MaDM;",
+      "hint": "Kết hợp thông tin danh mục, sản phẩm, chi tiết đơn hàng và đơn hàng. Lọc theo quý 4 năm 2023. Tính tổng số lượng sản phẩm bán ra cho mỗi danh mục.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 121,
+      "question": "Top 5 nhân viên có số lượng đơn hàng 'Đã giao' cao nhất trong tháng 7 năm 2023 là ai?",
+      "intent": "complex",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenNV, COUNT(T2.MaDH) AS SoDonHangDaGiao FROM NhanVien AS T1 INNER JOIN DonHang AS T2 ON T1.MaNV = T2.MaNV WHERE T2.TrangThai = 'Hoàn thành' AND STRFTIME('%Y-%m', T2.NgayMua) = '2023-07' GROUP BY T1.MaNV ORDER BY SoDonHangDaGiao DESC LIMIT 5;",
+      "hint": "Sử dụng JOIN giữa Nhân viên và Đơn hàng. Lọc đơn hàng 'Đã giao' trong tháng 7 năm 2023. Đếm số lượng đơn hàng và xếp hạng top 5.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 122,
+      "question": "Doanh thu trung bình của các đơn hàng có trạng thái 'Đã giao' trong năm 2023 là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT AVG(TongGiaTriDonHang) FROM (SELECT T1.MaDH, SUM(T2.SoLuong * T3.DonGia * (1 - T2.MucGiamGia)) AS TongGiaTriDonHang FROM DonHang AS T1 INNER JOIN ChiTietDonHang AS T2 ON T1.MaDH = T2.MaDH INNER JOIN SanPham AS T3 ON T2.MaSP = T3.MaSP WHERE T1.TrangThai = 'Hoàn thành' AND STRFTIME('%Y', T1.NgayMua) = '2023' GROUP BY T1.MaDH);",
+      "hint": "Tính tổng giá trị cho mỗi đơn hàng 'Đã giao' trong năm 2023. Sau đó, tính giá trị trung bình của các tổng giá trị này.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 123,
+      "question": "Liệt kê tên các nhân viên được quản lý trực tiếp bởi 'nguyễn văn a' và có ngày vào làm trong năm 2022.",
+      "intent": "complex",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT TenNV FROM NhanVien WHERE MaNQL = (SELECT MaNV FROM NhanVien WHERE TenNV = 'nguyễn văn a') AND STRFTIME('%Y', NgayVaoLam) = '2022';",
+      "hint": "Tìm mã NV của 'nguyễn văn a'. Sử dụng mã này để lọc các nhân viên cấp dưới có ngày vào làm trong năm 2022.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 124,
+      "question": "Hiển thị tên các sản phẩm và số lượng đã bán của chúng, chỉ tính những sản phẩm thuộc danh mục 'Đồ gia dụng' và có tổng số lượng bán ra trên 75.",
+      "intent": "complex",
+      "sql_keywords": [
+        "SanPham",
+        "DanhMuc",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT T1.TenSP, SUM(T2.SoLuong) AS TongSoLuongBan FROM SanPham AS T1 INNER JOIN ChiTietDonHang AS T2 ON T1.MaSP = T2.MaSP INNER JOIN DanhMuc AS T3 ON T1.MaDM = T3.MaDM WHERE T3.TenDM = 'Đồ gia dụng' GROUP BY T1.MaSP HAVING SUM(T2.SoLuong) > 75;",
+      "hint": "Kết hợp bảng Sản phẩm, Chi tiết đơn hàng và Danh mục. Lọc theo danh mục 'Đồ gia dụng'. Tính tổng số lượng bán và lọc những sản phẩm có tổng số lượng trên 75.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 125,
+      "question": "Tỷ lệ phần trăm khách hàng có loại thẻ 'Platinum' so với tổng số khách hàng là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "KhachHang"
+      ],
+      "gold_sql": "SELECT CAST(SUM(CASE WHEN LoaiThe = 'Platinum' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(MaKH) FROM KhachHang;",
+      "hint": "Đếm số lượng khách hàng có loại thẻ 'Platinum'. Chia cho tổng số lượng khách hàng và nhân với 100.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 126,
+      "question": "Những đơn hàng nào có mức giảm giá trung bình trên 20% trên mỗi dòng sản phẩm?",
+      "intent": "complex",
+      "sql_keywords": [
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.MaDH FROM ChiTietDonHang AS T1 INNER JOIN DonHang AS T2 ON T1.MaDH = T2.MaDH GROUP BY T1.MaDH HAVING AVG(T1.MucGiamGia) > 0.2;",
+      "hint": "Tính giá trị giảm giá trung bình cho từng đơn hàng. Lọc những đơn hàng có giá trị trung bình lớn hơn 0.2 (tức là 20%).",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 127,
+      "question": "Doanh thu của từng nhân viên trong quý 3 năm 2023, phân loại theo từng cửa hàng.",
+      "intent": "complex",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham",
+        "CuaHang"
+      ],
+      "gold_sql": "SELECT T1.TenNV, T5.TenCH, SUM(T3.SoLuong * T4.DonGia * (1 - T3.MucGiamGia)) AS DoanhThu FROM NhanVien AS T1 INNER JOIN DonHang AS T2 ON T1.MaNV = T2.MaNV INNER JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH INNER JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP INNER JOIN CuaHang AS T5 ON T2.MaCH = T5.MaCH WHERE STRFTIME('%Y-%m', T2.NgayMua) BETWEEN '2023-07' AND '2023-09' GROUP BY T1.MaNV, T5.MaCH ORDER BY T1.TenNV, T5.TenCH;",
+      "hint": "Kết hợp nhiều bảng để có thể tính doanh thu theo từng nhân viên và từng cửa hàng. Lọc theo quý 3 năm 2023.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 128,
+      "question": "Hiển thị tên các sản phẩm có tổng doanh thu cao hơn 10,000,000 vnd trong năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenSP FROM SanPham AS T1 INNER JOIN ChiTietDonHang AS T2 ON T1.MaSP = T2.MaSP INNER JOIN DonHang AS T3 ON T2.MaDH = T3.MaDH WHERE STRFTIME('%Y', T3.NgayMua) = '2023' GROUP BY T1.MaSP HAVING SUM(T2.SoLuong * T1.DonGia * (1 - T2.MucGiamGia)) > 10000000;",
+      "hint": "Tính tổng doanh thu cho từng sản phẩm trong năm 2023. Lọc những sản phẩm có doanh thu trên 10,000,000 vnd.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 129,
+      "question": "Số lượng khách hàng đã mua sản phẩm thuộc cả hai danh mục 'Điện thoại' và 'Phụ kiện' là bao nhiêu?",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham",
+        "DanhMuc"
+      ],
+      "gold_sql": "SELECT COUNT(DISTINCT T1.MaKH) FROM KhachHang AS T1 INNER JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH INNER JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH INNER JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP INNER JOIN DanhMuc AS T5 ON T4.MaDM = T5.MaDM WHERE T5.TenDM = 'Điện thoại' INTERSECT SELECT T1.MaKH FROM KhachHang AS T1 INNER JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH INNER JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH INNER JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP INNER JOIN DanhMuc AS T5 ON T4.MaDM = T5.MaDM WHERE T5.TenDM = 'Phụ kiện';",
+      "hint": "Sử dụng INTERSECT để tìm những khách hàng đã mua sản phẩm từ cả hai danh mục.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 130,
+      "question": "Tổng số lượng giảm giá đã áp dụng cho các đơn hàng trong tháng 6 năm 2023 là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT SUM(T2.SoLuong * T3.DonGia * T2.MucGiamGia) AS TongTienGiamGia FROM DonHang AS T1 INNER JOIN ChiTietDonHang AS T2 ON T1.MaDH = T2.MaDH INNER JOIN SanPham AS T3 ON T2.MaSP = T3.MaSP WHERE STRFTIME('%Y-%m', T1.NgayMua) = '2023-06';",
+      "hint": "Tính tổng tiền giảm giá cho mỗi dòng sản phẩm trong đơn hàng. Lọc các đơn hàng trong tháng 6 năm 2023. Tính tổng cộng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 131,
+      "question": "Doanh thu của các đơn hàng được đặt vào ngày 25 tháng 12 năm 2023 là bao nhiêu?",
+      "intent": "simple",
+      "sql_keywords": [
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT SUM(T2.SoLuong * T3.DonGia * (1 - T2.MucGiamGia)) AS DoanhThu FROM DonHang AS T1 INNER JOIN ChiTietDonHang AS T2 ON T1.MaDH = T2.MaDH INNER JOIN SanPham AS T3 ON T2.MaSP = T3.MaSP WHERE T1.NgayMua = '2023-12-25';",
+      "hint": "Kết hợp bảng Đơn hàng, Chi tiết đơn hàng và Sản phẩm. Lọc các đơn hàng theo ngày cụ thể. Tính tổng doanh thu.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 132,
+      "question": "Hiển thị tên các nhân viên và chức vụ của họ, những người có mức lương cao hơn mức lương trung bình của tất cả nhân viên.",
+      "intent": "complex",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT TenNV, ChucVu FROM NhanVien WHERE Luong > (SELECT AVG(Luong) FROM NhanVien);",
+      "hint": "Sử dụng truy vấn con để tính lương trung bình. Lọc những nhân viên có lương cao hơn giá trị trung bình này.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 133,
+      "question": "Liệt kê tên các sản phẩm chưa từng được bán trong bất kỳ đơn hàng nào.",
+      "intent": "complex",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT TenSP FROM SanPham LEFT JOIN ChiTietDonHang ON SanPham.MaSP = ChiTietDonHang.MaSP WHERE ChiTietDonHang.MaSP IS NULL;",
+      "hint": "Sử dụng LEFT JOIN từ bảng Sản phẩm đến Chi tiết đơn hàng. Lọc những sản phẩm mà không có bản ghi tương ứng trong Chi tiết đơn hàng (tức là chưa từng được bán).",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 134,
+      "question": "Liệt kê tên 5 khách hàng chi tiêu nhiều nhất trong năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T1.TenKH, SUM(T3.SoLuong * T4.DonGia * (1 - T3.MucGiamGia)) AS TongChiTieu FROM KhachHang AS T1 INNER JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH INNER JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH INNER JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP WHERE STRFTIME('%Y', T2.NgayMua) = '2023' GROUP BY T1.TenKH ORDER BY TongChiTieu DESC LIMIT 5;",
+      "hint": "Tham gia các bảng KhachHang, DonHang, ChiTietDonHang, SanPham. Lọc theo năm 2023, nhóm theo tên khách hàng, tính tổng chi tiêu và giới hạn 5 kết quả cao nhất.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 135,
+      "question": "Doanh thu của từng nhân viên trong quý 4 năm 2023 là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T1.TenNV, SUM(T3.SoLuong * T4.DonGia * (1 - T3.MucGiamGia)) AS DoanhThuQuy4 FROM NhanVien AS T1 INNER JOIN DonHang AS T2 ON T1.MaNV = T2.MaNV INNER JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH INNER JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP WHERE STRFTIME('%Y', T2.NgayMua) = '2023' AND CAST(STRFTIME('%W', T2.NgayMua) AS INTEGER) BETWEEN 40 AND 52 GROUP BY T1.TenNV;",
+      "hint": "Kết nối các bảng NhanVien, DonHang, ChiTietDonHang, SanPham. Lọc theo năm 2023 và tuần thứ 40-52 (tương ứng quý 4), sau đó nhóm theo tên nhân viên để tính doanh thu.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 136,
+      "question": "Những sản phẩm nào thuộc danh mục 'Thiết bị văn phòng' có tổng số lượng bán ra trên 150?",
+      "intent": "complex",
+      "sql_keywords": [
+        "SanPham",
+        "DanhMuc",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT T1.TenSP FROM SanPham AS T1 INNER JOIN DanhMuc AS T2 ON T1.MaDM = T2.MaDM INNER JOIN ChiTietDonHang AS T3 ON T1.MaSP = T3.MaSP WHERE T2.TenDM = 'Thiết bị văn phòng' GROUP BY T1.TenSP HAVING SUM(T3.SoLuong) > 150;",
+      "hint": "Sử dụng JOIN để liên kết SanPham và DanhMuc. Lọc theo tên danh mục, sau đó nhóm theo tên sản phẩm và sử dụng HAVING để lọc những sản phẩm có tổng số lượng bán ra lớn hơn 150.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 137,
+      "question": "Top 3 danh mục sản phẩm có tổng doanh thu cao nhất trong tháng 11 năm 2023 là gì?",
+      "intent": "complex",
+      "sql_keywords": [
+        "DanhMuc",
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenDM, SUM(T3.SoLuong * T4.DonGia * (1 - T3.MucGiamGia)) AS TongDoanhThu FROM DanhMuc AS T1 INNER JOIN SanPham AS T2 ON T1.MaDM = T2.MaDM INNER JOIN ChiTietDonHang AS T3 ON T2.MaSP = T3.MaSP INNER JOIN DonHang AS T4 ON T3.MaDH = T4.MaDH WHERE STRFTIME('%Y', T4.NgayMua) = '2023' AND STRFTIME('%m', T4.NgayMua) = '11' GROUP BY T1.TenDM ORDER BY TongDoanhThu DESC LIMIT 3;",
+      "hint": "Sử dụng JOIN để kết nối DanhMuc, SanPham, ChiTietDonHang, DonHang. Lọc theo tháng 11 năm 2023. Nhóm theo tên danh mục, tính tổng doanh thu và lấy 3 danh mục cao nhất.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 138,
+      "question": "Mức lương trung bình của nhân viên theo từng chức vụ là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT ChucVu, AVG(Luong) AS LuongTrungBinh FROM NhanVien GROUP BY ChucVu;",
+      "hint": "Nhóm bảng NhanVien theo ChucVu và tính giá trị trung bình của cột Luong.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 139,
+      "question": "Tổng số lượng sản phẩm của danh mục 'Điện tử' đã được bán là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DanhMuc",
+        "SanPham",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT SUM(T3.SoLuong) FROM DanhMuc AS T1 INNER JOIN SanPham AS T2 ON T1.MaDM = T2.MaDM INNER JOIN ChiTietDonHang AS T3 ON T2.MaSP = T3.MaSP WHERE T1.TenDM = 'Điện tử';",
+      "hint": "Kết hợp bảng DanhMuc, SanPham, ChiTietDonHang. Lọc theo tên danh mục 'Điện tử' và tính tổng số lượng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 140,
+      "question": "Hiển thị số lượng đơn hàng 'Chờ xử lý' cho từng nhân viên.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenNV, COUNT(T2.MaDH) AS SoLuongDonHangChoXuLy FROM NhanVien AS T1 INNER JOIN DonHang AS T2 ON T1.MaNV = T2.MaNV WHERE T2.TrangThai = 'Chờ xử lý' GROUP BY T1.TenNV;",
+      "hint": "Kết hợp bảng NhanVien và DonHang. Lọc theo trạng thái 'Chờ xử lý'. Nhóm theo tên nhân viên và đếm số lượng đơn hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 141,
+      "question": "Tổng doanh thu của mỗi cửa hàng trong quý 3 năm 2023 là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "CuaHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T1.TenCH, SUM(T3.SoLuong * T4.DonGia * (1 - T3.MucGiamGia)) AS TongDoanhThuQuy3 FROM CuaHang AS T1 INNER JOIN DonHang AS T2 ON T1.MaCH = T2.MaCH INNER JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH INNER JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP WHERE STRFTIME('%Y', T2.NgayMua) = '2023' AND CAST(STRFTIME('%Q', T2.NgayMua) AS INTEGER) = 3 GROUP BY T1.TenCH;",
+      "hint": "Sử dụng JOIN để kết nối CuaHang, DonHang, ChiTietDonHang, SanPham. Lọc theo năm 2023 và quý 3. Nhóm theo tên cửa hàng và tính tổng doanh thu.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 142,
+      "question": "Hiển thị tên các sản phẩm và tổng giá trị đơn hàng (trước giảm giá) của chúng.",
+      "intent": "join",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenSP, SUM(T1.DonGia * T2.SoLuong) AS TongGiaTri FROM SanPham AS T1 INNER JOIN ChiTietDonHang AS T2 ON T1.MaSP = T2.MaSP GROUP BY T1.TenSP;",
+      "hint": "Bạn cần kết nối bảng SanPham với ChiTietDonHang để tính tổng giá trị.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 143,
+      "question": "Top 5 nhân viên có tổng giá trị đơn hàng (bao gồm giảm giá) cao nhất.",
+      "intent": "join|aggregate|complex",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T1.TenNV, SUM(T3.SoLuong * T2.DonGia * (1 - T4.MucGiamGia)) AS TongGiaTriDonHang FROM NhanVien AS T1 JOIN DonHang AS T2 ON T1.MaNV = T2.MaNV JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH JOIN SanPham AS T2 ON T3.MaSP = T2.MaSP GROUP BY T1.TenNV ORDER BY TongGiaTriDonHang DESC LIMIT 5;",
+      "hint": "Kết hợp các bảng NhanVien, DonHang, ChiTietDonHang, SanPham. Tính tổng giá trị đơn hàng có áp dụng giảm giá và xếp hạng theo doanh thu.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 144,
+      "question": "Hiển thị tên các cửa hàng có tổng số lượng sản phẩm đã bán trong tháng 3/2023 cao hơn 100.",
+      "intent": "join|aggregate|complex",
+      "sql_keywords": [
+        "CuaHang",
+        "DonHang",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT T1.TenCH FROM CuaHang AS T1 JOIN DonHang AS T2 ON T1.MaCH = T2.MaCH JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH WHERE STRFTIME('%m-%Y', T2.NgayMua) = '03-2023' GROUP BY T1.TenCH HAVING SUM(T3.SoLuong) > 100;",
+      "hint": "Kết nối CuaHang, DonHang, ChiTietDonHang. Lọc theo tháng 3/2023, nhóm theo cửa hàng và sử dụng HAVING để lọc tổng số lượng sản phẩm.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 145,
+      "question": "Những khách hàng nào đã đặt ít nhất 3 đơn hàng trong quý 4 năm 2023?",
+      "intent": "join|aggregate|complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenKH FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH WHERE STRFTIME('%Y', T2.NgayMua) = '2023' AND CAST(STRFTIME('%W', T2.NgayMua) AS INTEGER) BETWEEN 40 AND 52 GROUP BY T1.TenKH HAVING COUNT(T2.MaDH) >= 3;",
+      "hint": "Kết hợp KhachHang và DonHang. Lọc đơn hàng trong quý 4/2023, nhóm theo khách hàng và đếm số lượng đơn hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 146,
+      "question": "Tính tổng số lượng sản phẩm thuộc danh mục 'Thiết bị văn phòng' đã bán trong năm 2023.",
+      "intent": "join|aggregate|complex",
+      "sql_keywords": [
+        "DanhMuc",
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT SUM(T3.SoLuong) AS TongSoLuong FROM DanhMuc AS T1 JOIN SanPham AS T2 ON T1.MaDM = T2.MaDM JOIN ChiTietDonHang AS T3 ON T2.MaSP = T3.MaSP JOIN DonHang AS T4 ON T3.MaDH = T4.MaDH WHERE T1.TenDM = 'Thiết bị văn phòng' AND STRFTIME('%Y', T4.NgayMua) = '2023';",
+      "hint": "Kết hợp DanhMuc, SanPham, ChiTietDonHang, DonHang. Lọc theo tên danh mục và năm, sau đó tính tổng số lượng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 147,
+      "question": "Hiển thị tên các sản phẩm có mức giảm giá trung bình trên 10% trên tất cả các đơn hàng.",
+      "intent": "aggregate|join",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT T1.TenSP FROM SanPham AS T1 JOIN ChiTietDonHang AS T2 ON T1.MaSP = T2.MaSP GROUP BY T1.TenSP HAVING AVG(T2.MucGiamGia) > 0.10;",
+      "hint": "Kết hợp SanPham và ChiTietDonHang. Tính trung bình MucGiamGia cho mỗi sản phẩm và lọc theo điều kiện.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 148,
+      "question": "Liệt kê tên các nhân viên và tổng lương của họ, chỉ những người có chức vụ 'Chuyên viên'.",
+      "intent": "simple|aggregate",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT TenNV, Luong FROM NhanVien WHERE ChucVu = 'Chuyên viên';",
+      "hint": "Lọc bảng NhanVien theo ChucVu 'Chuyên viên'.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 149,
+      "question": "Doanh thu của từng cửa hàng trong quý 1 năm 2023 là bao nhiêu?",
+      "intent": "join|aggregate|complex",
+      "sql_keywords": [
+        "CuaHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T1.TenCH, SUM(T3.SoLuong * T2.DonGia * (1 - T4.MucGiamGia)) AS DoanhThu FROM CuaHang AS T1 JOIN DonHang AS T2 ON T1.MaCH = T2.MaCH JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH JOIN SanPham AS T2 ON T3.MaSP = T2.MaSP WHERE STRFTIME('%Y', T2.NgayMua) = '2023' AND CAST(STRFTIME('%W', T2.NgayMua) AS INTEGER) BETWEEN 1 AND 13 GROUP BY T1.TenCH;",
+      "hint": "Kết hợp CuaHang, DonHang, ChiTietDonHang, SanPham. Lọc theo quý 1/2023 và tính tổng doanh thu theo từng cửa hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 150,
+      "question": "Liệt kê tên các sản phẩm và số lượng đã bán của chúng, chỉ tính những sản phẩm thuộc danh mục 'Đồ điện tử' và có tổng số lượng bán ra trên 50.",
+      "intent": "join|aggregate|complex",
+      "sql_keywords": [
+        "DanhMuc",
+        "SanPham",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT T1.TenSP, SUM(T2.SoLuong) AS TongSoLuongBan FROM SanPham AS T1 JOIN ChiTietDonHang AS T2 ON T1.MaSP = T2.MaSP JOIN DanhMuc AS T3 ON T1.MaDM = T3.MaDM WHERE T3.TenDM = 'Đồ điện tử' GROUP BY T1.TenSP HAVING SUM(T2.SoLuong) > 50;",
+      "hint": "Kết hợp DanhMuc, SanPham, ChiTietDonHang. Lọc theo danh mục 'Đồ điện tử', nhóm theo sản phẩm và sử dụng HAVING để lọc tổng số lượng bán.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 151,
+      "question": "Những nhân viên nào chưa từng quản lý đơn hàng nào?",
+      "intent": "left_join|simple",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenNV FROM NhanVien AS T1 LEFT JOIN DonHang AS T2 ON T1.MaNV = T2.MaNV WHERE T2.MaDH IS NULL;",
+      "hint": "Sử dụng LEFT JOIN từ NhanVien tới DonHang và lọc những bản ghi mà MaDH là NULL.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 152,
+      "question": "Số lượng đơn hàng đã bị hủy trong từng tháng của năm 2023 là bao nhiêu?",
+      "intent": "aggregate|complex",
+      "sql_keywords": [
+        "DonHang"
+      ],
+      "gold_sql": "SELECT STRFTIME('%m', NgayMua) AS Thang, COUNT(MaDH) AS SoLuongDonHangHuy FROM DonHang WHERE TrangThai = 'Đã hủy' AND STRFTIME('%Y', NgayMua) = '2023' GROUP BY Thang ORDER BY Thang;",
+      "hint": "Lọc bảng DonHang theo TrangThai 'Đã hủy' và năm 2023. Nhóm theo tháng và đếm số lượng đơn hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 153,
+      "question": "Hiển thị tên các khách hàng và số lượng sản phẩm khác nhau mà họ đã mua trong quý 2 năm 2023.",
+      "intent": "join|aggregate|complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT T1.TenKH, COUNT(DISTINCT T3.MaSP) AS SoLuongSPKhacNhau FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH WHERE STRFTIME('%Y', T2.NgayMua) = '2023' AND CAST(STRFTIME('%W', T2.NgayMua) AS INTEGER) BETWEEN 14 AND 26 GROUP BY T1.TenKH;",
+      "hint": "Kết hợp KhachHang, DonHang, ChiTietDonHang. Lọc theo quý 2/2023, nhóm theo khách hàng và đếm số lượng sản phẩm khác nhau.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 154,
+      "question": "Liệt kê tên các nhân viên và số năm kinh nghiệm làm việc của họ (tính đến ngày hiện tại).",
+      "intent": "simple|complex",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT TenNV, CAST(STRFTIME('%Y', DATE('now')) - STRFTIME('%Y', NgayVaoLam) AS INTEGER) AS SoNamKinhNghiem FROM NhanVien;",
+      "hint": "Sử dụng hàm STRFTIME để tính số năm kinh nghiệm dựa trên ngày vào làm.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 155,
+      "question": "Hiển thị tên các sản phẩm có doanh thu cao nhất trong mỗi danh mục.",
+      "intent": "complex",
+      "sql_keywords": [
+        "DanhMuc",
+        "SanPham",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "WITH ProductRevenue AS ( SELECT T1.TenDM, T2.TenSP, SUM(T3.SoLuong * T2.DonGia) AS Revenue FROM DanhMuc AS T1 JOIN SanPham AS T2 ON T1.MaDM = T2.MaDM JOIN ChiTietDonHang AS T3 ON T2.MaSP = T3.MaSP GROUP BY T1.TenDM, T2.TenSP ), RankedProductRevenue AS ( SELECT TenDM, TenSP, Revenue, RANK() OVER (PARTITION BY TenDM ORDER BY Revenue DESC) as rn FROM ProductRevenue ) SELECT TenDM, TenSP FROM RankedProductRevenue WHERE rn = 1;",
+      "hint": "Sử dụng CTE (Common Table Expression) để tính doanh thu sản phẩm, xếp hạng chúng trong mỗi danh mục và chọn ra sản phẩm có doanh thu cao nhất.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 156,
+      "question": "Tỷ lệ phần trăm đơn hàng có tổng giá trị trên 1,000,000 VNĐ so với tổng số đơn hàng là bao nhiêu?",
+      "intent": "aggregate|complex",
+      "sql_keywords": [
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT CAST(SUM(CASE WHEN T3.SoLuong * T2.DonGia * (1 - T4.MucGiamGia) > 1000000 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T1.MaDH) FROM DonHang AS T1 JOIN ChiTietDonHang AS T3 ON T1.MaDH = T3.MaDH JOIN SanPham AS T2 ON T3.MaSP = T2.MaSP JOIN DonHang AS T4 ON T1.MaDH = T4.MaDH;",
+      "hint": "Tính tổng giá trị từng đơn hàng, sau đó đếm số đơn hàng có giá trị trên 1,000,000 và chia cho tổng số đơn hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 157,
+      "question": "Liệt kê tên các khách hàng đã mua hàng tại cửa hàng 'Siêu thị ABC' và cũng đã mua hàng tại cửa hàng 'Cửa hàng XYZ'.",
+      "intent": "join|complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "CuaHang"
+      ],
+      "gold_sql": "SELECT T1.TenKH FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH JOIN CuaHang AS T3 ON T2.MaCH = T3.MaCH WHERE T3.TenCH = 'Siêu thị ABC' INTERSECT SELECT T1.TenKH FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH JOIN CuaHang AS T3 ON T2.MaCH = T3.MaCH WHERE T3.TenCH = 'Cửa hàng XYZ';",
+      "hint": "Sử dụng toán tử INTERSECT để tìm những khách hàng có mặt ở cả hai cửa hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 158,
+      "question": "Tổng doanh thu (sau giảm giá) của tất cả các đơn hàng được xử lý bởi nhân viên 'Nguyễn Văn A' là bao nhiêu?",
+      "intent": "join|aggregate|complex",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT SUM(T3.SoLuong * T2.DonGia * (1 - T4.MucGiamGia)) AS TongDoanhThu FROM NhanVien AS T1 JOIN DonHang AS T2 ON T1.MaNV = T2.MaNV JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH JOIN SanPham AS T2 ON T3.MaSP = T2.MaSP WHERE T1.TenNV = 'Nguyễn Văn A';",
+      "hint": "Kết hợp NhanVien, DonHang, ChiTietDonHang, SanPham. Lọc theo tên nhân viên và tính tổng doanh thu.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 159,
+      "question": "Liệt kê tên các sản phẩm và đơn giá của chúng, chỉ những sản phẩm thuộc danh mục 'Đồ gia dụng' và có đơn giá trên 200,000 VNĐ.",
+      "intent": "join|simple",
+      "sql_keywords": [
+        "SanPham",
+        "DanhMuc"
+      ],
+      "gold_sql": "SELECT T1.TenSP, T1.DonGia FROM SanPham AS T1 JOIN DanhMuc AS T2 ON T1.MaDM = T2.MaDM WHERE T2.TenDM = 'Đồ gia dụng' AND T1.DonGia > 200000;",
+      "hint": "Kết hợp SanPham và DanhMuc. Lọc theo tên danh mục và đơn giá.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 160,
+      "question": "Những khách hàng nào chưa từng mua sản phẩm thuộc danh mục 'Điện thoại di động'?",
+      "intent": "left_join|complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham",
+        "DanhMuc"
+      ],
+      "gold_sql": "SELECT DISTINCT T1.TenKH FROM KhachHang AS T1 LEFT JOIN ( SELECT T2.MaKH, T5.TenDM FROM DonHang AS T2 JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP JOIN DanhMuc AS T5 ON T4.MaDM = T5.MaDM WHERE T5.TenDM = 'Điện thoại di động' ) AS MobilePurchases ON T1.MaKH = MobilePurchases.MaKH WHERE MobilePurchases.TenDM IS NULL;",
+      "hint": "Sử dụng LEFT JOIN để kết nối KhachHang với các đơn hàng có sản phẩm thuộc danh mục 'Điện thoại di động'. Lọc ra những khách hàng không có trong kết quả JOIN.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 161,
+      "question": "Hiển thị tên và số lượng sản phẩm đã bán của 10 sản phẩm bán chạy nhất trong năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenSP, SUM(T2.SoLuong) AS TongSoLuongBan FROM SanPham AS T1 INNER JOIN ChiTietDonHang AS T2 ON T1.MaSP = T2.MaSP INNER JOIN DonHang AS T3 ON T2.MaDH = T3.MaDH WHERE STRFTIME('%Y', T3.NgayMua) = '2023' GROUP BY T1.TenSP ORDER BY TongSoLuongBan DESC LIMIT 10;",
+      "hint": "Sử dụng JOIN để kết hợp bảng SanPham, ChiTietDonHang và DonHang. Lọc theo năm 2023, tính tổng số lượng bán và sắp xếp theo thứ tự giảm dần, sau đó lấy 10 bản ghi đầu tiên.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 162,
+      "question": "Liệt kê tên các nhân viên quản lý và số lượng nhân viên cấp dưới mà họ đang quản lý.",
+      "intent": "join",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT T1.TenNV, COUNT(T2.MaNV) AS SoNhanVienCapDuoi FROM NhanVien AS T1 JOIN NhanVien AS T2 ON T1.MaNV = T2.MaNQL GROUP BY T1.TenNV;",
+      "hint": "Sử dụng JOIN trên chính bảng NhanVien để liên kết nhân viên với người quản lý của họ. Đếm số lượng nhân viên cấp dưới cho mỗi người quản lý.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 163,
+      "question": "Tổng giá trị các đơn hàng đã hủy trong tháng 12 năm 2023 là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT SUM(T2.SoLuong * T3.DonGia * (1 - T2.MucGiamGia)) AS TongGiaTriDonHangHuy FROM DonHang AS T1 JOIN ChiTietDonHang AS T2 ON T1.MaDH = T2.MaDH JOIN SanPham AS T3 ON T2.MaSP = T3.MaSP WHERE T1.TrangThai = 'Đã hủy' AND STRFTIME('%Y-%m', T1.NgayMua) = '2023-12';",
+      "hint": "Kết hợp bảng DonHang, ChiTietDonHang và SanPham. Lọc theo trạng thái 'Đã hủy' và tháng 12 năm 2023. Tính tổng giá trị đơn hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 164,
+      "question": "Những sản phẩm nào có tỷ lệ giảm giá trung bình trên 10% và đã được bán trong năm 2022?",
+      "intent": "complex",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenSP FROM SanPham AS T1 JOIN ChiTietDonHang AS T2 ON T1.MaSP = T2.MaSP JOIN DonHang AS T3 ON T2.MaDH = T3.MaDH WHERE STRFTIME('%Y', T3.NgayMua) = '2022' GROUP BY T1.TenSP HAVING AVG(T2.MucGiamGia) > 0.1;",
+      "hint": "Sử dụng JOIN để liên kết SanPham, ChiTietDonHang, DonHang. Lọc theo năm 2022, nhóm theo tên sản phẩm và sử dụng HAVING để lọc những sản phẩm có tỷ lệ giảm giá trung bình trên 10%.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 165,
+      "question": "Hiển thị tên các nhân viên và tổng số tiền họ đã bán được trong quý 4 năm 2023, chỉ tính những đơn hàng đã được giao.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T1.TenNV, SUM(T3.SoLuong * T4.DonGia * (1 - T3.MucGiamGia)) AS TongDoanhThu FROM NhanVien AS T1 JOIN DonHang AS T2 ON T1.MaNV = T2.MaNV JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP WHERE T2.TrangThai = 'Hoàn thành' AND STRFTIME('%Y', T2.NgayMua) = '2023' AND CAST(STRFTIME('%Q', T2.NgayMua) AS INTEGER) = 4 GROUP BY T1.TenNV;",
+      "hint": "Kết hợp NhanVien, DonHang, ChiTietDonHang, SanPham. Lọc theo trạng thái 'Đã giao', quý 4 năm 2023. Tính tổng doanh thu cho từng nhân viên.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 166,
+      "question": "Số lượng đơn hàng có trạng thái 'Chờ xử lý' cho từng nhân viên phụ trách là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DonHang",
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT T2.TenNV, COUNT(T1.MaDH) AS SoDonHangChoXuLy FROM DonHang AS T1 JOIN NhanVien AS T2 ON T1.MaNV = T2.MaNV WHERE T1.TrangThai = 'Chờ xử lý' GROUP BY T2.TenNV;",
+      "hint": "Sử dụng JOIN giữa DonHang và NhanVien. Lọc các đơn hàng có trạng thái 'Chờ xử lý' và đếm số lượng cho từng nhân viên.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 167,
+      "question": "Top 3 khách hàng có số lượng đơn hàng nhiều nhất trong quý 2 năm 2023.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenKH, COUNT(T2.MaDH) AS SoLuongDonHang FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH WHERE STRFTIME('%Y', T2.NgayMua) = '2023' AND CAST(STRFTIME('%Q', T2.NgayMua) AS INTEGER) = 2 GROUP BY T1.TenKH ORDER BY SoLuongDonHang DESC LIMIT 3;",
+      "hint": "Sử dụng JOIN giữa KhachHang và DonHang. Lọc theo quý 2 năm 2023, đếm số lượng đơn hàng cho mỗi khách hàng và lấy top 3.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 168,
+      "question": "Tính tổng số lương của tất cả nhân viên theo từng chức vụ.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT ChucVu, SUM(Luong) AS TongLuong FROM NhanVien GROUP BY ChucVu;",
+      "hint": "Nhóm bảng NhanVien theo 'ChucVu' và tính tổng 'Luong' cho mỗi nhóm.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 169,
+      "question": "Doanh thu trung bình của các sản phẩm trong danh mục 'Đồ điện tử' là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "SanPham",
+        "DanhMuc",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT AVG(T1.DonGia) FROM SanPham AS T1 JOIN DanhMuc AS T2 ON T1.MaDM = T2.MaDM WHERE T2.TenDM = 'Đồ điện tử';",
+      "hint": "Kết hợp SanPham và DanhMuc. Lọc theo danh mục 'Đồ điện tử' và tính giá trị trung bình của cột DonGia.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 170,
+      "question": "Hiển thị tên các nhân viên và ngày họ vào làm, chỉ những người có ngày vào làm trong nửa đầu năm 2023 (từ tháng 1 đến tháng 6).",
+      "intent": "simple",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT TenNV, NgayVaoLam FROM NhanVien WHERE STRFTIME('%Y-%m', NgayVaoLam) BETWEEN '2023-01' AND '2023-06';",
+      "hint": "Lọc bảng NhanVien dựa trên cột NgayVaoLam, sử dụng BETWEEN để chọn các ngày từ tháng 1 đến tháng 6 năm 2023.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 171,
+      "question": "Liệt kê tên các nhân viên đã vào làm trước ngày 01/01/2022 và có số lượng đơn hàng đã giao trong năm 2023 nhiều hơn 10.",
+      "intent": "complex",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenNV FROM NhanVien AS T1 JOIN DonHang AS T2 ON T1.MaNV = T2.MaNV WHERE T1.NgayVaoLam < '2022-01-01' AND T2.TrangThai = 'Hoàn thành' AND STRFTIME('%Y', T2.NgayMua) = '2023' GROUP BY T1.TenNV HAVING COUNT(T2.MaDH) > 10;",
+      "hint": "Sử dụng JOIN giữa NhanVien và DonHang. Lọc nhân viên có ngày vào làm trước 2022-01-01 và đơn hàng đã giao trong năm 2023. Nhóm theo tên nhân viên và sử dụng HAVING để lọc những người có hơn 10 đơn hàng đã giao.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 172,
+      "question": "Hiển thị tên các khách hàng và tổng số lượng các mặt hàng khác nhau mà họ đã mua trong năm 2023.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T1.TenKH, COUNT(DISTINCT T3.MaSP) AS SoLuongMatHangKhacNhau FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH WHERE STRFTIME('%Y', T2.NgayMua) = '2023' GROUP BY T1.TenKH;",
+      "hint": "Kết hợp KhachHang, DonHang, ChiTietDonHang. Lọc theo năm 2023. Sử dụng COUNT(DISTINCT T3.MaSP) để đếm số lượng sản phẩm khác nhau mà mỗi khách hàng đã mua.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 173,
+      "question": "Nhân viên nào có số lượng khách hàng được phụ trách nhiều nhất?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NhanVien",
+        "KhachHang"
+      ],
+      "gold_sql": "SELECT T1.TenNV FROM NhanVien AS T1 JOIN KhachHang AS T2 ON T1.MaNV = T2.MaNV_PhuTrach GROUP BY T1.TenNV ORDER BY COUNT(T2.MaKH) DESC LIMIT 1;",
+      "hint": "Sử dụng JOIN giữa NhanVien và KhachHang. Nhóm theo tên nhân viên và đếm số lượng khách hàng được phụ trách. Sắp xếp theo thứ tự giảm dần và lấy bản ghi đầu tiên.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 174,
+      "question": "Tổng doanh thu của các đơn hàng đã được giao (trạng thái 'đã giao') trong tháng 3 năm 2023 là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT SUM(ct.SoLuong * sp.DonGia * (1 - ct.MucGiamGia)) AS TongDoanhThu FROM DonHang dh JOIN ChiTietDonHang ct ON dh.MaDH = ct.MaDH JOIN SanPham sp ON ct.MaSP = sp.MaSP WHERE dh.TrangThai = 'đã giao' AND STRFTIME('%Y-%m', dh.NgayMua) = '2023-03';",
+      "hint": "Tính toán doanh thu cho từng mặt hàng trong đơn hàng, lọc theo trạng thái 'đã giao' và tháng 3 năm 2023.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 175,
+      "question": "Những nhân viên nào có lương cao hơn mức lương trung bình của tất cả nhân viên?",
+      "intent": "complex",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT TenNV, Luong FROM NhanVien WHERE Luong > (SELECT AVG(Luong) FROM NhanVien);",
+      "hint": "Sử dụng một truy vấn con để tính lương trung bình, sau đó lọc nhân viên có lương cao hơn giá trị đó.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 176,
+      "question": "Liệt kê tên các sản phẩm và tổng giá trị đơn hàng (sau giảm giá) mà chúng đã được đưa vào, chỉ những sản phẩm có tổng giá trị trên 5,000,000 vnd.",
+      "intent": "complex",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT sp.TenSP, SUM(ct.SoLuong * sp.DonGia * (1 - ct.MucGiamGia)) AS TongGiaTri FROM SanPham sp JOIN ChiTietDonHang ct ON sp.MaSP = ct.MaSP GROUP BY sp.TenSP HAVING TongGiaTri > 5000000;",
+      "hint": "Tính tổng giá trị cho mỗi sản phẩm sau khi áp dụng giảm giá, sau đó lọc theo điều kiện tổng giá trị.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 177,
+      "question": "Số lượng đơn hàng chưa được xử lý ('chờ xử lý') cho mỗi cửa hàng trong tháng 1 năm 2024 là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DonHang",
+        "CuaHang"
+      ],
+      "gold_sql": "SELECT ch.TenCH, COUNT(dh.MaDH) AS SoLuongDonHangCho FROM CuaHang ch LEFT JOIN DonHang dh ON ch.MaCH = dh.MaCH WHERE dh.TrangThai = 'chờ xử lý' AND STRFTIME('%Y-%m', dh.NgayMua) = '2024-01' GROUP BY ch.TenCH;",
+      "hint": "Kết nối bảng CuaHang và DonHang, lọc theo trạng thái 'chờ xử lý' và tháng 1 năm 2024, sau đó đếm số lượng đơn hàng cho mỗi cửa hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 178,
+      "question": "Hiển thị tên các khách hàng đã đặt ít nhất 5 đơn hàng trong năm 2023.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT kh.TenKH FROM KhachHang kh JOIN DonHang dh ON kh.MaKH = dh.MaKH WHERE STRFTIME('%Y', dh.NgayMua) = '2023' GROUP BY kh.TenKH HAVING COUNT(dh.MaDH) >= 5;",
+      "hint": "Gộp đơn hàng theo khách hàng, lọc theo năm 2023 và sử dụng HAVING để chọn những khách hàng có từ 5 đơn hàng trở lên.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 179,
+      "question": "Doanh thu trung bình của các sản phẩm thuộc danh mục 'Thiết bị văn phòng' là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "SanPham",
+        "DanhMuc",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT AVG(sp.DonGia) AS DoanhThuTrungBinh FROM SanPham sp JOIN DanhMuc dm ON sp.MaDM = dm.MaDM WHERE dm.TenDM = 'Thiết bị văn phòng';",
+      "hint": "Lọc sản phẩm theo danh mục 'Thiết bị văn phòng' và tính giá trị trung bình của đơn giá.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 180,
+      "question": "Hiển thị tên các sản phẩm có số lượng bán ra trong tháng 12 năm 2023 cao hơn 50 đơn vị.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT sp.TenSP FROM SanPham sp JOIN ChiTietDonHang ct ON sp.MaSP = ct.MaSP JOIN DonHang dh ON ct.MaDH = dh.MaDH WHERE dh.TrangThai = 'đã giao' AND STRFTIME('%Y-%m', dh.NgayMua) = '2023-12' GROUP BY sp.TenSP HAVING SUM(ct.SoLuong) > 50;",
+      "hint": "Gộp số lượng bán theo sản phẩm, lọc theo tháng 12 năm 2023 và trạng thái 'đã giao', sau đó lọc những sản phẩm có tổng số lượng trên 50.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 181,
+      "question": "Những khách hàng nào ở khu vực 'miền trung' đã mua sản phẩm thuộc danh mục 'Điện tử'?",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham",
+        "DanhMuc",
+        "CuaHang"
+      ],
+      "gold_sql": "SELECT DISTINCT kh.TenKH FROM KhachHang kh JOIN DonHang dh ON kh.MaKH = dh.MaKH JOIN ChiTietDonHang ct ON dh.MaDH = ct.MaDH JOIN SanPham sp ON ct.MaSP = sp.MaSP JOIN DanhMuc dm ON sp.MaDM = dm.MaDM JOIN CuaHang ch ON dh.MaCH = ch.MaCH WHERE ch.KhuVuc = 'miền trung' AND dm.TenDM = 'Điện tử';",
+      "hint": "Kết hợp nhiều bảng để lọc khách hàng dựa trên khu vực cửa hàng và danh mục sản phẩm đã mua.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 182,
+      "question": "Hiển thị tên các nhân viên và tổng giá trị các đơn hàng mà họ đã tạo (bao gồm cả giảm giá) trong năm 2023.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT nv.TenNV, SUM(ct.SoLuong * sp.DonGia * (1 - ct.MucGiamGia)) AS TongGiaTriDonHang FROM NhanVien nv JOIN DonHang dh ON nv.MaNV = dh.MaNV JOIN ChiTietDonHang ct ON dh.MaDH = ct.MaDH JOIN SanPham sp ON ct.MaSP = sp.MaSP WHERE STRFTIME('%Y', dh.NgayMua) = '2023' GROUP BY nv.TenNV;",
+      "hint": "Tính tổng giá trị đơn hàng cho mỗi nhân viên trong năm 2023.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 183,
+      "question": "Số lượng khách hàng VIP ('vip') có số điện thoại bắt đầu bằng '09' là bao nhiêu?",
+      "intent": "simple",
+      "sql_keywords": [
+        "KhachHang"
+      ],
+      "gold_sql": "SELECT COUNT(MaKH) FROM KhachHang WHERE LoaiThe = 'vip' AND SoDienThoai LIKE '09%';",
+      "hint": "Lọc khách hàng theo loại thẻ 'vip' và số điện thoại bắt đầu bằng '09', sau đó đếm số lượng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 184,
+      "question": "Hiển thị tên các nhân viên và số năm kinh nghiệm của họ, chỉ những người có chức vụ 'chuyên viên bán hàng'.",
+      "intent": "simple",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT TenNV, STRFTIME('%Y', 'now') - STRFTIME('%Y', NgayVaoLam) AS SoNamKinhNghiem FROM NhanVien WHERE ChucVu = 'chuyên viên bán hàng';",
+      "hint": "Tính số năm kinh nghiệm dựa trên ngày vào làm và lọc theo chức vụ.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 185,
+      "question": "Tổng số lượng sản phẩm đã bán của từng danh mục trong quý 4 năm 2023 là bao nhiêu?",
+      "intent": "complex",
+      "sql_keywords": [
+        "DanhMuc",
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT dm.TenDM, SUM(ct.SoLuong) AS TongSoLuongBan FROM DanhMuc dm JOIN SanPham sp ON dm.MaDM = sp.MaDM JOIN ChiTietDonHang ct ON sp.MaSP = ct.MaSP JOIN DonHang dh ON ct.MaDH = dh.MaDH WHERE dh.NgayMua BETWEEN '2023-10-01' AND '2023-12-31' GROUP BY dm.TenDM;",
+      "hint": "Kết hợp các bảng để liên kết danh mục với số lượng bán, lọc theo quý 4 và nhóm theo tên danh mục.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 186,
+      "question": "Những đơn hàng nào có giá trị (sau giảm giá) trên 2,000,000 vnd và được đặt vào tháng 7 năm 2023?",
+      "intent": "complex",
+      "sql_keywords": [
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT dh.MaDH FROM DonHang dh JOIN ChiTietDonHang ct ON dh.MaDH = ct.MaDH JOIN SanPham sp ON ct.MaSP = sp.MaSP WHERE STRFTIME('%Y-%m', dh.NgayMua) = '2023-07' GROUP BY dh.MaDH HAVING SUM(ct.SoLuong * sp.DonGia * (1 - ct.MucGiamGia)) > 2000000;",
+      "hint": "Tính tổng giá trị cho mỗi đơn hàng, lọc theo tháng 7 năm 2023 và giá trị trên 2,000,000 vnd.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 187,
+      "question": "Hiển thị tên các khách hàng và email của họ, những người chưa từng thực hiện đơn hàng nào.",
+      "intent": "join",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT kh.TenKH, kh.Email FROM KhachHang kh LEFT JOIN DonHang dh ON kh.MaKH = dh.MaKH WHERE dh.MaDH IS NULL;",
+      "hint": "Sử dụng LEFT JOIN từ KhachHang đến DonHang và lọc những khách hàng có MaDH là NULL.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 188,
+      "question": "Top 5 sản phẩm bán chạy nhất theo số lượng trong quý 3 năm 2023 là gì?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT sp.TenSP, SUM(ct.SoLuong) AS TongSoLuongBan FROM SanPham sp JOIN ChiTietDonHang ct ON sp.MaSP = ct.MaSP JOIN DonHang dh ON ct.MaDH = dh.MaDH WHERE dh.NgayMua BETWEEN '2023-07-01' AND '2023-09-30' GROUP BY sp.TenSP ORDER BY TongSoLuongBan DESC LIMIT 5;",
+      "hint": "Tính tổng số lượng bán cho mỗi sản phẩm trong quý 3, sắp xếp theo số lượng giảm dần và lấy top 5.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 189,
+      "question": "Doanh thu của từng cửa hàng trong năm 2023 là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "CuaHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT ch.TenCH, SUM(ct.SoLuong * sp.DonGia * (1 - ct.MucGiamGia)) AS TongDoanhThu FROM CuaHang ch JOIN DonHang dh ON ch.MaCH = dh.MaCH JOIN ChiTietDonHang ct ON dh.MaDH = ct.MaDH JOIN SanPham sp ON ct.MaSP = sp.MaSP WHERE STRFTIME('%Y', dh.NgayMua) = '2023' GROUP BY ch.TenCH;",
+      "hint": "Kết nối các bảng để tính tổng doanh thu cho mỗi cửa hàng trong năm 2023.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 190,
+      "question": "Liệt kê tên các nhân viên và tổng số đơn hàng mà họ đã thực hiện, chỉ bao gồm các đơn hàng có trạng thái 'đã giao' hoặc 'đang xử lý'.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT nv.TenNV, COUNT(dh.MaDH) AS SoLuongDonHang FROM NhanVien nv JOIN DonHang dh ON nv.MaNV = dh.MaNV WHERE dh.TrangThai IN ('đã giao', 'đang xử lý') GROUP BY nv.TenNV;",
+      "hint": "Gộp số lượng đơn hàng theo nhân viên, lọc theo trạng thái 'đã giao' hoặc 'đang xử lý'.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 191,
+      "question": "Doanh thu theo từng tháng trong năm 2023 là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DonHang",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT STRFTIME('%m', NgayMua) AS Thang, SUM(ctdh.SoLuong * sp.DonGia * (1 - ctdh.MucGiamGia)) AS DoanhThu FROM DonHang dh JOIN ChiTietDonHang ctdh ON dh.MaDH = ctdh.MaDH JOIN SanPham sp ON ctdh.MaSP = sp.MaSP WHERE STRFTIME('%Y', dh.NgayMua) = '2023' GROUP BY Thang ORDER BY Thang;",
+      "hint": "Sử dụng hàm STRFTIME để trích xuất tháng từ ngày mua và tính tổng doanh thu.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 192,
+      "question": "Liệt kê tên và mức lương của những nhân viên có quản lý trực tiếp là 'Nguyễn Văn A'.",
+      "intent": "join",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT nv1.TenNV, nv1.Luong FROM NhanVien nv1 JOIN NhanVien nv2 ON nv1.MaNQL = nv2.MaNV WHERE nv2.TenNV = 'Nguyễn Văn A';",
+      "hint": "Tham gia bảng NhanVien với chính nó để tìm nhân viên dưới quyền của một quản lý cụ thể.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 193,
+      "question": "Top 5 khách hàng chi tiêu nhiều nhất trong năm 2023 là ai?",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT kh.TenKH, SUM(ctdh.SoLuong * sp.DonGia * (1 - ctdh.MucGiamGia)) AS TongChiTieu FROM KhachHang kh JOIN DonHang dh ON kh.MaKH = dh.MaKH JOIN ChiTietDonHang ctdh ON dh.MaDH = ctdh.MaDH JOIN SanPham sp ON ctdh.MaSP = sp.MaSP WHERE STRFTIME('%Y', dh.NgayMua) = '2023' GROUP BY kh.TenKH ORDER BY TongChiTieu DESC LIMIT 5;",
+      "hint": "Tính tổng chi tiêu của mỗi khách hàng trong năm 2023 và xếp hạng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 194,
+      "question": "Liệt kê các sản phẩm chưa từng được bán trong năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT TenSP FROM SanPham WHERE MaSP NOT IN (SELECT DISTINCT MaSP FROM ChiTietDonHang ctdh JOIN DonHang dh ON ctdh.MaDH = dh.MaDH WHERE STRFTIME('%Y', dh.NgayMua) = '2023');",
+      "hint": "Sử dụng mệnh đề NOT IN hoặc LEFT JOIN để tìm các sản phẩm không có trong các đơn hàng năm 2023.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 195,
+      "question": "Doanh thu trung bình của mỗi nhân viên trong năm 2023 là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT nv.TenNV, AVG(ctdh.SoLuong * sp.DonGia * (1 - ctdh.MucGiamGia)) AS DoanhThuTrungBinh FROM NhanVien nv JOIN DonHang dh ON nv.MaNV = dh.MaNV JOIN ChiTietDonHang ctdh ON dh.MaDH = ctdh.MaDH JOIN SanPham sp ON ctdh.MaSP = sp.MaSP WHERE STRFTIME('%Y', dh.NgayMua) = '2023' GROUP BY nv.TenNV;",
+      "hint": "Tính doanh thu cho từng nhân viên trong năm 2023 và sau đó tính trung bình.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 196,
+      "question": "Những sản phẩm nào có lợi nhuận gộp cao nhất (tổng doanh thu trừ tổng chi phí - giả sử chi phí bằng 50% đơn giá) trong quý 3 năm 2023?",
+      "intent": "complex",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT sp.TenSP, SUM(ctdh.SoLuong * sp.DonGia * (1 - ctdh.MucGiamGia) - ctdh.SoLuong * sp.DonGia * 0.5) AS LoiNhuanGop FROM SanPham sp JOIN ChiTietDonHang ctdh ON sp.MaSP = ctdh.MaSP JOIN DonHang dh ON ctdh.MaDH = dh.MaDH WHERE dh.NgayMua BETWEEN '2023-07-01' AND '2023-09-30' GROUP BY sp.TenSP ORDER BY LoiNhuanGop DESC;",
+      "hint": "Ước tính lợi nhuận gộp bằng cách trừ đi một phần chi phí giả định và tìm sản phẩm có lợi nhuận cao nhất.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 197,
+      "question": "Liệt kê tên các khu vực và tổng số đơn hàng đã xử lý (trạng thái 'Đã giao') tại mỗi khu vực trong năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "CuaHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT ch.KhuVuc, COUNT(dh.MaDH) AS SoDonHangDaGiao FROM CuaHang ch JOIN DonHang dh ON ch.MaCH = dh.MaCH WHERE dh.TrangThai = 'Hoàn thành' AND STRFTIME('%Y', dh.NgayMua) = '2023' GROUP BY ch.KhuVuc ORDER BY SoDonHangDaGiao DESC;",
+      "hint": "Join bảng CuaHang và DonHang, lọc theo trạng thái 'Đã giao' và năm 2023, sau đó nhóm theo khu vực.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 198,
+      "question": "Hiển thị tên nhân viên và số ngày làm việc kể từ ngày vào làm cho đến hết năm 2023.",
+      "intent": "simple",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT TenNV, JULIANDAY('2023-12-31') - JULIANDAY(NgayVaoLam) AS SoNgayLamViec FROM NhanVien WHERE NgayVaoLam <= '2023-12-31';",
+      "hint": "Sử dụng hàm JULIANDAY để tính số ngày giữa ngày vào làm và cuối năm 2023.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 199,
+      "question": "Doanh thu của các đơn hàng có giá trị trên 500,000 VNĐ (sau giảm giá) trong tháng 11 năm 2023 là bao nhiêu?",
+      "intent": "complex",
+      "sql_keywords": [
+        "DonHang",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT SUM(ctdh.SoLuong * sp.DonGia * (1 - ctdh.MucGiamGia)) AS DoanhThu FROM DonHang dh JOIN ChiTietDonHang ctdh ON dh.MaDH = ctdh.MaDH JOIN SanPham sp ON ctdh.MaSP = sp.MaSP WHERE STRFTIME('%Y-%m', dh.NgayMua) = '2023-11' GROUP BY dh.MaDH HAVING SUM(ctdh.SoLuong * sp.DonGia * (1 - ctdh.MucGiamGia)) > 500000;",
+      "hint": "Tính tổng giá trị từng đơn hàng trong tháng 11, sau đó lọc và tính tổng doanh thu.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 200,
+      "question": "Hiển thị tên các nhân viên và số lượng khách hàng mà mỗi người phụ trách, chỉ những nhân viên có chức vụ 'Chuyên viên'.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NhanVien",
+        "KhachHang"
+      ],
+      "gold_sql": "SELECT nv.TenNV, COUNT(kh.MaKH) AS SoKhachHangPhuTrach FROM NhanVien nv LEFT JOIN KhachHang kh ON nv.MaNV = kh.MaNV_PhuTrach WHERE nv.ChucVu = 'Chuyên viên' GROUP BY nv.TenNV ORDER BY SoKhachHangPhuTrach DESC;",
+      "hint": "Join bảng NhanVien và KhachHang, lọc theo chức vụ và đếm số khách hàng phụ trách.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 201,
+      "question": "Doanh thu của từng loại thẻ khách hàng trong quý 1 năm 2023 là bao nhiêu?",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT kh.LoaiThe, SUM(ctdh.SoLuong * sp.DonGia * (1 - ctdh.MucGiamGia)) AS DoanhThuQuy1 FROM KhachHang kh JOIN DonHang dh ON kh.MaKH = dh.MaKH JOIN ChiTietDonHang ctdh ON dh.MaDH = ctdh.MaDH JOIN SanPham sp ON ctdh.MaSP = sp.MaSP WHERE dh.NgayMua BETWEEN '2023-01-01' AND '2023-03-31' GROUP BY kh.LoaiThe ORDER BY DoanhThuQuy1 DESC;",
+      "hint": "Lọc đơn hàng theo quý 1, join các bảng cần thiết và tính doanh thu theo loại thẻ.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 202,
+      "question": "Tổng giá trị các đơn hàng đã xử lý (không bao gồm 'Đã hủy' và 'Chờ xử lý') trong năm 2023 là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DonHang",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT SUM(ctdh.SoLuong * sp.DonGia * (1 - ctdh.MucGiamGia)) AS TongGiaTriDonHang FROM DonHang dh JOIN ChiTietDonHang ctdh ON dh.MaDH = ctdh.MaDH JOIN SanPham sp ON ctdh.MaSP = sp.MaSP WHERE STRFTIME('%Y', dh.NgayMua) = '2023' AND dh.TrangThai NOT IN ('Đã hủy', 'Chờ xử lý');",
+      "hint": "Tính tổng giá trị các đơn hàng trong năm 2023, loại trừ các trạng thái không mong muốn.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 203,
+      "question": "Liệt kê tên các cửa hàng và số lượng nhân viên làm việc tại mỗi cửa hàng.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "CuaHang",
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT ch.TenCH, COUNT(nv.MaNV) AS SoNhanVien FROM CuaHang ch LEFT JOIN NhanVien nv ON ch.MaCH = nv.MaCH GROUP BY ch.TenCH ORDER BY SoNhanVien DESC;",
+      "hint": "Join bảng CuaHang và NhanVien, nhóm theo cửa hàng và đếm số nhân viên.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 204,
+      "question": "Doanh thu của từng nhân viên theo từng khu vực cửa hàng trong quý 4 năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang",
+        "ChiTietDonHang",
+        "CuaHang"
+      ],
+      "gold_sql": "SELECT nv.TenNV, ch.KhuVuc, SUM(ctdh.SoLuong * sp.DonGia * (1 - ctdh.MucGiamGia)) AS DoanhThuQuy4 FROM NhanVien nv JOIN DonHang dh ON nv.MaNV = dh.MaNV JOIN ChiTietDonHang ctdh ON dh.MaDH = ctdh.MaDH JOIN SanPham sp ON ctdh.MaSP = sp.MaSP JOIN CuaHang ch ON dh.MaCH = ch.MaCH WHERE dh.NgayMua BETWEEN '2023-10-01' AND '2023-12-31' GROUP BY nv.TenNV, ch.KhuVuc ORDER BY nv.TenNV, ch.KhuVuc;",
+      "hint": "Join tất cả các bảng liên quan, lọc theo quý 4 và nhóm theo nhân viên và khu vực.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 205,
+      "question": "Số lượng khách hàng đã mua hàng tại cửa hàng 'Hà Nội' và có loại thẻ 'Vàng' là bao nhiêu?",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "CuaHang"
+      ],
+      "gold_sql": "SELECT COUNT(DISTINCT kh.MaKH) AS SoKhachHang FROM KhachHang kh JOIN DonHang dh ON kh.MaKH = dh.MaKH JOIN CuaHang ch ON dh.MaCH = ch.MaCH WHERE ch.TenCH = 'Cửa hàng Hà Nội' AND kh.LoaiThe = 'Vàng';",
+      "hint": "Join KhachHang, DonHang, CuaHang, lọc theo tên cửa hàng và loại thẻ, sau đó đếm số khách hàng duy nhất.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 206,
+      "question": "Top 3 nhân viên có số lượng đơn hàng 'Đã giao' nhiều nhất trong tháng 8 năm 2023.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT nv.TenNV, COUNT(dh.MaDH) AS SoDonHangDaGiao FROM NhanVien nv JOIN DonHang dh ON nv.MaNV = dh.MaNV WHERE dh.TrangThai = 'Hoàn thành' AND STRFTIME('%Y-%m', dh.NgayMua) = '2023-08' GROUP BY nv.TenNV ORDER BY SoDonHangDaGiao DESC LIMIT 3;",
+      "hint": "Join NhanVien và DonHang, lọc theo trạng thái 'Đã giao' và tháng 8, nhóm theo nhân viên và lấy top 3.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 207,
+      "question": "Hiển thị tên các danh mục và tổng số lượng sản phẩm đã bán của mỗi danh mục trong năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "DanhMuc",
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT dm.TenDM, SUM(ctdh.SoLuong) AS TongSoLuongBan FROM DanhMuc dm JOIN SanPham sp ON dm.MaDM = sp.MaDM JOIN ChiTietDonHang ctdh ON sp.MaSP = ctdh.MaSP JOIN DonHang dh ON ctdh.MaDH = dh.MaDH WHERE STRFTIME('%Y', dh.NgayMua) = '2023' GROUP BY dm.TenDM ORDER BY TongSoLuongBan DESC;",
+      "hint": "Join các bảng, lọc đơn hàng năm 2023, nhóm theo danh mục và tính tổng số lượng sản phẩm bán ra.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 208,
+      "question": "Tính tổng doanh thu của tất cả các đơn hàng trong năm 2023.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT SUM(CTDH.SoLuong * SP.DonGia * (1 - CTDH.MucGiamGia)) FROM ChiTietDonHang AS CTDH JOIN SanPham AS SP ON CTDH.MaSP = SP.MaSP JOIN DonHang AS DH ON CTDH.MaDH = DH.MaDH WHERE STRFTIME('%Y', DH.NgayMua) = '2023';",
+      "hint": "Sử dụng SUM để tính tổng, join các bảng ChiTietDonHang, SanPham và DonHang, lọc theo năm.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 209,
+      "question": "Số lượng đơn hàng theo từng trạng thái trong quý 2 năm 2023 là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DonHang"
+      ],
+      "gold_sql": "SELECT TrangThai, COUNT(MaDH) FROM DonHang WHERE NgayMua BETWEEN '2023-04-01' AND '2023-06-30' GROUP BY TrangThai;",
+      "hint": "Group by TrangThai và đếm số lượng đơn hàng trong khoảng thời gian quý 2.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 210,
+      "question": "Hiển thị tên nhân viên và số lượng khách hàng mà họ đang phụ trách.",
+      "intent": "join",
+      "sql_keywords": [
+        "NhanVien",
+        "KhachHang"
+      ],
+      "gold_sql": "SELECT NV.TenNV, COUNT(KH.MaKH) FROM NhanVien AS NV LEFT JOIN KhachHang AS KH ON NV.MaNV = KH.MaNV_PhuTrach GROUP BY NV.TenNV ORDER BY COUNT(KH.MaKH) DESC;",
+      "hint": "Sử dụng LEFT JOIN để đảm bảo tất cả nhân viên được liệt kê, ngay cả khi họ không phụ trách khách hàng nào.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 211,
+      "question": "Top 3 nhân viên có doanh thu cao nhất trong tháng 11 năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT NV.TenNV, SUM(CTDH.SoLuong * SP.DonGia * (1 - CTDH.MucGiamGia)) AS TongDoanhThu FROM NhanVien AS NV JOIN DonHang AS DH ON NV.MaNV = DH.MaNV JOIN ChiTietDonHang AS CTDH ON DH.MaDH = CTDH.MaDH JOIN SanPham AS SP ON CTDH.MaSP = SP.MaSP WHERE STRFTIME('%Y-%m', DH.NgayMua) = '2023-11' GROUP BY NV.TenNV ORDER BY TongDoanhThu DESC LIMIT 3;",
+      "hint": "Join NhanVien, DonHang, ChiTietDonHang, SanPham. Tính tổng doanh thu cho từng nhân viên trong tháng 11, sắp xếp và giới hạn kết quả.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 212,
+      "question": "Liệt kê tên các danh mục sản phẩm có tổng số lượng bán ra trong năm 2023 trên 1000 đơn vị.",
+      "intent": "complex",
+      "sql_keywords": [
+        "DanhMuc",
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT DM.TenDM, SUM(CTDH.SoLuong) AS TongSoLuongBan FROM DanhMuc AS DM JOIN SanPham AS SP ON DM.MaDM = SP.MaDM JOIN ChiTietDonHang AS CTDH ON SP.MaSP = CTDH.MaSP JOIN DonHang AS DH ON CTDH.MaDH = DH.MaDH WHERE STRFTIME('%Y', DH.NgayMua) = '2023' GROUP BY DM.TenDM HAVING SUM(CTDH.SoLuong) > 1000;",
+      "hint": "Join DanhMuc, SanPham, ChiTietDonHang, DonHang. Tính tổng số lượng bán cho từng danh mục trong năm 2023 và lọc những danh mục có tổng số lượng trên 1000.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 213,
+      "question": "Những khách hàng nào đã đặt hàng tại cửa hàng 'Siêu thị A' và có loại thẻ 'Gold'?",
+      "intent": "join",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "CuaHang"
+      ],
+      "gold_sql": "SELECT DISTINCT KH.TenKH FROM KhachHang AS KH JOIN DonHang AS DH ON KH.MaKH = DH.MaKH JOIN CuaHang AS CH ON DH.MaCH = CH.MaCH WHERE CH.TenCH = 'Siêu thị A' AND KH.LoaiThe = 'Gold';",
+      "hint": "Join KhachHang, DonHang, CuaHang. Lọc theo tên cửa hàng và loại thẻ khách hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 214,
+      "question": "Liệt kê tên các nhân viên có quản lý trực tiếp là 'Nguyễn Văn An'.",
+      "intent": "join",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT NV1.TenNV FROM NhanVien AS NV1 JOIN NhanVien AS NV2 ON NV1.MaNQL = NV2.MaNV WHERE NV2.TenNV = 'Nguyễn Văn An';",
+      "hint": "Self-join bảng NhanVien để tìm nhân viên có MaNQL tương ứng với MaNV của nhân viên 'Nguyễn Văn An'.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 215,
+      "question": "Doanh thu của từng sản phẩm trong quý 3 năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT SP.TenSP, SUM(CTDH.SoLuong * SP.DonGia * (1 - CTDH.MucGiamGia)) AS DoanhThu FROM SanPham AS SP JOIN ChiTietDonHang AS CTDH ON SP.MaSP = CTDH.MaSP JOIN DonHang AS DH ON CTDH.MaDH = DH.MaDH WHERE DH.NgayMua BETWEEN '2023-07-01' AND '2023-09-30' GROUP BY SP.TenSP ORDER BY DoanhThu DESC;",
+      "hint": "Join SanPham, ChiTietDonHang, DonHang. Tính tổng doanh thu cho từng sản phẩm trong quý 3.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 216,
+      "question": "Hiển thị tên các khách hàng và tổng số đơn hàng họ đã thực hiện trong năm 2022.",
+      "intent": "join",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT KH.TenKH, COUNT(DH.MaDH) FROM KhachHang AS KH JOIN DonHang AS DH ON KH.MaKH = DH.MaKH WHERE STRFTIME('%Y', DH.NgayMua) = '2022' GROUP BY KH.TenKH ORDER BY COUNT(DH.MaDH) DESC;",
+      "hint": "Join KhachHang và DonHang, lọc theo năm 2022 và đếm số đơn hàng cho mỗi khách hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 217,
+      "question": "Mức giảm giá trung bình theo từng danh mục sản phẩm trong năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "DanhMuc",
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT DM.TenDM, AVG(CTDH.MucGiamGia) FROM DanhMuc AS DM JOIN SanPham AS SP ON DM.MaDM = SP.MaDM JOIN ChiTietDonHang AS CTDH ON SP.MaSP = CTDH.MaSP JOIN DonHang AS DH ON CTDH.MaDH = DH.MaDH WHERE STRFTIME('%Y', DH.NgayMua) = '2023' GROUP BY DM.TenDM;",
+      "hint": "Join các bảng cần thiết, tính trung bình MucGiamGia cho từng DanhMuc trong năm 2023.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 218,
+      "question": "Hiển thị tên các nhân viên đã thực hiện ít nhất 2 đơn hàng trong tháng 1 năm 2023.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT NV.TenNV FROM NhanVien AS NV JOIN DonHang AS DH ON NV.MaNV = DH.MaNV WHERE STRFTIME('%Y-%m', DH.NgayMua) = '2023-01' GROUP BY NV.TenNV HAVING COUNT(DH.MaDH) >= 2;",
+      "hint": "Join NhanVien và DonHang, lọc theo tháng 1 năm 2023, group theo tên nhân viên và sử dụng HAVING để lọc những người có ít nhất 2 đơn hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 219,
+      "question": "Tổng số lượng sản phẩm đã bán thuộc danh mục 'Điện tử' trong quý 1 năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "DanhMuc",
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT SUM(CTDH.SoLuong) FROM DanhMuc AS DM JOIN SanPham AS SP ON DM.MaDM = SP.MaDM JOIN ChiTietDonHang AS CTDH ON SP.MaSP = CTDH.MaSP JOIN DonHang AS DH ON CTDH.MaDH = DH.MaDH WHERE DM.TenDM = 'Điện tử' AND DH.NgayMua BETWEEN '2023-01-01' AND '2023-03-31';",
+      "hint": "Join các bảng liên quan, lọc theo danh mục 'Điện tử' và quý 1 năm 2023, sau đó tính tổng số lượng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 220,
+      "question": "Liệt kê tên các cửa hàng có tổng doanh thu trên 50,000,000 vnd trong năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "CuaHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT CH.TenCH, SUM(CTDH.SoLuong * SP.DonGia * (1 - CTDH.MucGiamGia)) AS TongDoanhThu FROM CuaHang AS CH JOIN DonHang AS DH ON CH.MaCH = DH.MaCH JOIN ChiTietDonHang AS CTDH ON DH.MaDH = CTDH.MaDH JOIN SanPham AS SP ON CTDH.MaSP = SP.MaSP WHERE STRFTIME('%Y', DH.NgayMua) = '2023' GROUP BY CH.TenCH HAVING TongDoanhThu > 50000000;",
+      "hint": "Join CuaHang, DonHang, ChiTietDonHang, SanPham. Tính tổng doanh thu cho từng cửa hàng trong năm 2023 và lọc những cửa hàng có doanh thu trên 50,000,000.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 221,
+      "question": "Số lượng khách hàng tiềm năng (loại thẻ 'Potential') đã thực hiện ít nhất một đơn hàng.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT COUNT(DISTINCT KH.MaKH) FROM KhachHang AS KH JOIN DonHang AS DH ON KH.MaKH = DH.MaKH WHERE KH.LoaiThe = 'Potential';",
+      "hint": "Join KhachHang và DonHang, lọc theo 'Potential' và đếm số khách hàng duy nhất.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 222,
+      "question": "Lương trung bình của các nhân viên theo từng khu vực cửa hàng mà họ làm việc.",
+      "intent": "complex",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang",
+        "CuaHang"
+      ],
+      "gold_sql": "SELECT CH.KhuVuc, AVG(NV.Luong) FROM NhanVien AS NV JOIN DonHang AS DH ON NV.MaNV = DH.MaNV JOIN CuaHang AS CH ON DH.MaCH = CH.MaCH GROUP BY CH.KhuVuc;",
+      "hint": "Join NhanVien, DonHang, CuaHang. Group theo KhuVuc và tính lương trung bình.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 223,
+      "question": "Doanh thu của các đơn hàng có trạng thái 'Chờ xử lý' trong năm 2023.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT SUM(CTDH.SoLuong * SP.DonGia * (1 - CTDH.MucGiamGia)) FROM ChiTietDonHang AS CTDH JOIN SanPham AS SP ON CTDH.MaSP = SP.MaSP JOIN DonHang AS DH ON CTDH.MaDH = DH.MaDH WHERE DH.TrangThai = 'Chờ xử lý' AND STRFTIME('%Y', DH.NgayMua) = '2023';",
+      "hint": "Join ChiTietDonHang, SanPham, DonHang. Lọc theo trạng thái 'Chờ xử lý' và năm 2023, sau đó tính tổng doanh thu.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 224,
+      "question": "Hiển thị tên các khách hàng đã mua sản phẩm của danh mục 'Văn phòng phẩm' và cũng mua sản phẩm của danh mục 'Đồ dùng học tập'.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham",
+        "DanhMuc"
+      ],
+      "gold_sql": "SELECT DISTINCT T1.TenKH FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP JOIN DanhMuc AS T5 ON T4.MaDM = T5.MaDM WHERE T5.TenDM = 'Văn phòng phẩm' INTERSECT SELECT DISTINCT T1.TenKH FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP JOIN DanhMuc AS T5 ON T4.MaDM = T5.MaDM WHERE T5.TenDM = 'Đồ dùng học tập';",
+      "hint": "Sử dụng INTERSECT để tìm những khách hàng có mặt trong cả hai điều kiện: mua sản phẩm thuộc danh mục 'Văn phòng phẩm' và 'Đồ dùng học tập'.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 225,
+      "question": "Top 3 sản phẩm bán chạy nhất (tính theo số lượng) trong quý 4 năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT SP.TenSP, SUM(CTDH.SoLuong) AS TongSoLuong FROM SanPham AS SP JOIN ChiTietDonHang AS CTDH ON SP.MaSP = CTDH.MaSP JOIN DonHang AS DH ON CTDH.MaDH = DH.MaDH WHERE DH.NgayMua BETWEEN '2023-10-01' AND '2023-12-31' GROUP BY SP.TenSP ORDER BY TongSoLuong DESC LIMIT 3;",
+      "hint": "Join SanPham, ChiTietDonHang, DonHang. Tính tổng số lượng bán cho từng sản phẩm trong quý 4, sắp xếp và giới hạn kết quả.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 226,
+      "question": "Hiển thị tên các nhân viên và tổng chi tiêu của khách hàng mà họ phụ trách trong năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "NhanVien",
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT NV.TenNV, SUM(CTDH.SoLuong * SP.DonGia * (1 - CTDH.MucGiamGia)) AS TongChiTieuKhachHang FROM NhanVien AS NV JOIN KhachHang AS KH ON NV.MaNV = KH.MaNV_PhuTrach JOIN DonHang AS DH ON KH.MaKH = DH.MaKH JOIN ChiTietDonHang AS CTDH ON DH.MaDH = CTDH.MaDH JOIN SanPham AS SP ON CTDH.MaSP = SP.MaSP WHERE STRFTIME('%Y', DH.NgayMua) = '2023' GROUP BY NV.TenNV;",
+      "hint": "Join NhanVien, KhachHang, DonHang, ChiTietDonHang, SanPham. Tính tổng chi tiêu của khách hàng được phụ trách bởi mỗi nhân viên trong năm 2023.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 227,
+      "question": "Số lượng đơn hàng theo từng khu vực cửa hàng trong tháng 3 năm 2023.",
+      "intent": "join",
+      "sql_keywords": [
+        "CuaHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT CH.KhuVuc, COUNT(DH.MaDH) FROM CuaHang AS CH JOIN DonHang AS DH ON CH.MaCH = DH.MaCH WHERE STRFTIME('%Y-%m', DH.NgayMua) = '2023-03' GROUP BY CH.KhuVuc;",
+      "hint": "Join CuaHang và DonHang, lọc theo tháng 3 năm 2023, group theo KhuVuc và đếm số đơn hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 228,
+      "question": "Liệt kê tên các nhân viên và tổng doanh thu mà họ đã tạo ra từ các đơn hàng đã giao trong năm 2023.",
+      "intent": "join",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT NV.TenNV, SUM(CTDH.SoLuong * SP.DonGia * (1 - CTDH.MucGiamGia)) AS TongDoanhThu FROM NhanVien NV JOIN DonHang DH ON NV.MaNV = DH.MaNV JOIN ChiTietDonHang CTDH ON DH.MaDH = CTDH.MaDH JOIN SanPham SP ON CTDH.MaSP = SP.MaSP WHERE DH.TrangThai = 'Hoàn thành' AND STRFTIME('%Y', DH.NgayMua) = '2023' GROUP BY NV.MaNV, NV.TenNV;",
+      "hint": "Sử dụng JOIN để kết nối bảng Nhân viên, Đơn hàng, Chi tiết đơn hàng và Sản phẩm. Lọc các đơn hàng đã giao trong năm 2023 và tính tổng doanh thu cho mỗi nhân viên.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 229,
+      "question": "Những khách hàng nào đã chi tiêu nhiều nhất trong quý 3 năm 2023 (tính theo tổng giá trị đơn hàng)?",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT KH.TenKH, SUM(CTDH.SoLuong * SP.DonGia * (1 - CTDH.MucGiamGia)) AS TongChiTieu FROM KhachHang KH JOIN DonHang DH ON KH.MaKH = DH.MaKH JOIN ChiTietDonHang CTDH ON DH.MaDH = CTDH.MaDH JOIN SanPham SP ON CTDH.MaSP = SP.MaSP WHERE DH.NgayMua BETWEEN '2023-07-01' AND '2023-09-30' GROUP BY KH.MaKH, KH.TenKH ORDER BY TongChiTieu DESC;",
+      "hint": "Kết hợp bảng Khách hàng, Đơn hàng, Chi tiết đơn hàng và Sản phẩm. Tính tổng giá trị đơn hàng cho mỗi khách hàng trong khoảng thời gian quý 3 năm 2023 và sắp xếp theo thứ tự giảm dần.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 230,
+      "question": "Liệt kê tên các danh mục sản phẩm và tổng số lượng sản phẩm đã bán thuộc mỗi danh mục đó trong năm 2023.",
+      "intent": "join",
+      "sql_keywords": [
+        "DanhMuc",
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT DM.TenDM, SUM(CTDH.SoLuong) AS TongSoLuongBan FROM DanhMuc DM JOIN SanPham SP ON DM.MaDM = SP.MaDM JOIN ChiTietDonHang CTDH ON SP.MaSP = CTDH.MaSP JOIN DonHang DH ON CTDH.MaDH = DH.MaDH WHERE STRFTIME('%Y', DH.NgayMua) = '2023' GROUP BY DM.MaDM, DM.TenDM;",
+      "hint": "Nối bảng Danh mục, Sản phẩm, Chi tiết đơn hàng và Đơn hàng. Tổng hợp số lượng sản phẩm đã bán theo từng danh mục trong năm 2023.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 231,
+      "question": "Hiển thị tên của những nhân viên quản lý (MaNQL) và số lượng nhân viên cấp dưới mà họ đang quản lý.",
+      "intent": "join",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT NV_QL.TenNV AS NhanVienQuanLy, COUNT(NV_NV.MaNV) AS SoLuongNhanVienCapDuoi FROM NhanVien NV_QL JOIN NhanVien NV_NV ON NV_QL.MaNV = NV_NV.MaNQL GROUP BY NV_QL.MaNV, NV_QL.TenNV ORDER BY SoLuongNhanVienCapDuoi DESC;",
+      "hint": "Sử dụng tự nối (self-join) trên bảng Nhân viên để tìm các nhân viên quản lý và đếm số lượng nhân viên mà họ quản lý.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 232,
+      "question": "Liệt kê tên các khách hàng đã mua sản phẩm của danh mục 'Thiết bị văn phòng' và tổng số tiền họ đã chi tiêu cho danh mục này.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham",
+        "DanhMuc"
+      ],
+      "gold_sql": "SELECT KH.TenKH, SUM(CTDH.SoLuong * SP.DonGia * (1 - CTDH.MucGiamGia)) AS TongTien FROM KhachHang KH JOIN DonHang DH ON KH.MaKH = DH.MaKH JOIN ChiTietDonHang CTDH ON DH.MaDH = CTDH.MaDH JOIN SanPham SP ON CTDH.MaSP = SP.MaSP JOIN DanhMuc DM ON SP.MaDM = DM.MaDM WHERE DM.TenDM = 'Thiết bị văn phòng' GROUP BY KH.MaKH, KH.TenKH ORDER BY TongTien DESC;",
+      "hint": "Nối các bảng Khách hàng, Đơn hàng, Chi tiết đơn hàng, Sản phẩm và Danh mục. Lọc theo danh mục 'Thiết bị văn phòng' và tính tổng số tiền chi tiêu cho mỗi khách hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 233,
+      "question": "Hiển thị tên các nhân viên, chức vụ của họ và ngày vào làm, chỉ bao gồm những người có lương trên 10,000,000.",
+      "intent": "simple",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT TenNV, ChucVu, NgayVaoLam FROM NhanVien WHERE Luong > 10000000;",
+      "hint": "Truy vấn trực tiếp từ bảng Nhân viên, lọc theo điều kiện lương.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 234,
+      "question": "Số lượng đơn hàng trung bình mỗi khách hàng đã đặt trong năm 2023 là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT AVG(SoDonHang) AS SoDonHangTrungBinh FROM (SELECT MaKH, COUNT(MaDH) AS SoDonHang FROM DonHang WHERE STRFTIME('%Y', NgayMua) = '2023' GROUP BY MaKH) AS DonHangCuaKhach;",
+      "hint": "Đếm số đơn hàng cho mỗi khách hàng trong năm 2023, sau đó tính giá trị trung bình của số lượng đơn hàng đó.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 235,
+      "question": "Top 5 khách hàng có tổng giá trị đơn hàng cao nhất trong năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT KH.TenKH, SUM(CTDH.SoLuong * SP.DonGia * (1 - CTDH.MucGiamGia)) AS TongGiaTriDonHang FROM KhachHang KH JOIN DonHang DH ON KH.MaKH = DH.MaKH JOIN ChiTietDonHang CTDH ON DH.MaDH = CTDH.MaDH JOIN SanPham SP ON CTDH.MaSP = SP.MaSP WHERE STRFTIME('%Y', DH.NgayMua) = '2023' GROUP BY KH.MaKH, KH.TenKH ORDER BY TongGiaTriDonHang DESC LIMIT 5;",
+      "hint": "Tính tổng giá trị đơn hàng cho mỗi khách hàng trong năm 2023 và lấy ra 5 khách hàng có tổng giá trị cao nhất.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 236,
+      "question": "Hiển thị tên các sản phẩm có đơn giá trên 500,000 thuộc danh mục 'Điện tử'.",
+      "intent": "simple",
+      "sql_keywords": [
+        "SanPham",
+        "DanhMuc"
+      ],
+      "gold_sql": "SELECT SP.TenSP FROM SanPham SP JOIN DanhMuc DM ON SP.MaDM = DM.MaDM WHERE SP.DonGia > 500000 AND DM.TenDM = 'Điện tử';",
+      "hint": "Nối bảng Sản phẩm và Danh mục, lọc theo đơn giá và tên danh mục.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 237,
+      "question": "Số lượng khách hàng chưa từng mua hàng trước đó (tức là những người chưa có đơn hàng nào) trong từng tháng của năm 2023 là bao nhiêu?",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT STRFTIME('%Y-%m', DH.NgayMua) AS Thang, COUNT(DISTINCT KH.MaKH) AS SoKhachHangMoi FROM KhachHang KH LEFT JOIN DonHang DH ON KH.MaKH = DH.MaKH WHERE KH.MaKH NOT IN (SELECT MaKH FROM DonHang WHERE STRFTIME('%Y', NgayMua) < STRFTIME('%Y', DH.NgayMua)) AND STRFTIME('%Y', DH.NgayMua) = '2023' GROUP BY Thang ORDER BY Thang;",
+      "hint": "Sử dụng LEFT JOIN và NOT IN để xác định những khách hàng chưa từng có đơn hàng. Sau đó, lọc theo năm 2023 và nhóm theo tháng để đếm số lượng khách hàng mới.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 238,
+      "question": "Liệt kê tên các cửa hàng và tổng số lượng sản phẩm đã bán tại mỗi cửa hàng trong quý 4 năm 2023.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "CuaHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT CH.TenCH, SUM(CTDH.SoLuong) AS TongSoLuongBan FROM CuaHang CH JOIN DonHang DH ON CH.MaCH = DH.MaCH JOIN ChiTietDonHang CTDH ON DH.MaDH = CTDH.MaDH WHERE DH.NgayMua BETWEEN '2023-10-01' AND '2023-12-31' GROUP BY CH.MaCH, CH.TenCH;",
+      "hint": "Kết hợp bảng Cửa hàng, Đơn hàng, Chi tiết đơn hàng. Lọc các đơn hàng trong quý 4 năm 2023 và tính tổng số lượng sản phẩm đã bán cho mỗi cửa hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 239,
+      "question": "Hiển thị tên nhân viên, chức vụ và tổng số đơn hàng họ đã thực hiện trong năm 2022.",
+      "intent": "join",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT NV.TenNV, NV.ChucVu, COUNT(DH.MaDH) AS SoLuongDonHang FROM NhanVien NV LEFT JOIN DonHang DH ON NV.MaNV = DH.MaNV AND STRFTIME('%Y', DH.NgayMua) = '2022' GROUP BY NV.MaNV, NV.TenNV, NV.ChucVu;",
+      "hint": "Sử dụng LEFT JOIN để đảm bảo hiển thị tất cả nhân viên, kể cả những người không có đơn hàng trong năm 2022. Đếm số lượng đơn hàng theo từng nhân viên.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 240,
+      "question": "Top 3 nhân viên có tổng lương cao nhất.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT TenNV, Luong FROM NhanVien ORDER BY Luong DESC LIMIT 3;",
+      "hint": "Truy vấn trực tiếp từ bảng Nhân viên và sắp xếp theo lương giảm dần, giới hạn kết quả ở 3.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 241,
+      "question": "Hiển thị tên các khách hàng đã đặt đơn hàng tại cửa hàng 'TP.HCM' và tổng số tiền họ đã chi tiêu tại cửa hàng đó.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "CuaHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT KH.TenKH, SUM(CTDH.SoLuong * SP.DonGia * (1 - CTDH.MucGiamGia)) AS TongTien FROM KhachHang KH JOIN DonHang DH ON KH.MaKH = DH.MaKH JOIN CuaHang CH ON DH.MaCH = CH.MaCH JOIN ChiTietDonHang CTDH ON DH.MaDH = CTDH.MaDH JOIN SanPham SP ON CTDH.MaSP = SP.MaSP WHERE CH.TenCH = 'TP.HCM' GROUP BY KH.MaKH, KH.TenKH ORDER BY TongTien DESC;",
+      "hint": "Kết hợp các bảng Khách hàng, Đơn hàng, Cửa hàng, Chi tiết đơn hàng và Sản phẩm. Lọc theo cửa hàng 'TP.HCM', nhóm theo khách hàng và tính tổng số tiền đã chi tiêu.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 242,
+      "question": "Những nhân viên nào đã thực hiện ít nhất một đơn hàng với mức giảm giá trên 20% trong năm 2023?",
+      "intent": "complex",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT DISTINCT NV.TenNV FROM NhanVien NV JOIN DonHang DH ON NV.MaNV = DH.MaNV JOIN ChiTietDonHang CTDH ON DH.MaDH = CTDH.MaDH WHERE CTDH.MucGiamGia > 0.2 AND STRFTIME('%Y', DH.NgayMua) = '2023';",
+      "hint": "Nối bảng Nhân viên, Đơn hàng và Chi tiết đơn hàng. Lọc các đơn hàng có mức giảm giá trên 20% và trong năm 2023. Sử dụng DISTINCT để chỉ liệt kê tên nhân viên một lần.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 243,
+      "question": "Doanh thu (sau giảm giá) của từng khách hàng trong tháng 10 năm 2023 là bao nhiêu?",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT T1.TenKH, SUM(T2.SoLuong * T3.DonGia * (1 - T2.MucGiamGia)) AS DoanhThuThang10 FROM KhachHang AS T1 INNER JOIN DonHang AS T3 ON T1.MaKH = T3.MaKH INNER JOIN ChiTietDonHang AS T2 ON T3.MaDH = T2.MaDH WHERE STRFTIME('%Y-%m', T3.NgayMua) = '2023-10' GROUP BY T1.TenKH;",
+      "hint": "Kết hợp bảng KhachHang, DonHang và ChiTietDonHang. Tính doanh thu sau giảm giá và lọc theo tháng/năm.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 244,
+      "question": "Những sản phẩm nào có số lượng bán ra trong tháng 5 năm 2023 thấp hơn 20 đơn vị?",
+      "intent": "complex",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenSP FROM SanPham AS T1 INNER JOIN ChiTietDonHang AS T2 ON T1.MaSP = T2.MaSP INNER JOIN DonHang AS T3 ON T2.MaDH = T3.MaDH WHERE STRFTIME('%Y-%m', T3.NgayMua) = '2023-05' GROUP BY T1.TenSP HAVING SUM(T2.SoLuong) < 20;",
+      "hint": "Sử dụng JOIN để liên kết các bảng, lọc theo tháng/năm và sử dụng HAVING để lọc theo tổng số lượng bán ra.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 245,
+      "question": "Hiển thị tên các cửa hàng và tổng doanh thu (trước giảm giá) của mỗi cửa hàng trong tháng 1 năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "CuaHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T1.TenCH, SUM(T3.SoLuong * T4.DonGia) AS TongDoanhThu FROM CuaHang AS T1 INNER JOIN DonHang AS T2 ON T1.MaCH = T2.MaCH INNER JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH INNER JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP WHERE STRFTIME('%Y-%m', T2.NgayMua) = '2023-01' GROUP BY T1.TenCH;",
+      "hint": "Kết hợp bảng CuaHang, DonHang, ChiTietDonHang, SanPham. Tính doanh thu trước giảm giá và nhóm theo cửa hàng, lọc theo tháng/năm.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 246,
+      "question": "Liệt kê tên các nhân viên và tổng số tiền họ đã nhận được từ hoa hồng (dựa trên mức giảm giá) trong năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T1.TenNV, SUM(T3.SoLuong * T4.DonGia * T3.MucGiamGia) AS TongHoaHong FROM NhanVien AS T1 INNER JOIN DonHang AS T2 ON T1.MaNV = T2.MaNV INNER JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH INNER JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP WHERE STRFTIME('%Y', T2.NgayMua) = '2023' GROUP BY T1.TenNV;",
+      "hint": "Kết hợp bảng NhanVien, DonHang, ChiTietDonHang, SanPham. Tính tổng giá trị giảm giá theo nhân viên và lọc theo năm.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 247,
+      "question": "Top 5 nhân viên có tổng số lượng sản phẩm bán ra cao nhất trong tháng 8 năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT T1.TenNV, SUM(T3.SoLuong) AS TongSoLuong FROM NhanVien AS T1 INNER JOIN DonHang AS T2 ON T1.MaNV = T2.MaNV INNER JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH WHERE STRFTIME('%Y-%m', T2.NgayMua) = '2023-08' GROUP BY T1.TenNV ORDER BY TongSoLuong DESC LIMIT 5;",
+      "hint": "Kết hợp NhanVien, DonHang, ChiTietDonHang. Tính tổng số lượng bán ra, lọc theo tháng/năm, sắp xếp và giới hạn kết quả.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 248,
+      "question": "Hiển thị tên các sản phẩm đã được giảm giá trong các đơn hàng có trạng thái 'đã giao' trong năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT DISTINCT T1.TenSP FROM SanPham AS T1 INNER JOIN ChiTietDonHang AS T2 ON T1.MaSP = T2.MaSP INNER JOIN DonHang AS T3 ON T2.MaDH = T3.MaDH WHERE T2.MucGiamGia > 0 AND T3.TrangThai = 'đã giao' AND STRFTIME('%Y', T3.NgayMua) = '2023';",
+      "hint": "Join bảng SanPham, ChiTietDonHang, DonHang. Lọc theo điều kiện giảm giá, trạng thái đơn hàng và năm.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 249,
+      "question": "Hiển thị tên các nhân viên quản lý và số lượng nhân viên mà mỗi người quản lý trong năm 2023.",
+      "intent": "join",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT T1.TenNV AS TenNhanVienQuanLy, COUNT(T2.MaNV) AS SoLuongNhanVienDuoiQuyen FROM NhanVien AS T1 INNER JOIN NhanVien AS T2 ON T1.MaNV = T2.MaNQL GROUP BY T1.TenNV;",
+      "hint": "Sử dụng SELF JOIN trên bảng NhanVien để tìm mối quan hệ quản lý và đếm số lượng nhân viên cấp dưới.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 250,
+      "question": "Số lượng nhân viên có ngày vào làm trong năm 2022 và có lương trên 10,000,000 vnđ là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT COUNT(MaNV) FROM NhanVien WHERE STRFTIME('%Y', NgayVaoLam) = '2022' AND Luong > 10000000;",
+      "hint": "Lọc bảng NhanVien theo năm vào làm và mức lương, sau đó đếm số lượng nhân viên.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 251,
+      "question": "Hiển thị tên các khách hàng và tổng giá trị đơn hàng (sau giảm giá) của họ trong tháng 11 năm 2023, chỉ bao gồm những khách hàng có loại thẻ 'bạc'.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T1.TenKH, SUM(T3.SoLuong * T4.DonGia * (1 - T3.MucGiamGia)) AS TongGiaTriDonHang FROM KhachHang AS T1 INNER JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH INNER JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH INNER JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP WHERE T1.LoaiThe = 'bạc' AND STRFTIME('%Y-%m', T2.NgayMua) = '2023-11' GROUP BY T1.TenKH;",
+      "hint": "Join bảng KhachHang, DonHang, ChiTietDonHang, SanPham. Lọc theo loại thẻ và tháng/năm. Tính tổng giá trị đơn hàng và nhóm theo khách hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 252,
+      "question": "Top 3 cửa hàng có số lượng đơn hàng bị hủy nhiều nhất trong quý 4 năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "CuaHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenCH, COUNT(T2.MaDH) AS SoLuongDonHangHuy FROM CuaHang AS T1 INNER JOIN DonHang AS T2 ON T1.MaCH = T2.MaCH WHERE T2.TrangThai = 'đã hủy' AND T2.NgayMua BETWEEN '2023-10-01' AND '2023-12-31' GROUP BY T1.TenCH ORDER BY SoLuongDonHangHuy DESC LIMIT 3;",
+      "hint": "Join bảng CuaHang và DonHang. Lọc theo trạng thái 'đã hủy' và quý. Đếm số đơn hàng, sắp xếp và giới hạn kết quả.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 253,
+      "question": "Số lượng đơn hàng có trạng thái 'đang xử lý' hoặc 'chờ xử lý' trong tháng 3 năm 2023 là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DonHang"
+      ],
+      "gold_sql": "SELECT COUNT(MaDH) FROM DonHang WHERE (TrangThai = 'đang xử lý' OR TrangThai = 'chờ xử lý') AND STRFTIME('%Y-%m', NgayMua) = '2023-03';",
+      "hint": "Lọc bảng DonHang theo trạng thái và tháng/năm, sau đó đếm số lượng đơn hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 254,
+      "question": "Liệt kê tên các nhân viên và tổng giá trị các đơn hàng (sau giảm giá) mà họ đã tạo trong quý 2 năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T1.TenNV, SUM(T3.SoLuong * T4.DonGia * (1 - T3.MucGiamGia)) AS TongGiaTriDonHang FROM NhanVien AS T1 INNER JOIN DonHang AS T2 ON T1.MaNV = T2.MaNV INNER JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH INNER JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP WHERE T2.NgayMua BETWEEN '2023-04-01' AND '2023-06-30' GROUP BY T1.TenNV;",
+      "hint": "Join bảng NhanVien, DonHang, ChiTietDonHang, SanPham. Tính tổng giá trị đơn hàng sau giảm giá, lọc theo quý và nhóm theo nhân viên.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 255,
+      "question": "Hiển thị tên các cửa hàng và tổng số lượng sản phẩm đã bán ra tại mỗi cửa hàng trong tháng 7 năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "CuaHang",
+        "DonHang",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT T1.TenCH, SUM(T3.SoLuong) AS TongSoLuongSanPham FROM CuaHang AS T1 INNER JOIN DonHang AS T2 ON T1.MaCH = T2.MaCH INNER JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH WHERE STRFTIME('%Y-%m', T2.NgayMua) = '2023-07' GROUP BY T1.TenCH;",
+      "hint": "Kết hợp bảng CuaHang, DonHang, ChiTietDonHang. Tính tổng số lượng sản phẩm bán ra, lọc theo tháng/năm và nhóm theo cửa hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 256,
+      "question": "Liệt kê tên các khách hàng và tổng số tiền họ đã chi tiêu (sau giảm giá) trong năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T1.TenKH, SUM(T3.SoLuong * T4.DonGia * (1 - T3.MucGiamGia)) AS TongTienDaChi FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP WHERE STRFTIME('%Y', T2.NgayMua) = '2023' GROUP BY T1.TenKH;",
+      "hint": "Bạn cần kết hợp bảng KhachHang, DonHang, ChiTietDonHang và SanPham, sau đó lọc theo năm và tính tổng doanh thu sau giảm giá cho mỗi khách hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 257,
+      "question": "Những sản phẩm nào có tổng số lượng bán ra trong quý 2 năm 2023 cao hơn 100 đơn vị?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenSP FROM SanPham AS T1 JOIN ChiTietDonHang AS T2 ON T1.MaSP = T2.MaSP JOIN DonHang AS T3 ON T2.MaDH = T3.MaDH WHERE STRFTIME('%Y', T3.NgayMua) = '2023' AND CAST(STRFTIME('%Q', T3.NgayMua) AS INTEGER) = 2 GROUP BY T1.TenSP HAVING SUM(T2.SoLuong) > 100;",
+      "hint": "Kết hợp bảng SanPham, ChiTietDonHang và DonHang, lọc theo quý và năm, sau đó nhóm theo sản phẩm và tính tổng số lượng bán ra, cuối cùng lọc theo điều kiện tổng số lượng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 258,
+      "question": "Số lượng khách hàng tiềm năng ('potential') đã thực hiện ít nhất một đơn hàng.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT COUNT(DISTINCT T1.MaKH) FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH WHERE T1.LoaiThe = 'potential';",
+      "hint": "Kết hợp bảng KhachHang và DonHang, lọc theo loại thẻ 'potential', sau đó đếm số lượng khách hàng duy nhất.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 259,
+      "question": "Hiển thị tên các sản phẩm được bán ra với số lượng lớn hơn 50 trong tháng 3 năm 2023.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenSP FROM SanPham AS T1 JOIN ChiTietDonHang AS T2 ON T1.MaSP = T2.MaSP JOIN DonHang AS T3 ON T2.MaDH = T3.MaDH WHERE STRFTIME('%Y-%m', T3.NgayMua) = '2023-03' GROUP BY T1.TenSP HAVING SUM(T2.SoLuong) > 50;",
+      "hint": "Kết hợp SanPham, ChiTietDonHang, DonHang. Lọc theo tháng và năm. Nhóm theo sản phẩm và tính tổng số lượng, sau đó lọc theo điều kiện tổng số lượng > 50.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 260,
+      "question": "Hiển thị tên các khách hàng ở khu vực 'miền nam' và chi tiết các đơn hàng của họ.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "CuaHang"
+      ],
+      "gold_sql": "SELECT T1.TenKH, T2.* FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH JOIN CuaHang AS T3 ON T2.MaCH = T3.MaCH WHERE T3.KhuVuc = 'miền nam';",
+      "hint": "Kết hợp KhachHang, DonHang và CuaHang. Lọc theo KhuVuc của CuaHang.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 261,
+      "question": "Tỷ lệ phần trăm các đơn hàng có mức giảm giá trên 15% so với tổng số đơn hàng trong năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "DonHang",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT CAST(SUM(CASE WHEN T2.MucGiamGia > 0.15 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T1.MaDH) FROM DonHang AS T1 JOIN ChiTietDonHang AS T2 ON T1.MaDH = T2.MaDH WHERE STRFTIME('%Y', T1.NgayMua) = '2023';",
+      "hint": "Kết hợp DonHang và ChiTietDonHang. Lọc theo năm. Sử dụng CASE WHEN để đếm các đơn hàng có mức giảm giá > 15% và chia cho tổng số đơn hàng trong năm.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 262,
+      "question": "Những nhân viên nào chưa từng thực hiện đơn hàng nào trong năm 2023?",
+      "intent": "complex",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenNV FROM NhanVien AS T1 LEFT JOIN DonHang AS T2 ON T1.MaNV = T2.MaNV AND STRFTIME('%Y', T2.NgayMua) = '2023' WHERE T2.MaDH IS NULL;",
+      "hint": "Sử dụng LEFT JOIN từ NhanVien đến DonHang với điều kiện lọc theo năm 2023. Chọn những nhân viên có MaDH là NULL.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 263,
+      "question": "Liệt kê tên các sản phẩm và tổng doanh thu (sau giảm giá) của từng sản phẩm trong năm 2023.",
+      "intent": "aggregate|join|complex",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenSP, SUM(T2.SoLuong * T1.DonGia * (1 - T2.MucGiamGia)) AS TongDoanhThu FROM SanPham AS T1 JOIN ChiTietDonHang AS T2 ON T1.MaSP = T2.MaSP JOIN DonHang AS T3 ON T2.MaDH = T3.MaDH WHERE STRFTIME('%Y', T3.NgayMua) = '2023' GROUP BY T1.TenSP;",
+      "hint": "Cần join bảng SanPham, ChiTietDonHang, DonHang và lọc theo năm 2023.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 264,
+      "question": "Tìm những khách hàng đã mua sản phẩm thuộc danh mục 'Điện thoại di động' và cũng đã mua sản phẩm thuộc danh mục 'Phụ kiện'.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham",
+        "DanhMuc"
+      ],
+      "gold_sql": "SELECT T1.TenKH FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP JOIN DanhMuc AS T5 ON T4.MaDM = T5.MaDM WHERE T5.TenDM = 'Điện thoại di động' INTERSECT SELECT T1.TenKH FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP JOIN DanhMuc AS T5 ON T4.MaDM = T5.MaDM WHERE T5.TenDM = 'Phụ kiện';",
+      "hint": "Sử dụng INTERSECT để tìm những khách hàng thỏa mãn cả hai điều kiện.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 265,
+      "question": "Hiển thị tên các cửa hàng có tổng doanh thu (trước giảm giá) trong tháng 1 năm 2023 cao hơn 50,000,000 vnđ.",
+      "intent": "aggregate|join",
+      "sql_keywords": [
+        "CuaHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT T1.TenCH FROM CuaHang AS T1 JOIN DonHang AS T2 ON T1.MaCH = T2.MaCH JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP WHERE STRFTIME('%Y-%m', T2.NgayMua) = '2023-01' GROUP BY T1.TenCH HAVING SUM(T3.SoLuong * T4.DonGia) > 50000000;",
+      "hint": "Cần join các bảng liên quan, lọc theo tháng 1 năm 2023 và sử dụng HAVING để lọc theo tổng doanh thu.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 266,
+      "question": "Liệt kê tên nhân viên và số lượng khách hàng mà mỗi nhân viên phụ trách.",
+      "intent": "join|aggregate",
+      "sql_keywords": [
+        "NhanVien",
+        "KhachHang"
+      ],
+      "gold_sql": "SELECT T1.TenNV, COUNT(T2.MaKH) AS SoLuongKhachHang FROM NhanVien AS T1 JOIN KhachHang AS T2 ON T1.MaNV = T2.MaNV_PhuTrach GROUP BY T1.TenNV;",
+      "hint": "Join bảng NhanVien và KhachHang, đếm số lượng khách hàng theo từng nhân viên.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 267,
+      "question": "Tổng giá trị các đơn hàng đã hủy trong năm 2023 là bao nhiêu?",
+      "intent": "aggregate|join|complex",
+      "sql_keywords": [
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT SUM(T2.SoLuong * T3.DonGia * (1 - T2.MucGiamGia)) AS TongGiaTriDonHangHuy FROM DonHang AS T1 JOIN ChiTietDonHang AS T2 ON T1.MaDH = T2.MaDH JOIN SanPham AS T3 ON T2.MaSP = T3.MaSP WHERE T1.TrangThai = 'Đã hủy' AND STRFTIME('%Y', T1.NgayMua) = '2023';",
+      "hint": "Join bảng DonHang, ChiTietDonHang, SanPham. Lọc theo trạng thái 'Đã hủy' và năm 2023, sau đó tính tổng giá trị.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 268,
+      "question": "Sản phẩm nào có số lượng bán ra ít nhất trong năm 2023?",
+      "intent": "aggregate|join|complex",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenSP FROM SanPham AS T1 JOIN ChiTietDonHang AS T2 ON T1.MaSP = T2.MaSP JOIN DonHang AS T3 ON T2.MaDH = T3.MaDH WHERE STRFTIME('%Y', T3.NgayMua) = '2023' GROUP BY T1.TenSP ORDER BY SUM(T2.SoLuong) ASC LIMIT 1;",
+      "hint": "Join các bảng liên quan, lọc theo năm 2023, nhóm theo sản phẩm, sắp xếp theo tổng số lượng bán ra tăng dần và lấy sản phẩm đầu tiên.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 269,
+      "question": "Hiển thị tên các khách hàng đã thực hiện đơn hàng vào ngày 2023-05-15 và đơn hàng đó có tổng giá trị (sau giảm giá) trên 1,000,000 vnđ.",
+      "intent": "aggregate|join|complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT DISTINCT T1.TenKH FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH JOIN ChiTietDonHang AS T3 ON T2.MaDH = T3.MaDH JOIN SanPham AS T4 ON T3.MaSP = T4.MaSP WHERE T2.NgayMua = '2023-05-15' GROUP BY T2.MaDH HAVING SUM(T3.SoLuong * T4.DonGia * (1 - T3.MucGiamGia)) > 1000000;",
+      "hint": "Join các bảng liên quan, lọc theo ngày cụ thể, nhóm theo đơn hàng, tính tổng giá trị và lọc những đơn hàng có giá trị trên 1,000,000.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 270,
+      "question": "Tìm những khách hàng đã mua đơn hàng có trạng thái 'Đang xử lý' và cũng đã mua đơn hàng có trạng thái 'Đã giao'.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT T1.TenKH FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH WHERE T2.TrangThai = 'Đang xử lý' INTERSECT SELECT T1.TenKH FROM KhachHang AS T1 JOIN DonHang AS T2 ON T1.MaKH = T2.MaKH WHERE T2.TrangThai = 'Hoàn thành';",
+      "hint": "Sử dụng INTERSECT để tìm những khách hàng có cả hai loại trạng thái đơn hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 271,
+      "question": "Tổng số lượng nhân viên hiện có trong công ty là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT COUNT(MaNV) FROM NhanVien;",
+      "hint": "Đếm tổng số bản ghi trong bảng NhanVien.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 272,
+      "question": "Hiển thị tên các sản phẩm chưa từng được bán trong năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT TenSP FROM SanPham EXCEPT SELECT T1.TenSP FROM SanPham AS T1 JOIN ChiTietDonHang AS T2 ON T1.MaSP = T2.MaSP JOIN DonHang AS T3 ON T2.MaDH = T3.MaDH WHERE STRFTIME('%Y', T3.NgayMua) = '2023';",
+      "hint": "Sử dụng EXCEPT để tìm những sản phẩm có trong bảng SanPham nhưng không có trong các đơn hàng của năm 2023.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 273,
+      "question": "Doanh thu (sau giảm giá) của các sản phẩm thuộc danh mục 'Thiết bị điện tử' trong tháng 10 năm 2023 là bao nhiêu?",
+      "intent": "complex",
+      "sql_keywords": [
+        "DanhMuc",
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT SUM(ctdh.SoLuong * sp.DonGia * (1 - ctdh.MucGiamGia))\nFROM DanhMuc dm\nJOIN SanPham sp ON dm.MaDM = sp.MaDM\nJOIN ChiTietDonHang ctdh ON sp.MaSP = ctdh.MaSP\nJOIN DonHang dh ON ctdh.MaDH = dh.MaDH\nWHERE dm.TenDM = 'Thiết bị điện tử' AND dh.NgayMua BETWEEN '2023-10-01' AND '2023-10-31';",
+      "hint": "Tính toán doanh thu sau giảm giá, lọc theo tên danh mục và thời gian (tháng).",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 274,
+      "question": "Tìm những nhân viên có mức lương trên 15,000,000 VNĐ và đã làm việc tại công ty trên 2 năm.",
+      "intent": "simple",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT TenNV\nFROM NhanVien\nWHERE Luong > 15000000 AND NgayVaoLam < DATE('now', '-2 years');",
+      "hint": "Lọc trực tiếp bảng NhanVien dựa trên Lương và thời gian làm việc (tính từ NgayVaoLam đến ngày hiện tại).",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 275,
+      "question": "Tổng doanh thu (sau giảm giá) của mỗi khách hàng trong tháng 3 năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT kh.TenKH, SUM(ctdh.SoLuong * sp.DonGia * (1 - ctdh.MucGiamGia))\nFROM KhachHang kh\nJOIN DonHang dh ON kh.MaKH = dh.MaKH\nJOIN ChiTietDonHang ctdh ON dh.MaDH = ctdh.MaDH\nJOIN SanPham sp ON ctdh.MaSP = sp.MaSP\nWHERE dh.NgayMua BETWEEN '2023-03-01' AND '2023-03-31'\nGROUP BY kh.TenKH;",
+      "hint": "Tính doanh thu sau giảm giá, lọc theo tháng và nhóm theo tên khách hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 276,
+      "question": "Liệt kê tên của các quản lý và số lượng nhân viên mà họ đang quản lý.",
+      "intent": "join",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT NQL.TenNV AS TenQuanLy, COUNT(NV.MaNV) AS SoNhanVien\nFROM NhanVien NV\nJOIN NhanVien NQL ON NV.MaNQL = NQL.MaNV\nGROUP BY NQL.TenNV;",
+      "hint": "Sử dụng self-join trên bảng NhanVien để liên kết nhân viên với người quản lý của họ và đếm số lượng nhân viên cấp dưới.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 277,
+      "question": "Số lượng khách hàng có loại thẻ 'Vàng' và đã thực hiện ít nhất 2 đơn hàng trong năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT COUNT(kh.MaKH)\nFROM KhachHang kh\nJOIN DonHang dh ON kh.MaKH = dh.MaKH\nWHERE kh.LoaiThe = 'Vàng' AND dh.NgayMua BETWEEN '2023-01-01' AND '2023-12-31'\nGROUP BY kh.MaKH\nHAVING COUNT(dh.MaDH) >= 2;",
+      "hint": "Gắn kết KhachHang và DonHang, lọc theo loại thẻ và năm, sau đó sử dụng HAVING để đếm số đơn hàng của mỗi khách hàng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 278,
+      "question": "Tìm những khách hàng đã mua ít nhất một sản phẩm thuộc danh mục 'Sách' và cũng đã mua ít nhất một sản phẩm thuộc danh mục 'Văn phòng phẩm'.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham",
+        "DanhMuc"
+      ],
+      "gold_sql": "SELECT kh.TenKH\nFROM KhachHang kh\nJOIN DonHang dh ON kh.MaKH = dh.MaKH\nJOIN ChiTietDonHang ctdh ON dh.MaDH = ctdh.MaDH\nJOIN SanPham sp ON ctdh.MaSP = sp.MaSP\nJOIN DanhMuc dm ON sp.MaDM = dm.MaDM\nWHERE dm.TenDM = 'Sách'\nINTERSECT\nSELECT kh.TenKH\nFROM KhachHang kh\nJOIN DonHang dh ON kh.MaKH = dh.MaKH\nJOIN ChiTietDonHang ctdh ON dh.MaDH = ctdh.MaDH\nJOIN SanPham sp ON ctdh.MaSP = sp.MaSP\nJOIN DanhMuc dm ON sp.MaDM = dm.MaDM\nWHERE dm.TenDM = 'Văn phòng phẩm';",
+      "hint": "Sử dụng hai truy vấn con với INTERSECT để tìm những khách hàng đã mua sản phẩm từ cả hai danh mục.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 279,
+      "question": "Liệt kê tên các sản phẩm có số lượng tồn kho (giả định số lượng bán ra là số lượng tồn kho) thấp nhất trong năm 2023.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "SanPham",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT sp.TenSP\nFROM SanPham sp\nJOIN ChiTietDonHang ctdh ON sp.MaSP = ctdh.MaSP\nJOIN DonHang dh ON ctdh.MaDH = dh.MaDH\nWHERE dh.NgayMua BETWEEN '2023-01-01' AND '2023-12-31'\nGROUP BY sp.TenSP\nORDER BY SUM(ctdh.SoLuong) ASC\nLIMIT 1;",
+      "hint": "Tính tổng số lượng bán ra của mỗi sản phẩm trong năm 2023 và sắp xếp để tìm sản phẩm có số lượng thấp nhất.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 280,
+      "question": "Hiển thị tên các khách hàng và tổng số tiền họ đã chi tiêu trong năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT kh.TenKH, SUM(ctdh.SoLuong * sp.DonGia * (1 - ctdh.MucGiamGia))\nFROM KhachHang kh\nJOIN DonHang dh ON kh.MaKH = dh.MaKH\nJOIN ChiTietDonHang ctdh ON dh.MaDH = ctdh.MaDH\nJOIN SanPham sp ON ctdh.MaSP = sp.MaSP\nWHERE dh.NgayMua BETWEEN '2023-01-01' AND '2023-12-31'\nGROUP BY kh.TenKH;",
+      "hint": "Tính tổng chi tiêu sau giảm giá cho mỗi khách hàng trong năm 2023.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 281,
+      "question": "Những nhân viên nào đã quản lý các đơn hàng có tổng giá trị (trước giảm giá) trên 10,000,000 VNĐ trong quý 1 năm 2023?",
+      "intent": "complex",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT DISTINCT nv.TenNV\nFROM NhanVien nv\nJOIN DonHang dh ON nv.MaNV = dh.MaNV\nJOIN ChiTietDonHang ctdh ON dh.MaDH = ctdh.MaDH\nJOIN SanPham sp ON ctdh.MaSP = sp.MaSP\nWHERE dh.NgayMua BETWEEN '2023-01-01' AND '2023-03-31'\nGROUP BY dh.MaDH, nv.TenNV\nHAVING SUM(ctdh.SoLuong * sp.DonGia) > 10000000;",
+      "hint": "Tính tổng giá trị đơn hàng trước giảm giá, lọc theo quý và trạng thái, sau đó tìm tên nhân viên phụ trách.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 282,
+      "question": "Hiển thị tên các danh mục và tổng số tiền giảm giá đã áp dụng cho các sản phẩm thuộc danh mục đó trong năm 2023.",
+      "intent": "join",
+      "sql_keywords": [
+        "DanhMuc",
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT dm.TenDM, SUM(ctdh.SoLuong * sp.DonGia * ctdh.MucGiamGia)\nFROM DanhMuc dm\nJOIN SanPham sp ON dm.MaDM = sp.MaDM\nJOIN ChiTietDonHang ctdh ON sp.MaSP = ctdh.MaSP\nJOIN DonHang dh ON ctdh.MaDH = dh.MaDH\nWHERE dh.NgayMua BETWEEN '2023-01-01' AND '2023-12-31'\nGROUP BY dm.TenDM;",
+      "hint": "Tính tổng số tiền giảm giá, lọc theo năm và nhóm theo tên danh mục.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 283,
+      "question": "Hiển thị tên nhân viên và số lượng đơn hàng 'Đã hủy' mà họ đã xử lý trong quý 4 năm 2023.",
+      "intent": "join",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT nv.TenNV, COUNT(dh.MaDH)\nFROM NhanVien nv\nJOIN DonHang dh ON nv.MaNV = dh.MaNV\nWHERE dh.TrangThai = 'Đã hủy' AND dh.NgayMua BETWEEN '2023-10-01' AND '2023-12-31'\nGROUP BY nv.TenNV;",
+      "hint": "Gắn kết NhanVien và DonHang, lọc theo trạng thái 'Đã hủy' và quý, sau đó đếm số đơn hàng theo nhân viên.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 284,
+      "question": "Tỷ lệ phần trăm doanh thu từ các sản phẩm thuộc danh mục 'Thời trang' so với tổng doanh thu của công ty trong năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "DanhMuc",
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT SUM(CASE WHEN dm.TenDM = 'Thời trang' THEN ctdh.SoLuong * sp.DonGia * (1 - ctdh.MucGiamGia) ELSE 0 END) * 100.0 / SUM(ctdh.SoLuong * sp.DonGia * (1 - ctdh.MucGiamGia))\nFROM DanhMuc dm\nJOIN SanPham sp ON dm.MaDM = sp.MaDM\nJOIN ChiTietDonHang ctdh ON sp.MaSP = ctdh.MaSP\nJOIN DonHang dh ON ctdh.MaDH = dh.MaDH\nWHERE dh.NgayMua BETWEEN '2023-01-01' AND '2023-12-31';",
+      "hint": "Tính tổng doanh thu cho danh mục 'Thời trang' và tổng doanh thu toàn công ty trong năm 2023, sau đó tính tỷ lệ phần trăm.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 285,
+      "question": "Tìm những nhân viên mà ngày vào làm của họ gần đây nhất.",
+      "intent": "simple",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT TenNV, NgayVaoLam\nFROM NhanVien\nORDER BY NgayVaoLam DESC\nLIMIT 1;",
+      "hint": "Sắp xếp bảng NhanVien theo NgayVaoLam giảm dần và lấy bản ghi đầu tiên.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 286,
+      "question": "Liệt kê tên và chức vụ của tất cả nhân viên.",
+      "intent": "simple",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT TenNV, ChucVu FROM NhanVien;",
+      "hint": "Sử dụng SELECT để lấy tên và chức vụ từ bảng NhanVien.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 287,
+      "question": "Doanh thu gộp (trước giảm giá) của tất cả các đơn hàng là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT SUM(CTDH.SoLuong * SP.DonGia) FROM ChiTietDonHang AS CTDH JOIN SanPham AS SP ON CTDH.MaSP = SP.MaSP;",
+      "hint": "Cần join ChiTietDonHang với SanPham để lấy DonGia, sau đó tính tổng (SoLuong * DonGia).",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 288,
+      "question": "Những nhân viên nào đã phụ trách các đơn hàng có trạng thái 'hoàn thành' trong năm 2023?",
+      "intent": "join",
+      "sql_keywords": [
+        "NhanVien",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT DISTINCT NV.TenNV FROM NhanVien AS NV JOIN DonHang AS DH ON NV.MaNV = DH.MaNV WHERE DH.TrangThai = 'hoàn thành' AND STRFTIME('%Y', DH.NgayMua) = '2023';",
+      "hint": "Join NhanVien với DonHang, lọc theo TrangThai và năm.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 289,
+      "question": "Tính tổng số lượng sản phẩm đã bán cho mỗi danh mục trong quý 2 năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "DanhMuc",
+        "SanPham",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT DM.TenDM, SUM(CTDH.SoLuong) FROM DanhMuc AS DM JOIN SanPham AS SP ON DM.MaDM = SP.MaDM JOIN ChiTietDonHang AS CTDH ON SP.MaSP = CTDH.MaSP JOIN DonHang AS DH ON CTDH.MaDH = DH.MaDH WHERE STRFTIME('%Y-%m', DH.NgayMua) BETWEEN '2023-04' AND '2023-06' GROUP BY DM.TenDM;",
+      "hint": "Cần join 4 bảng, lọc theo quý và nhóm theo tên danh mục.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 290,
+      "question": "Liệt kê tên các sản phẩm có đơn giá cao hơn 500,000 VNĐ.",
+      "intent": "simple",
+      "sql_keywords": [
+        "SanPham"
+      ],
+      "gold_sql": "SELECT TenSP FROM SanPham WHERE DonGia > 500000;",
+      "hint": "Sử dụng WHERE để lọc sản phẩm theo DonGia.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 291,
+      "question": "Tổng doanh thu (sau giảm giá) của mỗi loại thẻ khách hàng trong năm 2023 là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT KH.LoaiThe, SUM(CTDH.SoLuong * SP.DonGia * (1 - CTDH.MucGiamGia)) FROM KhachHang AS KH JOIN DonHang AS DH ON KH.MaKH = DH.MaKH JOIN ChiTietDonHang AS CTDH ON DH.MaDH = CTDH.MaDH JOIN SanPham AS SP ON CTDH.MaSP = SP.MaSP WHERE STRFTIME('%Y', DH.NgayMua) = '2023' GROUP BY KH.LoaiThe;",
+      "hint": "Join nhiều bảng, tính doanh thu sau giảm giá và nhóm theo LoaiThe.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 292,
+      "question": "Hiển thị tên các cửa hàng và số lượng đơn hàng đã được xử lý (trạng thái 'đã giao') trong mỗi khu vực.",
+      "intent": "join",
+      "sql_keywords": [
+        "CuaHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT CH.TenCH, CH.KhuVuc, COUNT(DH.MaDH) FROM CuaHang AS CH JOIN DonHang AS DH ON CH.MaCH = DH.MaCH WHERE DH.TrangThai = 'đã giao' GROUP BY CH.TenCH, CH.KhuVuc;",
+      "hint": "Join CuaHang với DonHang, lọc theo TrangThai và nhóm theo CuaHang, KhuVuc.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 293,
+      "question": "Liệt kê tên của những nhân viên có mức lương trên 10,000,000 VNĐ và ngày vào làm trước năm 2022.",
+      "intent": "simple",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT TenNV FROM NhanVien WHERE Luong > 10000000 AND STRFTIME('%Y', NgayVaoLam) < '2022';",
+      "hint": "Sử dụng WHERE để lọc theo Luong và năm NgayVaoLam.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 294,
+      "question": "Số lượng khách hàng đã thực hiện ít nhất 5 đơn hàng trong quý 3 năm 2023 là bao nhiêu?",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT COUNT(KH.MaKH) FROM KhachHang AS KH JOIN DonHang AS DH ON KH.MaKH = DH.MaKH WHERE STRFTIME('%Y-%m', DH.NgayMua) BETWEEN '2023-07' AND '2023-09' GROUP BY KH.MaKH HAVING COUNT(DH.MaDH) >= 5;",
+      "hint": "Join KhachHang và DonHang, lọc theo quý, nhóm theo khách hàng và đếm số đơn hàng, sử dụng HAVING.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 295,
+      "question": "Liệt kê tên các nhà quản lý và tổng số lượng nhân viên mà họ đang quản lý, chỉ hiển thị những người quản lý có hơn 5 nhân viên cấp dưới.",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "gold_sql": "SELECT NQL.TenNV AS TenNguoiQuanLy, COUNT(NV.MaNV) AS SoNhanVien FROM NhanVien AS NV JOIN NhanVien AS NQL ON NV.MaNQL = NQL.MaNV GROUP BY NQL.MaNV, NQL.TenNV HAVING COUNT(NV.MaNV) > 5;",
+      "hint": "Self-join bảng NhanVien, nhóm theo người quản lý và đếm số nhân viên, sử dụng HAVING.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 296,
+      "question": "Tìm những khách hàng đã mua sản phẩm có đơn giá trên 1,000,000 VNĐ và cũng đã mua sản phẩm có đơn giá dưới 100,000 VNĐ.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT DISTINCT KH.TenKH FROM KhachHang AS KH JOIN DonHang AS DH ON KH.MaKH = DH.MaKH JOIN ChiTietDonHang AS CTDH ON DH.MaDH = CTDH.MaDH JOIN SanPham AS SP ON CTDH.MaSP = SP.MaSP WHERE KH.MaKH IN (SELECT DH_sub.MaKH FROM DonHang AS DH_sub JOIN ChiTietDonHang AS CTDH_sub ON DH_sub.MaDH = CTDH_sub.MaDH JOIN SanPham AS SP_sub ON CTDH_sub.MaSP = SP_sub.MaSP WHERE SP_sub.DonGia > 1000000) AND KH.MaKH IN (SELECT DH_sub2.MaKH FROM DonHang AS DH_sub2 JOIN ChiTietDonHang AS CTDH_sub2 ON DH_sub2.MaDH = CTDH_sub2.MaDH JOIN SanPham AS SP_sub2 ON CTDH_sub2.MaSP = SP_sub2.MaSP WHERE SP_sub2.DonGia < 100000);",
+      "hint": "Sử dụng 2 subquery để tìm khách hàng đã mua sản phẩm giá cao và sản phẩm giá thấp, sau đó lấy giao của 2 tập khách hàng này.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 297,
+      "question": "Tổng doanh thu sau giảm giá của các đơn hàng được đặt tại cửa hàng 'hồ chí minh' trong năm 2023 là bao nhiêu?",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DonHang",
+        "ChiTietDonHang",
+        "CuaHang"
+      ],
+      "gold_sql": "SELECT SUM(CTDH.SoLuong * SP.DonGia * (1 - CTDH.MucGiamGia)) AS TongDoanhThu FROM DonHang DH JOIN ChiTietDonHang CTDH ON DH.MaDH = CTDH.MaDH JOIN SanPham SP ON CTDH.MaSP = SP.MaSP JOIN CuaHang CH ON DH.MaCH = CH.MaCH WHERE CH.TenCH = 'hồ chí minh' AND STRFTIME('%Y', DH.NgayMua) = '2023';",
+      "hint": "Sử dụng JOIN để kết hợp thông tin đơn hàng, chi tiết đơn hàng, sản phẩm và cửa hàng. Lọc theo tên cửa hàng và năm.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 298,
+      "question": "Những khách hàng nào đã chi tiêu nhiều hơn 5,000,000 vnđ trong quý 2 năm 2023?",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang",
+        "SanPham"
+      ],
+      "gold_sql": "SELECT KH.TenKH, SUM(CTDH.SoLuong * SP.DonGia * (1 - CTDH.MucGiamGia)) AS TongChiTieu FROM KhachHang KH JOIN DonHang DH ON KH.MaKH = DH.MaKH JOIN ChiTietDonHang CTDH ON DH.MaDH = CTDH.MaDH JOIN SanPham SP ON CTDH.MaSP = SP.MaSP WHERE STRFTIME('%Y', DH.NgayMua) = '2023' AND STRFTIME('%m', DH.NgayMua) BETWEEN '04' AND '06' GROUP BY KH.MaKH HAVING TongChiTieu > 5000000;",
+      "hint": "Tính tổng chi tiêu của mỗi khách hàng trong khoảng thời gian quý 2, sau đó lọc những khách hàng có tổng chi tiêu vượt ngưỡng.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 299,
+      "question": "Liệt kê tên các sản phẩm thuộc danh mục 'thiết bị nhà bếp' và số lượng bán ra của chúng trong tháng 6 năm 2023.",
+      "intent": "join",
+      "sql_keywords": [
+        "SanPham",
+        "DanhMuc",
+        "ChiTietDonHang",
+        "DonHang"
+      ],
+      "gold_sql": "SELECT SP.TenSP, SUM(CTDH.SoLuong) AS TongSoLuongBan FROM SanPham SP JOIN DanhMuc DM ON SP.MaDM = DM.MaDM JOIN ChiTietDonHang CTDH ON SP.MaSP = CTDH.MaSP JOIN DonHang DH ON CTDH.MaDH = DH.MaDH WHERE DM.TenDM = 'thiết bị nhà bếp' AND STRFTIME('%Y-%m', DH.NgayMua) = '2023-06' GROUP BY SP.MaSP;",
+      "hint": "Kết hợp bảng Sản phẩm, Danh mục, Chi tiết đơn hàng và Đơn hàng. Lọc theo tên danh mục và tháng/năm.",
+      "tables": [],
+      "note": ""
+    },
+    {
+      "id": 300,
+      "question": "Hiển thị tên các khách hàng đã mua ít nhất 3 loại sản phẩm khác nhau trong năm 2023.",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "DonHang",
+        "ChiTietDonHang"
+      ],
+      "gold_sql": "SELECT KH.TenKH, COUNT(DISTINCT CTDH.MaSP) AS SoLuongSanPhamKhacNhau FROM KhachHang KH JOIN DonHang DH ON KH.MaKH = DH.MaKH JOIN ChiTietDonHang CTDH ON DH.MaDH = CTDH.MaDH WHERE STRFTIME('%Y', DH.NgayMua) = '2023' GROUP BY KH.MaKH HAVING SoLuongSanPhamKhacNhau >= 3;",
+      "hint": "Đếm số lượng sản phẩm khác nhau mà mỗi khách hàng đã mua trong năm 2023 và lọc những người có số lượng lớn hơn hoặc bằng 3.",
+      "tables": [],
+      "note": ""
+    }
+  ]
+}

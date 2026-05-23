@@ -12,8 +12,8 @@ if __name__ == "__main__":
     retriever = FewShotRetriever()
     
     # Đường dẫn chính xác
-    train_path = "data/northwind_data.json"
+    train_path = "data/spider/spider_data/train_spider.json"
     
     print(f"🚀 Bắt đầu tạo Vector DB từ: {train_path}")
-    retriever.index_dataset(train_path, dataset_type="northwind")
+    retriever.index_dataset(train_path, dataset_type="spider_full")
     print("🎉 Hoàn tất!")

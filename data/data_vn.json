@@ -1,0 +1,5358 @@
+{
+  "metadata": {
+    "dataset": "Chinook VN (Vietnamese Business DB)",
+    "total_questions": 300,
+    "categories": {
+      "album": 73,
+      "artist": 82,
+      "track": 150,
+      "customer": 41,
+      "invoice": 79,
+      "genre": 80,
+      "playlist": 23,
+      "employee": 10,
+      "complex": 21,
+      "simple": 67,
+      "aggregate": 186,
+      "join": 26
+    },
+    "has_gold_sql": true,
+    "gold_sql_version": "1.0"
+  },
+  "questions": [
+    {
+      "id": 1,
+      "question": "Danh sách album của nghệ sĩ AC/DC",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "WHERE",
+        "AC/DC"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.TieuDe FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'AC/DC';"
+    },
+    {
+      "id": 2,
+      "question": "Số lượng album của nghệ sĩ AC/DC",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        "AC/DC"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'AC/DC';"
+    },
+    {
+      "id": 3,
+      "question": "Tổng số bài hát trong album của AC/DC",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "BaiHat",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "BaiHat",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(BaiHat.MaBaiHat) AS total_tracks FROM BaiHat INNER JOIN Album ON BaiHat.MaAlbum = Album.MaAlbum INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'AC/DC';"
+    },
+    {
+      "id": 4,
+      "question": "Danh sách album của nghệ sĩ Aerosmith",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "WHERE",
+        "Aerosmith"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.TieuDe FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Aerosmith';"
+    },
+    {
+      "id": 5,
+      "question": "Số lượng album của nghệ sĩ Aerosmith",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        "Aerosmith"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Aerosmith';"
+    },
+    {
+      "id": 6,
+      "question": "Tổng số bài hát trong album của Aerosmith",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "BaiHat",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "BaiHat",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(BaiHat.MaBaiHat) AS total_tracks FROM BaiHat INNER JOIN Album ON BaiHat.MaAlbum = Album.MaAlbum INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Aerosmith';"
+    },
+    {
+      "id": 7,
+      "question": "Danh sách album của nghệ sĩ Alanis Morissette",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "WHERE",
+        "Alanis Morissette"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.TieuDe FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Alanis Morissette';"
+    },
+    {
+      "id": 8,
+      "question": "Số lượng album của nghệ sĩ Alanis Morissette",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        "Alanis Morissette"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Alanis Morissette';"
+    },
+    {
+      "id": 9,
+      "question": "Tổng số bài hát trong album của Alanis Morissette",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "BaiHat",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "BaiHat",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(BaiHat.MaBaiHat) AS total_tracks FROM BaiHat INNER JOIN Album ON BaiHat.MaAlbum = Album.MaAlbum INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Alanis Morissette';"
+    },
+    {
+      "id": 10,
+      "question": "Danh sách album của nghệ sĩ Apocalyptica",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "WHERE",
+        "Apocalyptica"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.TieuDe FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Apocalyptica';"
+    },
+    {
+      "id": 11,
+      "question": "Số lượng album của nghệ sĩ Apocalyptica",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        "Apocalyptica"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Apocalyptica';"
+    },
+    {
+      "id": 12,
+      "question": "Tổng số bài hát trong album của Apocalyptica",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "BaiHat",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "BaiHat",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(BaiHat.MaBaiHat) AS total_tracks FROM BaiHat INNER JOIN Album ON BaiHat.MaAlbum = Album.MaAlbum INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Apocalyptica';"
+    },
+    {
+      "id": 13,
+      "question": "Danh sách album của nghệ sĩ Iron Maiden",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "WHERE",
+        "Iron Maiden"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.TieuDe FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Iron Maiden';"
+    },
+    {
+      "id": 14,
+      "question": "Số lượng album của nghệ sĩ Iron Maiden",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        "Iron Maiden"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Iron Maiden';"
+    },
+    {
+      "id": 15,
+      "question": "Tổng số bài hát trong album của Iron Maiden",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "BaiHat",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "BaiHat",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(BaiHat.MaBaiHat) AS total_tracks FROM BaiHat INNER JOIN Album ON BaiHat.MaAlbum = Album.MaAlbum INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Iron Maiden';"
+    },
+    {
+      "id": 16,
+      "question": "Danh sách album của nghệ sĩ U2",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "WHERE",
+        "U2"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.TieuDe FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'U2';"
+    },
+    {
+      "id": 17,
+      "question": "Số lượng album của nghệ sĩ U2",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        "U2"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'U2';"
+    },
+    {
+      "id": 18,
+      "question": "Tổng số bài hát trong album của U2",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "BaiHat",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "BaiHat",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(BaiHat.MaBaiHat) AS total_tracks FROM BaiHat INNER JOIN Album ON BaiHat.MaAlbum = Album.MaAlbum INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'U2';"
+    },
+    {
+      "id": 19,
+      "question": "Danh sách album của nghệ sĩ Led Zeppelin",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "WHERE",
+        "Led Zeppelin"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.TieuDe FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Led Zeppelin';"
+    },
+    {
+      "id": 20,
+      "question": "Số lượng album của nghệ sĩ Led Zeppelin",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        "Led Zeppelin"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Led Zeppelin';"
+    },
+    {
+      "id": 21,
+      "question": "Tổng số bài hát trong album của Led Zeppelin",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "BaiHat",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "BaiHat",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(BaiHat.MaBaiHat) AS total_tracks FROM BaiHat INNER JOIN Album ON BaiHat.MaAlbum = Album.MaAlbum INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Led Zeppelin';"
+    },
+    {
+      "id": 22,
+      "question": "Danh sách album của nghệ sĩ Metallica",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "WHERE",
+        "Metallica"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.TieuDe FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Metallica';"
+    },
+    {
+      "id": 23,
+      "question": "Số lượng album của nghệ sĩ Metallica",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        "Metallica"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Metallica';"
+    },
+    {
+      "id": 24,
+      "question": "Tổng số bài hát trong album của Metallica",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "BaiHat",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "BaiHat",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(BaiHat.MaBaiHat) AS total_tracks FROM BaiHat INNER JOIN Album ON BaiHat.MaAlbum = Album.MaAlbum INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Metallica';",
+      "hint": "Metallica là tên nghệ sĩ (NgheSi.Ten), không phải tiêu đề album. Cần JOIN BaiHat, Album và NgheSi."
+    },
+    {
+      "id": 25,
+      "question": "Danh sách album của nghệ sĩ Pink Floyd",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "WHERE",
+        "Pink Floyd"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.TieuDe FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Pink Floyd';"
+    },
+    {
+      "id": 26,
+      "question": "Số lượng album của nghệ sĩ Pink Floyd",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        "Pink Floyd"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Pink Floyd';"
+    },
+    {
+      "id": 27,
+      "question": "Tổng số bài hát trong album của Pink Floyd",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "BaiHat",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "BaiHat",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(BaiHat.MaBaiHat) AS total_tracks FROM BaiHat INNER JOIN Album ON BaiHat.MaAlbum = Album.MaAlbum INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Pink Floyd';"
+    },
+    {
+      "id": 28,
+      "question": "Danh sách album của nghệ sĩ The Doors",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "WHERE",
+        "The Doors"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.TieuDe FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'The Doors';"
+    },
+    {
+      "id": 29,
+      "question": "Số lượng album của nghệ sĩ The Doors",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        "The Doors"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'The Doors';"
+    },
+    {
+      "id": 30,
+      "question": "Tổng số bài hát trong album của The Doors",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "BaiHat",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "BaiHat",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(BaiHat.MaBaiHat) AS total_tracks FROM BaiHat INNER JOIN Album ON BaiHat.MaAlbum = Album.MaAlbum INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'The Doors';"
+    },
+    {
+      "id": 31,
+      "question": "Danh sách album của nghệ sĩ Queen",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "WHERE",
+        "Queen"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.TieuDe FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Queen';"
+    },
+    {
+      "id": 32,
+      "question": "Số lượng album của nghệ sĩ Queen",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        "Queen"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Queen';"
+    },
+    {
+      "id": 33,
+      "question": "Tổng số bài hát trong album của Queen",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "BaiHat",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "BaiHat",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(BaiHat.MaBaiHat) AS total_tracks FROM BaiHat INNER JOIN Album ON BaiHat.MaAlbum = Album.MaAlbum INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Queen';"
+    },
+    {
+      "id": 34,
+      "question": "Danh sách album của nghệ sĩ The Beatles",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "WHERE",
+        "The Beatles"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.TieuDe FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'The Beatles';"
+    },
+    {
+      "id": 35,
+      "question": "Số lượng album của nghệ sĩ The Beatles",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        "The Beatles"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'The Beatles';"
+    },
+    {
+      "id": 36,
+      "question": "Tổng số bài hát trong album của The Beatles",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "BaiHat",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "BaiHat",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(BaiHat.MaBaiHat) AS total_tracks FROM BaiHat INNER JOIN Album ON BaiHat.MaAlbum = Album.MaAlbum INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'The Beatles';"
+    },
+    {
+      "id": 37,
+      "question": "Danh sách album của nghệ sĩ Nirvana",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "WHERE",
+        "Nirvana"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.TieuDe FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Nirvana';"
+    },
+    {
+      "id": 38,
+      "question": "Số lượng album của nghệ sĩ Nirvana",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        "Nirvana"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Nirvana';"
+    },
+    {
+      "id": 39,
+      "question": "Tổng số bài hát trong album của Nirvana",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "BaiHat",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "BaiHat",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(BaiHat.MaBaiHat) AS total_tracks FROM BaiHat INNER JOIN Album ON BaiHat.MaAlbum = Album.MaAlbum INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Nirvana';"
+    },
+    {
+      "id": 40,
+      "question": "Danh sách album của nghệ sĩ Red Hot Chili Peppers",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "WHERE",
+        "Red Hot Chili Peppers"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.TieuDe FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Red Hot Chili Peppers';"
+    },
+    {
+      "id": 41,
+      "question": "Số lượng album của nghệ sĩ Red Hot Chili Peppers",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        "Red Hot Chili Peppers"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Guns N'' Roses';"
+    },
+    {
+      "id": 42,
+      "question": "Tổng số bài hát trong album của Red Hot Chili Peppers",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "BaiHat",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "BaiHat",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(BaiHat.MaBaiHat) AS total_tracks FROM BaiHat INNER JOIN Album ON BaiHat.MaAlbum = Album.MaAlbum INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Red Hot Chili Peppers';"
+    },
+    {
+      "id": 43,
+      "question": "Danh sách album của nghệ sĩ Guns N' Roses",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "WHERE",
+        " Guns N' Roses"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.TieuDe FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Guns N'' Roses';"
+    },
+    {
+      "id": 44,
+      "question": "Số lượng album của nghệ sĩ Guns N' Roses",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        " Guns N' Roses"
+      ],
+      "tables": [
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Guns N'' Roses';"
+    },
+    {
+      "id": 45,
+      "question": "Tổng số bài hát trong album của Guns N' Roses",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "BaiHat",
+        "NgheSi",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "BaiHat",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(BaiHat.MaBaiHat) AS total_tracks FROM BaiHat INNER JOIN Album ON BaiHat.MaAlbum = Album.MaAlbum INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Guns N'' Roses';"
+    },
+    {
+      "id": 46,
+      "question": "Album nào có nhiều bài hát nhất",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "BaiHat",
+        "COUNT",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC"
+      ],
+      "tables": [
+        "Album",
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.TieuDe FROM Album INNER JOIN BaiHat ON Album.MaAlbum = BaiHat.MaAlbum GROUP BY Album.MaAlbum ORDER BY COUNT(BaiHat.MaBaiHat) DESC LIMIT 1;"
+    },
+    {
+      "id": 47,
+      "question": "Album nào có ít bài hát nhất",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "BaiHat",
+        "COUNT",
+        "GROUP BY",
+        "ORDER BY",
+        "ASC"
+      ],
+      "tables": [
+        "Album",
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.TieuDe FROM Album INNER JOIN BaiHat ON Album.MaAlbum = BaiHat.MaAlbum GROUP BY Album.MaAlbum ORDER BY COUNT(BaiHat.MaBaiHat) ASC LIMIT 1;",
+      "hint": "Hỏi Album nào thì trả về tên Album (Album.TieuDe). Dùng GROUP BY và ORDER BY COUNT() ASC LIMIT 1."
+    },
+    {
+      "id": 48,
+      "question": "Album dài nhất theo thời gian",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "BaiHat",
+        "SUM",
+        "ThoiLuong_ms",
+        "GROUP BY"
+      ],
+      "tables": [
+        "Album",
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.TieuDe FROM Album INNER JOIN BaiHat ON Album.MaAlbum = BaiHat.MaAlbum GROUP BY Album.MaAlbum ORDER BY SUM(BaiHat.ThoiLuong_ms) DESC LIMIT 1;",
+      "hint": "Album dài nhất tức là tổng thời lượng các bài hát trong album đó lớn nhất. Dùng SUM(ThoiLuong_ms) và GROUP BY Album.MaAlbum."
+    },
+    {
+      "id": 49,
+      "question": "Tổng số album trong hệ thống",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "COUNT"
+      ],
+      "tables": [
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) FROM Album;"
+    },
+    {
+      "id": 50,
+      "question": "Danh sách album theo thứ tự alphabet",
+      "intent": "simple",
+      "sql_keywords": [
+        "Album",
+        "ORDER BY",
+        "TieuDe"
+      ],
+      "tables": [
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT MaAlbum, TieuDe FROM Album ORDER BY TieuDe ASC;"
+    },
+    {
+      "id": 51,
+      "question": "Album đầu tiên trong hệ thống",
+      "intent": "simple",
+      "sql_keywords": [
+        "Album",
+        "ORDER BY",
+        "LIMIT"
+      ],
+      "tables": [
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT MaAlbum, TieuDe FROM Album ORDER BY MaAlbum ASC LIMIT 1;"
+    },
+    {
+      "id": 52,
+      "question": "Album cuối cùng trong hệ thống",
+      "intent": "simple",
+      "sql_keywords": [
+        "Album",
+        "ORDER BY",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT MaAlbum, TieuDe FROM Album ORDER BY MaAlbum DESC LIMIT 1;"
+    },
+    {
+      "id": 53,
+      "question": "Thông tin nghệ sĩ AC/DC",
+      "intent": "simple",
+      "sql_keywords": [
+        "NgheSi",
+        "WHERE",
+        "AC/DC"
+      ],
+      "tables": [
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM NgheSi WHERE Ten = 'AC/DC';"
+    },
+    {
+      "id": 54,
+      "question": "Nghệ sĩ AC/DC có bao nhiêu album",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NgheSi",
+        "Album",
+        "COUNT",
+        "WHERE",
+        "AC/DC"
+      ],
+      "tables": [
+        "NgheSi",
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'AC/DC';"
+    },
+    {
+      "id": 55,
+      "question": "Thông tin nghệ sĩ Aerosmith",
+      "intent": "simple",
+      "sql_keywords": [
+        "NgheSi",
+        "WHERE",
+        "Aerosmith"
+      ],
+      "tables": [
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM NgheSi WHERE Ten = 'Aerosmith';"
+    },
+    {
+      "id": 56,
+      "question": "Nghệ sĩ Aerosmith có bao nhiêu album",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NgheSi",
+        "Album",
+        "COUNT",
+        "WHERE",
+        "Aerosmith"
+      ],
+      "tables": [
+        "NgheSi",
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Aerosmith';"
+    },
+    {
+      "id": 57,
+      "question": "Thông tin nghệ sĩ Alanis Morissette",
+      "intent": "simple",
+      "sql_keywords": [
+        "NgheSi",
+        "WHERE",
+        "Alanis Morissette"
+      ],
+      "tables": [
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM NgheSi WHERE Ten = 'Alanis Morissette';"
+    },
+    {
+      "id": 58,
+      "question": "Nghệ sĩ Alanis Morissette có bao nhiêu album",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NgheSi",
+        "Album",
+        "COUNT",
+        "WHERE",
+        "Alanis Morissette"
+      ],
+      "tables": [
+        "NgheSi",
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Alanis Morissette';"
+    },
+    {
+      "id": 59,
+      "question": "Thông tin nghệ sĩ Apocalyptica",
+      "intent": "simple",
+      "sql_keywords": [
+        "NgheSi",
+        "WHERE",
+        "Apocalyptica"
+      ],
+      "tables": [
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM NgheSi WHERE Ten = 'Apocalyptica';"
+    },
+    {
+      "id": 60,
+      "question": "Nghệ sĩ Apocalyptica có bao nhiêu album",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NgheSi",
+        "Album",
+        "COUNT",
+        "WHERE",
+        "Apocalyptica"
+      ],
+      "tables": [
+        "NgheSi",
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Apocalyptica';"
+    },
+    {
+      "id": 61,
+      "question": "Thông tin nghệ sĩ Iron Maiden",
+      "intent": "simple",
+      "sql_keywords": [
+        "NgheSi",
+        "WHERE",
+        "Iron Maiden"
+      ],
+      "tables": [
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM NgheSi WHERE Ten = 'Iron Maiden';"
+    },
+    {
+      "id": 62,
+      "question": "Nghệ sĩ Iron Maiden có bao nhiêu album",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NgheSi",
+        "Album",
+        "COUNT",
+        "WHERE",
+        "Iron Maiden"
+      ],
+      "tables": [
+        "NgheSi",
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Iron Maiden';"
+    },
+    {
+      "id": 63,
+      "question": "Thông tin nghệ sĩ U2",
+      "intent": "simple",
+      "sql_keywords": [
+        "NgheSi",
+        "WHERE",
+        "U2"
+      ],
+      "tables": [
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM NgheSi WHERE Ten = 'U2';"
+    },
+    {
+      "id": 64,
+      "question": "Nghệ sĩ U2 có bao nhiêu album",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NgheSi",
+        "Album",
+        "COUNT",
+        "WHERE",
+        "U2"
+      ],
+      "tables": [
+        "NgheSi",
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'U2';"
+    },
+    {
+      "id": 65,
+      "question": "Thông tin nghệ sĩ Led Zeppelin",
+      "intent": "simple",
+      "sql_keywords": [
+        "NgheSi",
+        "WHERE",
+        "Led Zeppelin"
+      ],
+      "tables": [
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM NgheSi WHERE Ten = 'Led Zeppelin';"
+    },
+    {
+      "id": 66,
+      "question": "Nghệ sĩ Led Zeppelin có bao nhiêu album",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NgheSi",
+        "Album",
+        "COUNT",
+        "WHERE",
+        "Led Zeppelin"
+      ],
+      "tables": [
+        "NgheSi",
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Led Zeppelin';"
+    },
+    {
+      "id": 67,
+      "question": "Thông tin nghệ sĩ Metallica",
+      "intent": "simple",
+      "sql_keywords": [
+        "NgheSi",
+        "WHERE",
+        "Metallica"
+      ],
+      "tables": [
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM NgheSi WHERE Ten = 'Metallica';"
+    },
+    {
+      "id": 68,
+      "question": "Nghệ sĩ Metallica có bao nhiêu album",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NgheSi",
+        "Album",
+        "COUNT",
+        "WHERE",
+        "Metallica"
+      ],
+      "tables": [
+        "NgheSi",
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Metallica';"
+    },
+    {
+      "id": 69,
+      "question": "Thông tin nghệ sĩ Pink Floyd",
+      "intent": "simple",
+      "sql_keywords": [
+        "NgheSi",
+        "WHERE",
+        "Pink Floyd"
+      ],
+      "tables": [
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM NgheSi WHERE Ten = 'Pink Floyd';"
+    },
+    {
+      "id": 70,
+      "question": "Nghệ sĩ Pink Floyd có bao nhiêu album",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NgheSi",
+        "Album",
+        "COUNT",
+        "WHERE",
+        "Pink Floyd"
+      ],
+      "tables": [
+        "NgheSi",
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Pink Floyd';"
+    },
+    {
+      "id": 71,
+      "question": "Thông tin nghệ sĩ The Doors",
+      "intent": "simple",
+      "sql_keywords": [
+        "NgheSi",
+        "WHERE",
+        "The Doors"
+      ],
+      "tables": [
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM NgheSi WHERE Ten = 'The Doors';"
+    },
+    {
+      "id": 72,
+      "question": "Nghệ sĩ The Doors có bao nhiêu album",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NgheSi",
+        "Album",
+        "COUNT",
+        "WHERE",
+        "The Doors"
+      ],
+      "tables": [
+        "NgheSi",
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'The Doors';"
+    },
+    {
+      "id": 73,
+      "question": "Tất cả nghệ sĩ theo thứ tự tên",
+      "intent": "simple",
+      "sql_keywords": [
+        "NgheSi",
+        "ORDER BY",
+        "Ten"
+      ],
+      "tables": [
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT MaNgheSi, Ten FROM NgheSi ORDER BY Ten ASC;"
+    },
+    {
+      "id": 74,
+      "question": "Nghệ sĩ nhiều album nhất",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NgheSi",
+        "Album",
+        "COUNT",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "NgheSi",
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT NgheSi.Ten FROM NgheSi INNER JOIN Album ON NgheSi.MaNgheSi = Album.MaNgheSi GROUP BY NgheSi.MaNgheSi ORDER BY COUNT(Album.MaAlbum) DESC LIMIT 1;"
+    },
+    {
+      "id": 75,
+      "question": "Nghệ sĩ ít album nhất",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NgheSi",
+        "Album",
+        "COUNT",
+        "GROUP BY",
+        "ORDER BY",
+        "ASC",
+        "LIMIT"
+      ],
+      "tables": [
+        "NgheSi",
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT NgheSi.Ten FROM NgheSi INNER JOIN Album ON NgheSi.MaNgheSi = Album.MaNgheSi GROUP BY NgheSi.MaNgheSi ORDER BY COUNT(Album.MaAlbum) ASC LIMIT 1;"
+    },
+    {
+      "id": 76,
+      "question": "Tổng số nghệ sĩ trong hệ thống",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NgheSi",
+        "COUNT"
+      ],
+      "tables": [
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_artists FROM NgheSi;"
+    },
+    {
+      "id": 77,
+      "question": "Tìm nghệ sĩ có tên bắt đầu bằng chữ A",
+      "intent": "simple",
+      "sql_keywords": [
+        "NgheSi",
+        "WHERE",
+        "LIKE",
+        "A%"
+      ],
+      "tables": [
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM NgheSi WHERE Ten LIKE 'A%';"
+    },
+    {
+      "id": 78,
+      "question": "Tìm nghệ sĩ có chữ 'Rock' trong tên",
+      "intent": "simple",
+      "sql_keywords": [
+        "NgheSi",
+        "WHERE",
+        "LIKE",
+        "%Rock%"
+      ],
+      "tables": [
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM NgheSi WHERE Ten LIKE '%Rock%';"
+    },
+    {
+      "id": 79,
+      "question": "Danh sách 10 nghệ sĩ đầu tiên",
+      "intent": "simple",
+      "sql_keywords": [
+        "NgheSi",
+        "LIMIT"
+      ],
+      "tables": [
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT MaNgheSi, Ten FROM NgheSi LIMIT 10;"
+    },
+    {
+      "id": 80,
+      "question": "Nghệ sĩ không có album nào",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NgheSi",
+        "LEFT JOIN",
+        "Album",
+        "WHERE",
+        "NULL"
+      ],
+      "tables": [
+        "NgheSi",
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT NgheSi.Ten FROM NgheSi LEFT JOIN Album ON NgheSi.MaNgheSi = Album.MaNgheSi WHERE Album.MaAlbum IS NULL;"
+    },
+    {
+      "id": 81,
+      "question": "Tất cả bài hát của nghệ sĩ Nirvana",
+      "intent": "join",
+      "sql_keywords": [
+        "NgheSi",
+        "Album",
+        "BaiHat",
+        "WHERE",
+        "Nirvana"
+      ],
+      "tables": [
+        "NgheSi",
+        "Album",
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten FROM BaiHat INNER JOIN Album ON BaiHat.MaAlbum = Album.MaAlbum INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Nirvana';"
+    },
+    {
+      "id": 82,
+      "question": "Tổng số bài hát của nghệ sĩ Metallica",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NgheSi",
+        "Album",
+        "BaiHat",
+        "COUNT",
+        "WHERE",
+        "Metallica"
+      ],
+      "tables": [
+        "NgheSi",
+        "Album",
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(BaiHat.MaBaiHat) AS total_tracks FROM BaiHat INNER JOIN Album ON BaiHat.MaAlbum = Album.MaAlbum INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Metallica';"
+    },
+    {
+      "id": 83,
+      "question": "Bài hát dài hơn 5 phút",
+      "intent": "simple",
+      "sql_keywords": [
+        "BaiHat",
+        "WHERE",
+        "ThoiLuong_ms",
+        ">",
+        "300000"
+      ],
+      "tables": [
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Ten, ThoiLuong_ms FROM BaiHat WHERE ThoiLuong_ms > 300000 ORDER BY ThoiLuong_ms DESC;"
+    },
+    {
+      "id": 84,
+      "question": "Bài hát dài hơn 10 phút",
+      "intent": "simple",
+      "sql_keywords": [
+        "BaiHat",
+        "WHERE",
+        "ThoiLuong_ms",
+        ">",
+        "600000"
+      ],
+      "tables": [
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Ten, ThoiLuong_ms FROM BaiHat WHERE ThoiLuong_ms > 600000 ORDER BY ThoiLuong_ms DESC;"
+    },
+    {
+      "id": 85,
+      "question": "Bài hát ngắn hơn 2 phút",
+      "intent": "simple",
+      "sql_keywords": [
+        "BaiHat",
+        "WHERE",
+        "ThoiLuong_ms",
+        "<",
+        "120000"
+      ],
+      "tables": [
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Ten, ThoiLuong_ms FROM BaiHat WHERE ThoiLuong_ms < 120000 ORDER BY ThoiLuong_ms ASC;"
+    },
+    {
+      "id": 86,
+      "question": "Bài hát dài nhất",
+      "intent": "simple",
+      "sql_keywords": [
+        "BaiHat",
+        "ORDER BY",
+        "ThoiLuong_ms",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Ten, ThoiLuong_ms FROM BaiHat ORDER BY ThoiLuong_ms DESC LIMIT 1;"
+    },
+    {
+      "id": 87,
+      "question": "Bài hát ngắn nhất",
+      "intent": "simple",
+      "sql_keywords": [
+        "BaiHat",
+        "ORDER BY",
+        "ThoiLuong_ms",
+        "ASC",
+        "LIMIT"
+      ],
+      "tables": [
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Ten, ThoiLuong_ms FROM BaiHat ORDER BY ThoiLuong_ms ASC LIMIT 1;"
+    },
+    {
+      "id": 88,
+      "question": "Bài hát có giá 0.99",
+      "intent": "simple",
+      "sql_keywords": [
+        "BaiHat",
+        "WHERE",
+        "DonGia",
+        "0.99"
+      ],
+      "tables": [
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Ten, DonGia FROM BaiHat WHERE DonGia = 0.99;"
+    },
+    {
+      "id": 89,
+      "question": "Bài hát có giá cao nhất",
+      "intent": "simple",
+      "sql_keywords": [
+        "BaiHat",
+        "ORDER BY",
+        "DonGia",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Ten, DonGia FROM BaiHat ORDER BY DonGia DESC LIMIT 1;"
+    },
+    {
+      "id": 90,
+      "question": "Bài hát miễn phí (giá = 0)",
+      "intent": "simple",
+      "sql_keywords": [
+        "BaiHat",
+        "WHERE",
+        "DonGia",
+        "0"
+      ],
+      "tables": [
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Ten, DonGia FROM BaiHat WHERE DonGia = 0;"
+    },
+    {
+      "id": 91,
+      "question": "Tổng số bài hát",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "COUNT"
+      ],
+      "tables": [
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_tracks FROM BaiHat;"
+    },
+    {
+      "id": 92,
+      "question": "Bài hát thể loại Rock",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "WHERE",
+        "Rock"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Rock';"
+    },
+    {
+      "id": 93,
+      "question": "Có bao nhiêu bài hát thể loại Rock",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Rock"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Rock';"
+    },
+    {
+      "id": 94,
+      "question": "Tổng số bài hát thể loại Rock",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Rock"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Rock';"
+    },
+    {
+      "id": 95,
+      "question": "Bài hát thể loại Jazz",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "WHERE",
+        "Jazz"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Jazz';"
+    },
+    {
+      "id": 96,
+      "question": "Có bao nhiêu bài hát thể loại Jazz",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Jazz"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Jazz';"
+    },
+    {
+      "id": 97,
+      "question": "Tổng số bài hát thể loại Jazz",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Jazz"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Jazz';"
+    },
+    {
+      "id": 98,
+      "question": "Bài hát thể loại Metal",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "WHERE",
+        "Metal"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Metal';"
+    },
+    {
+      "id": 99,
+      "question": "Có bao nhiêu bài hát thể loại Metal",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Metal"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Metal';"
+    },
+    {
+      "id": 100,
+      "question": "Tổng số bài hát thể loại Metal",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Metal"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Metal';"
+    },
+    {
+      "id": 101,
+      "question": "Bài hát thể loại Alternative & Punk",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "WHERE",
+        "Alternative & Punk"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Alternative & Punk';"
+    },
+    {
+      "id": 102,
+      "question": "Có bao nhiêu bài hát thể loại Alternative & Punk",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Alternative & Punk"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Alternative & Punk';"
+    },
+    {
+      "id": 103,
+      "question": "Tổng số bài hát thể loại Alternative & Punk",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Alternative & Punk"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Alternative & Punk';"
+    },
+    {
+      "id": 104,
+      "question": "Bài hát thể loại Blues",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "WHERE",
+        "Blues"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Blues';"
+    },
+    {
+      "id": 105,
+      "question": "Có bao nhiêu bài hát thể loại Blues",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Blues"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Blues';"
+    },
+    {
+      "id": 106,
+      "question": "Tổng số bài hát thể loại Blues",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Blues"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Blues';"
+    },
+    {
+      "id": 107,
+      "question": "Bài hát thể loại Latin",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "WHERE",
+        "Latin"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Latin';"
+    },
+    {
+      "id": 108,
+      "question": "Có bao nhiêu bài hát thể loại Latin",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Latin"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Latin';"
+    },
+    {
+      "id": 109,
+      "question": "Tổng số bài hát thể loại Latin",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Latin"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Latin';"
+    },
+    {
+      "id": 110,
+      "question": "Bài hát thể loại Reggae",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "WHERE",
+        "Reggae"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Reggae';"
+    },
+    {
+      "id": 111,
+      "question": "Có bao nhiêu bài hát thể loại Reggae",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Reggae"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Reggae';"
+    },
+    {
+      "id": 112,
+      "question": "Tổng số bài hát thể loại Reggae",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Reggae"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Reggae';"
+    },
+    {
+      "id": 113,
+      "question": "Bài hát thể loại Pop",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "WHERE",
+        "Pop"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Pop';"
+    },
+    {
+      "id": 114,
+      "question": "Có bao nhiêu bài hát thể loại Pop",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Pop"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Pop';"
+    },
+    {
+      "id": 115,
+      "question": "Tổng số bài hát thể loại Pop",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Pop"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Pop';"
+    },
+    {
+      "id": 116,
+      "question": "Bài hát thể loại Classical",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "WHERE",
+        "Classical"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Classical';"
+    },
+    {
+      "id": 117,
+      "question": "Có bao nhiêu bài hát thể loại Classical",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Classical"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Classical';"
+    },
+    {
+      "id": 118,
+      "question": "Tổng số bài hát thể loại Classical",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Classical"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Classical';"
+    },
+    {
+      "id": 119,
+      "question": "Bài hát thể loại Heavy Metal",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "WHERE",
+        "Heavy Metal"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Heavy Metal';"
+    },
+    {
+      "id": 120,
+      "question": "Có bao nhiêu bài hát thể loại Heavy Metal",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Heavy Metal"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Heavy Metal';"
+    },
+    {
+      "id": 121,
+      "question": "Tổng số bài hát thể loại Heavy Metal",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Heavy Metal"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Heavy Metal';"
+    },
+    {
+      "id": 122,
+      "question": "Bài hát định dạng MPEG audio file",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "DinhDang",
+        "WHERE",
+        "MPEG audio file"
+      ],
+      "tables": [
+        "BaiHat",
+        "DinhDang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten FROM BaiHat INNER JOIN DinhDang ON BaiHat.MaDinhDang = DinhDang.MaDinhDang WHERE DinhDang.Ten = 'MPEG audio file';"
+    },
+    {
+      "id": 123,
+      "question": "Có bao nhiêu bài hát định dạng MPEG audio file",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "DinhDang",
+        "COUNT",
+        "WHERE",
+        "MPEG audio file"
+      ],
+      "tables": [
+        "BaiHat",
+        "DinhDang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN DinhDang ON BaiHat.MaDinhDang = DinhDang.MaDinhDang WHERE DinhDang.Ten = 'MPEG audio file';"
+    },
+    {
+      "id": 124,
+      "question": "Bài hát định dạng Protected AAC audio file",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "DinhDang",
+        "WHERE",
+        "Protected AAC audio file"
+      ],
+      "tables": [
+        "BaiHat",
+        "DinhDang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten FROM BaiHat INNER JOIN DinhDang ON BaiHat.MaDinhDang = DinhDang.MaDinhDang WHERE DinhDang.Ten = 'Protected AAC audio file';"
+    },
+    {
+      "id": 125,
+      "question": "Có bao nhiêu bài hát định dạng Protected AAC audio file",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "DinhDang",
+        "COUNT",
+        "WHERE",
+        "Protected AAC audio file"
+      ],
+      "tables": [
+        "BaiHat",
+        "DinhDang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN DinhDang ON BaiHat.MaDinhDang = DinhDang.MaDinhDang WHERE DinhDang.Ten = 'Protected AAC audio file';"
+    },
+    {
+      "id": 126,
+      "question": "Bài hát định dạng AAC audio file",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "DinhDang",
+        "WHERE",
+        "AAC audio file"
+      ],
+      "tables": [
+        "BaiHat",
+        "DinhDang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten FROM BaiHat INNER JOIN DinhDang ON BaiHat.MaDinhDang = DinhDang.MaDinhDang WHERE DinhDang.Ten = 'AAC audio file';"
+    },
+    {
+      "id": 127,
+      "question": "Có bao nhiêu bài hát định dạng AAC audio file",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "DinhDang",
+        "COUNT",
+        "WHERE",
+        "AAC audio file"
+      ],
+      "tables": [
+        "BaiHat",
+        "DinhDang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN DinhDang ON BaiHat.MaDinhDang = DinhDang.MaDinhDang WHERE DinhDang.Ten = 'AAC audio file';"
+    },
+    {
+      "id": 128,
+      "question": "Bài hát nào có nhiều lượt mua nhất",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "ChiTietHoaDon",
+        "SUM",
+        "SoLuong",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC"
+      ],
+      "tables": [
+        "BaiHat",
+        "ChiTietHoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten, SUM(ChiTietHoaDon.SoLuong) AS total_sold FROM BaiHat INNER JOIN ChiTietHoaDon ON BaiHat.MaBaiHat = ChiTietHoaDon.MaBaiHat GROUP BY BaiHat.MaBaiHat ORDER BY total_sold DESC LIMIT 1;"
+    },
+    {
+      "id": 129,
+      "question": "Tổng doanh thu theo bài hát",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "ChiTietHoaDon",
+        "SUM",
+        "DonGia",
+        "SoLuong",
+        "GROUP BY"
+      ],
+      "tables": [
+        "BaiHat",
+        "ChiTietHoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten, ROUND(SUM(ChiTietHoaDon.DonGia * ChiTietHoaDon.SoLuong), 2) AS revenue FROM BaiHat INNER JOIN ChiTietHoaDon ON BaiHat.MaBaiHat = ChiTietHoaDon.MaBaiHat GROUP BY BaiHat.MaBaiHat ORDER BY revenue DESC;"
+    },
+    {
+      "id": 130,
+      "question": "Bài hát nào không bao giờ được mua",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "LEFT JOIN",
+        "ChiTietHoaDon",
+        "WHERE",
+        "NULL"
+      ],
+      "tables": [
+        "BaiHat",
+        "ChiTietHoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten FROM BaiHat LEFT JOIN ChiTietHoaDon ON BaiHat.MaBaiHat = ChiTietHoaDon.MaBaiHat WHERE ChiTietHoaDon.MaBaiHat IS NULL;"
+    },
+    {
+      "id": 131,
+      "question": "Tất cả khách hàng",
+      "intent": "simple",
+      "sql_keywords": [
+        "KhachHang"
+      ],
+      "tables": [
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM KhachHang;"
+    },
+    {
+      "id": 132,
+      "question": "Tổng số khách hàng",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "KhachHang",
+        "COUNT"
+      ],
+      "tables": [
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_customers FROM KhachHang;"
+    },
+    {
+      "id": 133,
+      "question": "Số lượng khách hàng theo quốc gia",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "KhachHang",
+        "COUNT",
+        "QuocGia",
+        "GROUP BY"
+      ],
+      "tables": [
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT QuocGia, COUNT(*) AS total FROM KhachHang GROUP BY QuocGia ORDER BY total DESC;"
+    },
+    {
+      "id": 134,
+      "question": "Quốc gia nào có nhiều khách hàng nhất",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "KhachHang",
+        "COUNT",
+        "QuocGia",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC"
+      ],
+      "tables": [
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT QuocGia, COUNT(*) AS total FROM KhachHang GROUP BY QuocGia ORDER BY total DESC LIMIT 1;"
+    },
+    {
+      "id": 135,
+      "question": "Khách hàng tại Brazil",
+      "intent": "simple",
+      "sql_keywords": [
+        "KhachHang",
+        "WHERE",
+        "Brazil"
+      ],
+      "tables": [
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM KhachHang WHERE QuocGia = 'Brazil';"
+    },
+    {
+      "id": 136,
+      "question": "Khách hàng tại USA",
+      "intent": "simple",
+      "sql_keywords": [
+        "KhachHang",
+        "WHERE",
+        "USA"
+      ],
+      "tables": [
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM KhachHang WHERE QuocGia = 'USA';"
+    },
+    {
+      "id": 137,
+      "question": "Khách hàng tại Germany",
+      "intent": "simple",
+      "sql_keywords": [
+        "KhachHang",
+        "WHERE",
+        "Germany"
+      ],
+      "tables": [
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM KhachHang WHERE QuocGia = 'Germany';"
+    },
+    {
+      "id": 138,
+      "question": "Khách hàng theo thành phố",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "KhachHang",
+        "COUNT",
+        "ThanhPho",
+        "GROUP BY"
+      ],
+      "tables": [
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ThanhPho, COUNT(*) AS total FROM KhachHang GROUP BY ThanhPho ORDER BY total DESC;"
+    },
+    {
+      "id": 139,
+      "question": "Khách hàng theo state",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "KhachHang",
+        "COUNT",
+        "TieuBang",
+        "GROUP BY"
+      ],
+      "tables": [
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT TieuBang, COUNT(*) AS total FROM KhachHang GROUP BY TieuBang ORDER BY total DESC;"
+    },
+    {
+      "id": 140,
+      "question": "Khách hàng nào có email gmail",
+      "intent": "simple",
+      "sql_keywords": [
+        "KhachHang",
+        "WHERE",
+        "LIKE",
+        "%gmail%"
+      ],
+      "tables": [
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM KhachHang WHERE Email LIKE '%@gmail.com';"
+    },
+    {
+      "id": 141,
+      "question": "Tổng chi tiêu của mỗi khách hàng",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "KhachHang",
+        "HoaDon",
+        "SUM",
+        "TongTien",
+        "GROUP BY"
+      ],
+      "tables": [
+        "KhachHang",
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT KhachHang.Ten, KhachHang.Ho, ROUND(SUM(HoaDon.TongTien), 2) AS total_spent FROM KhachHang INNER JOIN HoaDon ON KhachHang.MaKhachHang = HoaDon.MaKhachHang GROUP BY KhachHang.MaKhachHang ORDER BY total_spent DESC;"
+    },
+    {
+      "id": 142,
+      "question": "Khách hàng nào chi nhiều tiền nhất",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "KhachHang",
+        "HoaDon",
+        "SUM",
+        "TongTien",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC"
+      ],
+      "tables": [
+        "KhachHang",
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT KhachHang.Ten, KhachHang.Ho, ROUND(SUM(HoaDon.TongTien), 2) AS total_spent FROM KhachHang INNER JOIN HoaDon ON KhachHang.MaKhachHang = HoaDon.MaKhachHang GROUP BY KhachHang.MaKhachHang ORDER BY total_spent DESC LIMIT 1;"
+    },
+    {
+      "id": 143,
+      "question": "Khách hàng nào chi ít tiền nhất",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "KhachHang",
+        "HoaDon",
+        "SUM",
+        "TongTien",
+        "GROUP BY",
+        "ORDER BY",
+        "ASC"
+      ],
+      "tables": [
+        "KhachHang",
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT KhachHang.Ten, KhachHang.Ho, ROUND(SUM(HoaDon.TongTien), 2) AS total_spent FROM KhachHang INNER JOIN HoaDon ON KhachHang.MaKhachHang = HoaDon.MaKhachHang GROUP BY KhachHang.MaKhachHang ORDER BY total_spent ASC LIMIT 1;"
+    },
+    {
+      "id": 144,
+      "question": "Số đơn hàng của mỗi khách hàng",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "KhachHang",
+        "HoaDon",
+        "COUNT",
+        "GROUP BY"
+      ],
+      "tables": [
+        "KhachHang",
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT KhachHang.Ten, KhachHang.Ho, COUNT(HoaDon.MaHoaDon) AS order_count FROM KhachHang INNER JOIN HoaDon ON KhachHang.MaKhachHang = HoaDon.MaKhachHang GROUP BY KhachHang.MaKhachHang ORDER BY order_count DESC;"
+    },
+    {
+      "id": 145,
+      "question": "Khách hàng nào có nhiều đơn hàng nhất",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "KhachHang",
+        "HoaDon",
+        "COUNT",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC"
+      ],
+      "tables": [
+        "KhachHang",
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT KhachHang.Ten, KhachHang.Ho, COUNT(HoaDon.MaHoaDon) AS order_count FROM KhachHang INNER JOIN HoaDon ON KhachHang.MaKhachHang = HoaDon.MaKhachHang GROUP BY KhachHang.MaKhachHang ORDER BY order_count DESC LIMIT 1;"
+    },
+    {
+      "id": 146,
+      "question": "Khách hàng nào chưa mua gì",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "KhachHang",
+        "LEFT JOIN",
+        "HoaDon",
+        "WHERE",
+        "NULL"
+      ],
+      "tables": [
+        "KhachHang",
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT KhachHang.Ten, KhachHang.Ho FROM KhachHang LEFT JOIN HoaDon ON KhachHang.MaKhachHang = HoaDon.MaKhachHang WHERE HoaDon.MaHoaDon IS NULL;"
+    },
+    {
+      "id": 147,
+      "question": "Tất cả hóa đơn",
+      "intent": "simple",
+      "sql_keywords": [
+        "HoaDon"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM HoaDon;"
+    },
+    {
+      "id": 148,
+      "question": "Tổng số hóa đơn",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "COUNT"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_invoices FROM HoaDon;"
+    },
+    {
+      "id": 149,
+      "question": "Tổng doanh thu",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "SUM",
+        "TongTien"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(TongTien), 2) AS total_revenue FROM HoaDon;"
+    },
+    {
+      "id": 150,
+      "question": "Doanh thu trung bình mỗi hóa đơn",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "AVG",
+        "TongTien"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(AVG(TongTien), 2) AS avg_invoice FROM HoaDon;"
+    },
+    {
+      "id": 151,
+      "question": "Hóa đơn có giá trị cao nhất",
+      "intent": "simple",
+      "sql_keywords": [
+        "HoaDon",
+        "ORDER BY",
+        "TongTien",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM HoaDon ORDER BY TongTien DESC LIMIT 1;"
+    },
+    {
+      "id": 152,
+      "question": "Hóa đơn có giá trị thấp nhất",
+      "intent": "simple",
+      "sql_keywords": [
+        "HoaDon",
+        "ORDER BY",
+        "TongTien",
+        "ASC",
+        "LIMIT"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM HoaDon ORDER BY TongTien ASC LIMIT 1;"
+    },
+    {
+      "id": 153,
+      "question": "Doanh thu năm 2021",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "SUM",
+        "TongTien",
+        "WHERE",
+        "2021"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(TongTien), 2) AS revenue FROM HoaDon WHERE strftime('%Y', NgayLapHoaDon) = '2021';"
+    },
+    {
+      "id": 154,
+      "question": "Số hóa đơn năm 2021",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "COUNT",
+        "WHERE",
+        "2021"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM HoaDon WHERE strftime('%Y', NgayLapHoaDon) = '2021';"
+    },
+    {
+      "id": 155,
+      "question": "Doanh thu năm 2020",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "SUM",
+        "TongTien",
+        "WHERE",
+        "2020"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(TongTien), 2) AS revenue FROM HoaDon WHERE strftime('%Y', NgayLapHoaDon) = '2020';"
+    },
+    {
+      "id": 156,
+      "question": "Số hóa đơn năm 2020",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "COUNT",
+        "WHERE",
+        "2020"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM HoaDon WHERE strftime('%Y', NgayLapHoaDon) = '2020';"
+    },
+    {
+      "id": 157,
+      "question": "Doanh thu năm 2019",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "SUM",
+        "TongTien",
+        "WHERE",
+        "2019"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(TongTien), 2) AS revenue FROM HoaDon WHERE strftime('%Y', NgayLapHoaDon) = '2019';"
+    },
+    {
+      "id": 158,
+      "question": "Số hóa đơn năm 2019",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "COUNT",
+        "WHERE",
+        "2019"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM HoaDon WHERE strftime('%Y', NgayLapHoaDon) = '2019';"
+    },
+    {
+      "id": 159,
+      "question": "Doanh thu năm 2017",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "SUM",
+        "TongTien",
+        "WHERE",
+        "2017"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(TongTien), 2) AS revenue FROM HoaDon WHERE strftime('%Y', NgayLapHoaDon) = '2017';"
+    },
+    {
+      "id": 160,
+      "question": "Số hóa đơn năm 2017",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "COUNT",
+        "WHERE",
+        "2017"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM HoaDon WHERE strftime('%Y', NgayLapHoaDon) = '2017';"
+    },
+    {
+      "id": 161,
+      "question": "Doanh thu tháng January",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "SUM",
+        "TongTien",
+        "WHERE",
+        "January"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(TongTien), 2) AS revenue FROM HoaDon WHERE strftime('%m', NgayLapHoaDon) = '01';"
+    },
+    {
+      "id": 162,
+      "question": "Doanh thu tháng February",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "SUM",
+        "TongTien",
+        "WHERE",
+        "February"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(TongTien), 2) AS revenue FROM HoaDon WHERE strftime('%m', NgayLapHoaDon) = '02';"
+    },
+    {
+      "id": 163,
+      "question": "Doanh thu tháng March",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "SUM",
+        "TongTien",
+        "WHERE",
+        "March"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(TongTien), 2) AS revenue FROM HoaDon WHERE strftime('%m', NgayLapHoaDon) = '03';"
+    },
+    {
+      "id": 164,
+      "question": "Doanh thu tháng April",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "SUM",
+        "TongTien",
+        "WHERE",
+        "April"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(TongTien), 2) AS revenue FROM HoaDon WHERE strftime('%m', NgayLapHoaDon) = '04';"
+    },
+    {
+      "id": 165,
+      "question": "Doanh thu tháng May",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "SUM",
+        "TongTien",
+        "WHERE",
+        "May"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(TongTien), 2) AS revenue FROM HoaDon WHERE strftime('%m', NgayLapHoaDon) = '05';"
+    },
+    {
+      "id": 166,
+      "question": "Doanh thu tháng June",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "SUM",
+        "TongTien",
+        "WHERE",
+        "June"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(TongTien), 2) AS revenue FROM HoaDon WHERE strftime('%m', NgayLapHoaDon) = '06';"
+    },
+    {
+      "id": 167,
+      "question": "Doanh thu tại Brazil",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "KhachHang",
+        "SUM",
+        "TongTien",
+        "WHERE",
+        "Brazil"
+      ],
+      "tables": [
+        "HoaDon",
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(HoaDon.TongTien), 2) AS revenue FROM HoaDon INNER JOIN KhachHang ON HoaDon.MaKhachHang = KhachHang.MaKhachHang WHERE KhachHang.QuocGia = 'Brazil';"
+    },
+    {
+      "id": 168,
+      "question": "Số hóa đơn tại Brazil",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "KhachHang",
+        "COUNT",
+        "WHERE",
+        "Brazil"
+      ],
+      "tables": [
+        "HoaDon",
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM HoaDon INNER JOIN KhachHang ON HoaDon.MaKhachHang = KhachHang.MaKhachHang WHERE KhachHang.QuocGia = 'Brazil';"
+    },
+    {
+      "id": 169,
+      "question": "Doanh thu tại Germany",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "KhachHang",
+        "SUM",
+        "TongTien",
+        "WHERE",
+        "Germany"
+      ],
+      "tables": [
+        "HoaDon",
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(HoaDon.TongTien), 2) AS revenue FROM HoaDon INNER JOIN KhachHang ON HoaDon.MaKhachHang = KhachHang.MaKhachHang WHERE KhachHang.QuocGia = 'Germany';"
+    },
+    {
+      "id": 170,
+      "question": "Số hóa đơn tại Germany",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "KhachHang",
+        "COUNT",
+        "WHERE",
+        "Germany"
+      ],
+      "tables": [
+        "HoaDon",
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM HoaDon INNER JOIN KhachHang ON HoaDon.MaKhachHang = KhachHang.MaKhachHang WHERE KhachHang.QuocGia = 'Germany';"
+    },
+    {
+      "id": 171,
+      "question": "Doanh thu tại Canada",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "KhachHang",
+        "SUM",
+        "TongTien",
+        "WHERE",
+        "Canada"
+      ],
+      "tables": [
+        "HoaDon",
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(HoaDon.TongTien), 2) AS revenue FROM HoaDon INNER JOIN KhachHang ON HoaDon.MaKhachHang = KhachHang.MaKhachHang WHERE KhachHang.QuocGia = 'Canada';"
+    },
+    {
+      "id": 172,
+      "question": "Số hóa đơn tại Canada",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "KhachHang",
+        "COUNT",
+        "WHERE",
+        "Canada"
+      ],
+      "tables": [
+        "HoaDon",
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM HoaDon INNER JOIN KhachHang ON HoaDon.MaKhachHang = KhachHang.MaKhachHang WHERE KhachHang.QuocGia = 'Canada';"
+    },
+    {
+      "id": 173,
+      "question": "Doanh thu tại Norway",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "KhachHang",
+        "SUM",
+        "TongTien",
+        "WHERE",
+        "Norway"
+      ],
+      "tables": [
+        "HoaDon",
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(HoaDon.TongTien), 2) AS revenue FROM HoaDon INNER JOIN KhachHang ON HoaDon.MaKhachHang = KhachHang.MaKhachHang WHERE KhachHang.QuocGia = 'Norway';"
+    },
+    {
+      "id": 174,
+      "question": "Số hóa đơn tại Norway",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "KhachHang",
+        "COUNT",
+        "WHERE",
+        "Norway"
+      ],
+      "tables": [
+        "HoaDon",
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM HoaDon INNER JOIN KhachHang ON HoaDon.MaKhachHang = KhachHang.MaKhachHang WHERE KhachHang.QuocGia = 'Norway';"
+    },
+    {
+      "id": 175,
+      "question": "Doanh thu tại Czech Republic",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "KhachHang",
+        "SUM",
+        "TongTien",
+        "WHERE",
+        "Czech Republic"
+      ],
+      "tables": [
+        "HoaDon",
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(HoaDon.TongTien), 2) AS revenue FROM HoaDon INNER JOIN KhachHang ON HoaDon.MaKhachHang = KhachHang.MaKhachHang WHERE KhachHang.QuocGia = 'Czech Republic';"
+    },
+    {
+      "id": 176,
+      "question": "Số hóa đơn tại Czech Republic",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "KhachHang",
+        "COUNT",
+        "WHERE",
+        "Czech Republic"
+      ],
+      "tables": [
+        "HoaDon",
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM HoaDon INNER JOIN KhachHang ON HoaDon.MaKhachHang = KhachHang.MaKhachHang WHERE KhachHang.QuocGia = 'Czech Republic';"
+    },
+    {
+      "id": 177,
+      "question": "Doanh thu tại Austria",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "KhachHang",
+        "SUM",
+        "TongTien",
+        "WHERE",
+        "Austria"
+      ],
+      "tables": [
+        "HoaDon",
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(HoaDon.TongTien), 2) AS revenue FROM HoaDon INNER JOIN KhachHang ON HoaDon.MaKhachHang = KhachHang.MaKhachHang WHERE KhachHang.QuocGia = 'Austria';"
+    },
+    {
+      "id": 178,
+      "question": "Số hóa đơn tại Austria",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "KhachHang",
+        "COUNT",
+        "WHERE",
+        "Austria"
+      ],
+      "tables": [
+        "HoaDon",
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM HoaDon INNER JOIN KhachHang ON HoaDon.MaKhachHang = KhachHang.MaKhachHang WHERE KhachHang.QuocGia = 'Austria';"
+    },
+    {
+      "id": 179,
+      "question": "Doanh thu tại Belgium",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "KhachHang",
+        "SUM",
+        "TongTien",
+        "WHERE",
+        "Belgium"
+      ],
+      "tables": [
+        "HoaDon",
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(HoaDon.TongTien), 2) AS revenue FROM HoaDon INNER JOIN KhachHang ON HoaDon.MaKhachHang = KhachHang.MaKhachHang WHERE KhachHang.QuocGia = 'Belgium';"
+    },
+    {
+      "id": 180,
+      "question": "Số hóa đơn tại Belgium",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "KhachHang",
+        "COUNT",
+        "WHERE",
+        "Belgium"
+      ],
+      "tables": [
+        "HoaDon",
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM HoaDon INNER JOIN KhachHang ON HoaDon.MaKhachHang = KhachHang.MaKhachHang WHERE KhachHang.QuocGia = 'Belgium';"
+    },
+    {
+      "id": 181,
+      "question": "Doanh thu tại Denmark",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "KhachHang",
+        "SUM",
+        "TongTien",
+        "WHERE",
+        "Denmark"
+      ],
+      "tables": [
+        "HoaDon",
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(HoaDon.TongTien), 2) AS revenue FROM HoaDon INNER JOIN KhachHang ON HoaDon.MaKhachHang = KhachHang.MaKhachHang WHERE KhachHang.QuocGia = 'Denmark';"
+    },
+    {
+      "id": 182,
+      "question": "Số hóa đơn tại Denmark",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "KhachHang",
+        "COUNT",
+        "WHERE",
+        "Denmark"
+      ],
+      "tables": [
+        "HoaDon",
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM HoaDon INNER JOIN KhachHang ON HoaDon.MaKhachHang = KhachHang.MaKhachHang WHERE KhachHang.QuocGia = 'Denmark';"
+    },
+    {
+      "id": 183,
+      "question": "Tổng số sản phẩm đã bán",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "ChiTietHoaDon",
+        "SUM",
+        "SoLuong"
+      ],
+      "tables": [
+        "ChiTietHoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT SUM(SoLuong) AS total_sold FROM ChiTietHoaDon;"
+    },
+    {
+      "id": 184,
+      "question": "Tổng doanh thu (InvoiceLine)",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "ChiTietHoaDon",
+        "SUM",
+        "DonGia",
+        "SoLuong"
+      ],
+      "tables": [
+        "ChiTietHoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(DonGia * SoLuong), 2) AS total_revenue FROM ChiTietHoaDon;"
+    },
+    {
+      "id": 185,
+      "question": "Tất cả thể loại nhạc",
+      "intent": "simple",
+      "sql_keywords": [
+        "TheLoai"
+      ],
+      "tables": [
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM TheLoai ORDER BY Ten ASC;"
+    },
+    {
+      "id": 186,
+      "question": "Tổng số thể loại",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "TheLoai",
+        "COUNT"
+      ],
+      "tables": [
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_genres FROM TheLoai;"
+    },
+    {
+      "id": 187,
+      "question": "Số lượng bài hát thể loại Rock",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Rock"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Rock';"
+    },
+    {
+      "id": 188,
+      "question": "Tổng doanh thu thể loại Rock",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "ChiTietHoaDon",
+        "SUM",
+        "WHERE",
+        "Rock"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai",
+        "ChiTietHoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(ChiTietHoaDon.DonGia * ChiTietHoaDon.SoLuong), 2) AS revenue FROM ChiTietHoaDon INNER JOIN BaiHat ON ChiTietHoaDon.MaBaiHat = BaiHat.MaBaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Rock';"
+    },
+    {
+      "id": 189,
+      "question": "Bài hát dài nhất thể loại Rock",
+      "intent": "simple",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "WHERE",
+        "Rock",
+        "ORDER BY",
+        "ThoiLuong_ms",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten, BaiHat.ThoiLuong_ms FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Rock' ORDER BY BaiHat.ThoiLuong_ms DESC LIMIT 1;"
+    },
+    {
+      "id": 190,
+      "question": "Số lượng bài hát thể loại Jazz",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Jazz"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Jazz';"
+    },
+    {
+      "id": 191,
+      "question": "Tổng doanh thu thể loại Jazz",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "ChiTietHoaDon",
+        "SUM",
+        "WHERE",
+        "Jazz"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai",
+        "ChiTietHoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(ChiTietHoaDon.DonGia * ChiTietHoaDon.SoLuong), 2) AS revenue FROM ChiTietHoaDon INNER JOIN BaiHat ON ChiTietHoaDon.MaBaiHat = BaiHat.MaBaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Jazz';"
+    },
+    {
+      "id": 192,
+      "question": "Bài hát dài nhất thể loại Jazz",
+      "intent": "simple",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "WHERE",
+        "Jazz",
+        "ORDER BY",
+        "ThoiLuong_ms",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten, BaiHat.ThoiLuong_ms FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Jazz' ORDER BY BaiHat.ThoiLuong_ms DESC LIMIT 1;"
+    },
+    {
+      "id": 193,
+      "question": "Số lượng bài hát thể loại Metal",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Metal"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Metal';"
+    },
+    {
+      "id": 194,
+      "question": "Tổng doanh thu thể loại Metal",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "ChiTietHoaDon",
+        "SUM",
+        "WHERE",
+        "Metal"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai",
+        "ChiTietHoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(ChiTietHoaDon.DonGia * ChiTietHoaDon.SoLuong), 2) AS revenue FROM ChiTietHoaDon INNER JOIN BaiHat ON ChiTietHoaDon.MaBaiHat = BaiHat.MaBaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Metal';"
+    },
+    {
+      "id": 195,
+      "question": "Bài hát dài nhất thể loại Metal",
+      "intent": "simple",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "WHERE",
+        "Metal",
+        "ORDER BY",
+        "ThoiLuong_ms",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten, BaiHat.ThoiLuong_ms FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Metal' ORDER BY BaiHat.ThoiLuong_ms DESC LIMIT 1;"
+    },
+    {
+      "id": 196,
+      "question": "Số lượng bài hát thể loại Alternative & Punk",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Alternative & Punk"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Alternative & Punk';"
+    },
+    {
+      "id": 197,
+      "question": "Tổng doanh thu thể loại Alternative & Punk",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "ChiTietHoaDon",
+        "SUM",
+        "WHERE",
+        "Alternative & Punk"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai",
+        "ChiTietHoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(ChiTietHoaDon.DonGia * ChiTietHoaDon.SoLuong), 2) AS revenue FROM ChiTietHoaDon INNER JOIN BaiHat ON ChiTietHoaDon.MaBaiHat = BaiHat.MaBaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Alternative & Punk';"
+    },
+    {
+      "id": 198,
+      "question": "Bài hát dài nhất thể loại Alternative & Punk",
+      "intent": "simple",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "WHERE",
+        "Alternative & Punk",
+        "ORDER BY",
+        "ThoiLuong_ms",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten, BaiHat.ThoiLuong_ms FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Alternative & Punk' ORDER BY BaiHat.ThoiLuong_ms DESC LIMIT 1;"
+    },
+    {
+      "id": 199,
+      "question": "Số lượng bài hát thể loại Blues",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Blues"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Blues';"
+    },
+    {
+      "id": 200,
+      "question": "Tổng doanh thu thể loại Blues",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "ChiTietHoaDon",
+        "SUM",
+        "WHERE",
+        "Blues"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai",
+        "ChiTietHoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(ChiTietHoaDon.DonGia * ChiTietHoaDon.SoLuong), 2) AS revenue FROM ChiTietHoaDon INNER JOIN BaiHat ON ChiTietHoaDon.MaBaiHat = BaiHat.MaBaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Blues';"
+    },
+    {
+      "id": 201,
+      "question": "Bài hát dài nhất thể loại Blues",
+      "intent": "simple",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "WHERE",
+        "Blues",
+        "ORDER BY",
+        "ThoiLuong_ms",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Blues' ORDER BY BaiHat.ThoiLuong_ms DESC LIMIT 1;"
+    },
+    {
+      "id": 202,
+      "question": "Số lượng bài hát thể loại Latin",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Latin"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Latin';"
+    },
+    {
+      "id": 203,
+      "question": "Tổng doanh thu thể loại Latin",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "ChiTietHoaDon",
+        "SUM",
+        "WHERE",
+        "Latin"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai",
+        "ChiTietHoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(ChiTietHoaDon.DonGia * ChiTietHoaDon.SoLuong), 2) AS revenue FROM ChiTietHoaDon INNER JOIN BaiHat ON ChiTietHoaDon.MaBaiHat = BaiHat.MaBaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Latin';"
+    },
+    {
+      "id": 204,
+      "question": "Bài hát dài nhất thể loại Latin",
+      "intent": "simple",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "WHERE",
+        "Latin",
+        "ORDER BY",
+        "ThoiLuong_ms",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten, BaiHat.ThoiLuong_ms FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Latin' ORDER BY BaiHat.ThoiLuong_ms DESC LIMIT 1;"
+    },
+    {
+      "id": 205,
+      "question": "Số lượng bài hát thể loại Reggae",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Reggae"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Reggae';"
+    },
+    {
+      "id": 206,
+      "question": "Tổng doanh thu thể loại Reggae",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "ChiTietHoaDon",
+        "SUM",
+        "WHERE",
+        "Reggae"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai",
+        "ChiTietHoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(ChiTietHoaDon.DonGia * ChiTietHoaDon.SoLuong), 2) AS revenue FROM ChiTietHoaDon INNER JOIN BaiHat ON ChiTietHoaDon.MaBaiHat = BaiHat.MaBaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Reggae';"
+    },
+    {
+      "id": 207,
+      "question": "Bài hát dài nhất thể loại Reggae",
+      "intent": "simple",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "WHERE",
+        "Reggae",
+        "ORDER BY",
+        "ThoiLuong_ms",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten, BaiHat.ThoiLuong_ms FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Reggae' ORDER BY BaiHat.ThoiLuong_ms DESC LIMIT 1;"
+    },
+    {
+      "id": 208,
+      "question": "Số lượng bài hát thể loại Pop",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Pop"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Pop';"
+    },
+    {
+      "id": 209,
+      "question": "Tổng doanh thu thể loại Pop",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "ChiTietHoaDon",
+        "SUM",
+        "WHERE",
+        "Pop"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai",
+        "ChiTietHoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(ChiTietHoaDon.DonGia * ChiTietHoaDon.SoLuong), 2) AS revenue FROM ChiTietHoaDon INNER JOIN BaiHat ON ChiTietHoaDon.MaBaiHat = BaiHat.MaBaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Pop';"
+    },
+    {
+      "id": 210,
+      "question": "Bài hát dài nhất thể loại Pop",
+      "intent": "simple",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "WHERE",
+        "Pop",
+        "ORDER BY",
+        "ThoiLuong_ms",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Pop' ORDER BY BaiHat.ThoiLuong_ms DESC LIMIT 1;"
+    },
+    {
+      "id": 211,
+      "question": "Số lượng bài hát thể loại Classical",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Classical"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Classical';"
+    },
+    {
+      "id": 212,
+      "question": "Tổng doanh thu thể loại Classical",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "ChiTietHoaDon",
+        "SUM",
+        "WHERE",
+        "Classical"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai",
+        "ChiTietHoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(ChiTietHoaDon.DonGia * ChiTietHoaDon.SoLuong), 2) AS revenue FROM ChiTietHoaDon INNER JOIN BaiHat ON ChiTietHoaDon.MaBaiHat = BaiHat.MaBaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Classical';"
+    },
+    {
+      "id": 213,
+      "question": "Bài hát dài nhất thể loại Classical",
+      "intent": "simple",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "WHERE",
+        "Classical",
+        "ORDER BY",
+        "ThoiLuong_ms",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten, BaiHat.ThoiLuong_ms FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Classical' ORDER BY BaiHat.ThoiLuong_ms DESC LIMIT 1;"
+    },
+    {
+      "id": 214,
+      "question": "Số lượng bài hát thể loại Heavy Metal",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Heavy Metal"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Heavy Metal';"
+    },
+    {
+      "id": 215,
+      "question": "Tổng doanh thu thể loại Heavy Metal",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "ChiTietHoaDon",
+        "SUM",
+        "WHERE",
+        "Heavy Metal"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai",
+        "ChiTietHoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(ChiTietHoaDon.DonGia * ChiTietHoaDon.SoLuong), 2) AS revenue FROM ChiTietHoaDon INNER JOIN BaiHat ON ChiTietHoaDon.MaBaiHat = BaiHat.MaBaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Heavy Metal';"
+    },
+    {
+      "id": 216,
+      "question": "Bài hát dài nhất thể loại Heavy Metal",
+      "intent": "simple",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "WHERE",
+        "Heavy Metal",
+        "ORDER BY",
+        "ThoiLuong_ms",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten, BaiHat.ThoiLuong_ms FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Heavy Metal' ORDER BY BaiHat.ThoiLuong_ms DESC LIMIT 1;"
+    },
+    {
+      "id": 217,
+      "question": "Số lượng bài hát thể loại R&B/Soul",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "R&B/Soul"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'R&B/Soul';"
+    },
+    {
+      "id": 218,
+      "question": "Tổng doanh thu thể loại R&B/Soul",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "ChiTietHoaDon",
+        "SUM",
+        "WHERE",
+        "R&B/Soul"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai",
+        "ChiTietHoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(ChiTietHoaDon.DonGia * ChiTietHoaDon.SoLuong), 2) AS revenue FROM ChiTietHoaDon INNER JOIN BaiHat ON ChiTietHoaDon.MaBaiHat = BaiHat.MaBaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'R&B/Soul';"
+    },
+    {
+      "id": 219,
+      "question": "Bài hát dài nhất thể loại R&B/Soul",
+      "intent": "simple",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "WHERE",
+        "R&B/Soul",
+        "ORDER BY",
+        "ThoiLuong_ms",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten, BaiHat.ThoiLuong_ms FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'R&B/Soul' ORDER BY BaiHat.ThoiLuong_ms DESC LIMIT 1;"
+    },
+    {
+      "id": 220,
+      "question": "Số lượng bài hát thể loại Hip Hop/Rap",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Hip Hop/Rap"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Hip Hop/Rap';"
+    },
+    {
+      "id": 221,
+      "question": "Tổng doanh thu thể loại Hip Hop/Rap",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "ChiTietHoaDon",
+        "SUM",
+        "WHERE",
+        "Hip Hop/Rap"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai",
+        "ChiTietHoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(ChiTietHoaDon.DonGia * ChiTietHoaDon.SoLuong), 2) AS revenue FROM ChiTietHoaDon INNER JOIN BaiHat ON ChiTietHoaDon.MaBaiHat = BaiHat.MaBaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Hip Hop/Rap';"
+    },
+    {
+      "id": 222,
+      "question": "Bài hát dài nhất thể loại Hip Hop/Rap",
+      "intent": "simple",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "WHERE",
+        "Hip Hop/Rap",
+        "ORDER BY",
+        "ThoiLuong_ms",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Hip Hop/Rap' ORDER BY BaiHat.ThoiLuong_ms DESC LIMIT 1;"
+    },
+    {
+      "id": 223,
+      "question": "Số lượng bài hát thể loại Alternative",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Alternative"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Alternative';"
+    },
+    {
+      "id": 224,
+      "question": "Tổng doanh thu thể loại Alternative",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "ChiTietHoaDon",
+        "SUM",
+        "WHERE",
+        "Alternative"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai",
+        "ChiTietHoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(ChiTietHoaDon.DonGia * ChiTietHoaDon.SoLuong), 2) AS revenue FROM ChiTietHoaDon INNER JOIN BaiHat ON ChiTietHoaDon.MaBaiHat = BaiHat.MaBaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Alternative';"
+    },
+    {
+      "id": 225,
+      "question": "Bài hát dài nhất thể loại Alternative",
+      "intent": "simple",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "WHERE",
+        "Alternative",
+        "ORDER BY",
+        "ThoiLuong_ms",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten, BaiHat.ThoiLuong_ms FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Alternative' ORDER BY BaiHat.ThoiLuong_ms DESC LIMIT 1;"
+    },
+    {
+      "id": 226,
+      "question": "Số lượng bài hát thể loại Bossa Nova",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "COUNT",
+        "WHERE",
+        "Bossa Nova"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Bossa Nova';"
+    },
+    {
+      "id": 227,
+      "question": "Tổng doanh thu thể loại Bossa Nova",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "ChiTietHoaDon",
+        "SUM",
+        "WHERE",
+        "Bossa Nova"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai",
+        "ChiTietHoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(ChiTietHoaDon.DonGia * ChiTietHoaDon.SoLuong), 2) AS revenue FROM ChiTietHoaDon INNER JOIN BaiHat ON ChiTietHoaDon.MaBaiHat = BaiHat.MaBaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Bossa Nova';"
+    },
+    {
+      "id": 228,
+      "question": "Bài hát dài nhất thể loại Bossa Nova",
+      "intent": "simple",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "WHERE",
+        "Bossa Nova",
+        "ORDER BY",
+        "ThoiLuong_ms",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten, BaiHat.ThoiLuong_ms FROM BaiHat INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Bossa Nova' ORDER BY BaiHat.ThoiLuong_ms DESC LIMIT 1;"
+    },
+    {
+      "id": 229,
+      "question": "Tất cả playlist",
+      "intent": "simple",
+      "sql_keywords": [
+        "DanhSachPhat"
+      ],
+      "tables": [
+        "DanhSachPhat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM DanhSachPhat ORDER BY Ten ASC;"
+    },
+    {
+      "id": 230,
+      "question": "Tổng số playlist",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DanhSachPhat",
+        "COUNT"
+      ],
+      "tables": [
+        "DanhSachPhat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_playlists FROM DanhSachPhat;"
+    },
+    {
+      "id": 231,
+      "question": "Số bài hát trong playlist Music",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat",
+        "COUNT",
+        "WHERE",
+        "Music"
+      ],
+      "tables": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM ChiTietDanhSachPhat INNER JOIN DanhSachPhat ON ChiTietDanhSachPhat.MaDanhSachPhat = DanhSachPhat.MaDanhSachPhat WHERE DanhSachPhat.Ten = 'Music';"
+    },
+    {
+      "id": 232,
+      "question": "Danh sách bài hát trong playlist Music",
+      "intent": "join",
+      "sql_keywords": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat",
+        "BaiHat",
+        "WHERE",
+        "Music"
+      ],
+      "tables": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat",
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten FROM BaiHat INNER JOIN ChiTietDanhSachPhat ON BaiHat.MaBaiHat = ChiTietDanhSachPhat.MaBaiHat INNER JOIN DanhSachPhat ON ChiTietDanhSachPhat.MaDanhSachPhat = DanhSachPhat.MaDanhSachPhat WHERE DanhSachPhat.Ten = 'Music';"
+    },
+    {
+      "id": 233,
+      "question": "Số bài hát trong playlist Movies",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat",
+        "COUNT",
+        "WHERE",
+        "Movies"
+      ],
+      "tables": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM ChiTietDanhSachPhat INNER JOIN DanhSachPhat ON ChiTietDanhSachPhat.MaDanhSachPhat = DanhSachPhat.MaDanhSachPhat WHERE DanhSachPhat.Ten = 'Movies';"
+    },
+    {
+      "id": 234,
+      "question": "Danh sách bài hát trong playlist Movies",
+      "intent": "join",
+      "sql_keywords": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat",
+        "BaiHat",
+        "WHERE",
+        "Movies"
+      ],
+      "tables": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat",
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten FROM BaiHat INNER JOIN ChiTietDanhSachPhat ON BaiHat.MaBaiHat = ChiTietDanhSachPhat.MaBaiHat INNER JOIN DanhSachPhat ON ChiTietDanhSachPhat.MaDanhSachPhat = DanhSachPhat.MaDanhSachPhat WHERE DanhSachPhat.Ten = 'Movies';"
+    },
+    {
+      "id": 235,
+      "question": "Số bài hát trong playlist TV Shows",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat",
+        "COUNT",
+        "WHERE",
+        "TV Shows"
+      ],
+      "tables": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM ChiTietDanhSachPhat INNER JOIN DanhSachPhat ON ChiTietDanhSachPhat.MaDanhSachPhat = DanhSachPhat.MaDanhSachPhat WHERE DanhSachPhat.Ten = 'TV Shows';"
+    },
+    {
+      "id": 236,
+      "question": "Danh sách bài hát trong playlist TV Shows",
+      "intent": "join",
+      "sql_keywords": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat",
+        "BaiHat",
+        "WHERE",
+        "TV Shows"
+      ],
+      "tables": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat",
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten FROM BaiHat INNER JOIN ChiTietDanhSachPhat ON BaiHat.MaBaiHat = ChiTietDanhSachPhat.MaBaiHat INNER JOIN DanhSachPhat ON ChiTietDanhSachPhat.MaDanhSachPhat = DanhSachPhat.MaDanhSachPhat WHERE DanhSachPhat.Ten = 'TV Shows';"
+    },
+    {
+      "id": 237,
+      "question": "Số bài hát trong playlist Audiobooks",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat",
+        "COUNT",
+        "WHERE",
+        "Audiobooks"
+      ],
+      "tables": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM ChiTietDanhSachPhat INNER JOIN DanhSachPhat ON ChiTietDanhSachPhat.MaDanhSachPhat = DanhSachPhat.MaDanhSachPhat WHERE DanhSachPhat.Ten = 'Audiobooks';"
+    },
+    {
+      "id": 238,
+      "question": "Danh sách bài hát trong playlist Audiobooks",
+      "intent": "join",
+      "sql_keywords": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat",
+        "BaiHat",
+        "WHERE",
+        "Audiobooks"
+      ],
+      "tables": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat",
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten FROM BaiHat INNER JOIN ChiTietDanhSachPhat ON BaiHat.MaBaiHat = ChiTietDanhSachPhat.MaBaiHat INNER JOIN DanhSachPhat ON ChiTietDanhSachPhat.MaDanhSachPhat = DanhSachPhat.MaDanhSachPhat WHERE DanhSachPhat.Ten = 'Audiobooks';"
+    },
+    {
+      "id": 239,
+      "question": "Số bài hát trong playlist 90's Music",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat",
+        "COUNT",
+        "WHERE",
+        "90's Music"
+      ],
+      "tables": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM ChiTietDanhSachPhat INNER JOIN DanhSachPhat ON ChiTietDanhSachPhat.MaDanhSachPhat = DanhSachPhat.MaDanhSachPhat WHERE DanhSachPhat.Ten = '90''s Music';"
+    },
+    {
+      "id": 240,
+      "question": "Danh sách bài hát trong playlist 90's Music",
+      "intent": "join",
+      "sql_keywords": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat",
+        "BaiHat",
+        "WHERE",
+        "90's Music"
+      ],
+      "tables": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat",
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten FROM BaiHat INNER JOIN ChiTietDanhSachPhat ON BaiHat.MaBaiHat = ChiTietDanhSachPhat.MaBaiHat INNER JOIN DanhSachPhat ON ChiTietDanhSachPhat.MaDanhSachPhat = DanhSachPhat.MaDanhSachPhat WHERE DanhSachPhat.Ten = '90''s Music';"
+    },
+    {
+      "id": 241,
+      "question": "Số bài hát trong playlist Classical",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat",
+        "COUNT",
+        "WHERE",
+        "Classical"
+      ],
+      "tables": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM ChiTietDanhSachPhat INNER JOIN DanhSachPhat ON ChiTietDanhSachPhat.MaDanhSachPhat = DanhSachPhat.MaDanhSachPhat WHERE DanhSachPhat.Ten = 'Classical';"
+    },
+    {
+      "id": 242,
+      "question": "Danh sách bài hát trong playlist Classical",
+      "intent": "join",
+      "sql_keywords": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat",
+        "BaiHat",
+        "WHERE",
+        "Classical"
+      ],
+      "tables": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat",
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten FROM BaiHat INNER JOIN ChiTietDanhSachPhat ON BaiHat.MaBaiHat = ChiTietDanhSachPhat.MaBaiHat INNER JOIN DanhSachPhat ON ChiTietDanhSachPhat.MaDanhSachPhat = DanhSachPhat.MaDanhSachPhat WHERE DanhSachPhat.Ten = 'Classical';"
+    },
+    {
+      "id": 243,
+      "question": "Số bài hát trong playlist Grunge",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat",
+        "COUNT",
+        "WHERE",
+        "Grunge"
+      ],
+      "tables": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM ChiTietDanhSachPhat INNER JOIN DanhSachPhat ON ChiTietDanhSachPhat.MaDanhSachPhat = DanhSachPhat.MaDanhSachPhat WHERE DanhSachPhat.Ten = 'Grunge';"
+    },
+    {
+      "id": 244,
+      "question": "Danh sách bài hát trong playlist Grunge",
+      "intent": "join",
+      "sql_keywords": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat",
+        "BaiHat",
+        "WHERE",
+        "Grunge"
+      ],
+      "tables": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat",
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten FROM BaiHat INNER JOIN ChiTietDanhSachPhat ON BaiHat.MaBaiHat = ChiTietDanhSachPhat.MaBaiHat INNER JOIN DanhSachPhat ON ChiTietDanhSachPhat.MaDanhSachPhat = DanhSachPhat.MaDanhSachPhat WHERE DanhSachPhat.Ten = 'Grunge';"
+    },
+    {
+      "id": 245,
+      "question": "Số bài hát trong playlist Heavy Metal Classic",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat",
+        "COUNT",
+        "WHERE",
+        "Heavy Metal Classic"
+      ],
+      "tables": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM ChiTietDanhSachPhat INNER JOIN DanhSachPhat ON ChiTietDanhSachPhat.MaDanhSachPhat = DanhSachPhat.MaDanhSachPhat WHERE DanhSachPhat.Ten = 'Heavy Metal Classic';"
+    },
+    {
+      "id": 246,
+      "question": "Danh sách bài hát trong playlist Heavy Metal Classic",
+      "intent": "join",
+      "sql_keywords": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat",
+        "BaiHat",
+        "WHERE",
+        "Heavy Metal Classic"
+      ],
+      "tables": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat",
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten FROM BaiHat INNER JOIN ChiTietDanhSachPhat ON BaiHat.MaBaiHat = ChiTietDanhSachPhat.MaBaiHat INNER JOIN DanhSachPhat ON ChiTietDanhSachPhat.MaDanhSachPhat = DanhSachPhat.MaDanhSachPhat WHERE DanhSachPhat.Ten = 'Heavy Metal Classic';"
+    },
+    {
+      "id": 247,
+      "question": "Playlist nào có nhiều bài hát nhất",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat",
+        "COUNT",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC"
+      ],
+      "tables": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT DanhSachPhat.Ten, COUNT(ChiTietDanhSachPhat.MaBaiHat) AS total FROM DanhSachPhat INNER JOIN ChiTietDanhSachPhat ON DanhSachPhat.MaDanhSachPhat = ChiTietDanhSachPhat.MaDanhSachPhat GROUP BY DanhSachPhat.MaDanhSachPhat ORDER BY total DESC LIMIT 1;"
+    },
+    {
+      "id": 248,
+      "question": "Playlist nào có ít bài hát nhất",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat",
+        "COUNT",
+        "GROUP BY",
+        "ORDER BY",
+        "ASC"
+      ],
+      "tables": [
+        "DanhSachPhat",
+        "ChiTietDanhSachPhat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT DanhSachPhat.Ten, COUNT(ChiTietDanhSachPhat.MaBaiHat) AS total FROM DanhSachPhat INNER JOIN ChiTietDanhSachPhat ON DanhSachPhat.MaDanhSachPhat = ChiTietDanhSachPhat.MaDanhSachPhat GROUP BY DanhSachPhat.MaDanhSachPhat ORDER BY total ASC LIMIT 1;"
+    },
+    {
+      "id": 249,
+      "question": "Tất cả nhân viên",
+      "intent": "simple",
+      "sql_keywords": [
+        "NhanVien"
+      ],
+      "tables": [
+        "NhanVien"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM NhanVien;"
+    },
+    {
+      "id": 250,
+      "question": "Tổng số nhân viên",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NhanVien",
+        "COUNT"
+      ],
+      "tables": [
+        "NhanVien"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_employees FROM NhanVien;"
+    },
+    {
+      "id": 251,
+      "question": "Số nhân viên theo chức vụ",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NhanVien",
+        "COUNT",
+        "TieuDe",
+        "GROUP BY"
+      ],
+      "tables": [
+        "NhanVien"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ChucVu, COUNT(*) AS total FROM NhanVien GROUP BY ChucVu ORDER BY total DESC;"
+    },
+    {
+      "id": 252,
+      "question": "Nhân viên quản lý (General Manager)",
+      "intent": "simple",
+      "sql_keywords": [
+        "NhanVien",
+        "WHERE",
+        "TieuDe",
+        "General Manager"
+      ],
+      "tables": [
+        "NhanVien"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM NhanVien WHERE ChucVu = 'General Manager';"
+    },
+    {
+      "id": 253,
+      "question": "Nhân viên hỗ trợ bán hàng",
+      "intent": "simple",
+      "sql_keywords": [
+        "NhanVien",
+        "WHERE",
+        "TieuDe",
+        "Sales Support Agent"
+      ],
+      "tables": [
+        "NhanVien"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM NhanVien WHERE ChucVu LIKE '%Sales%Support%';"
+    },
+    {
+      "id": 254,
+      "question": "Nhân viên và người quản lý trực tiếp",
+      "intent": "join",
+      "sql_keywords": [
+        "NhanVien",
+        "MaNguoiQuanLy",
+        "NhanVien"
+      ],
+      "tables": [
+        "NhanVien",
+        "NhanVien"
+      ],
+      "note": "",
+      "gold_sql": "SELECT e.Ten || ' ' || e.Ho AS employee, m.Ten || ' ' || m.Ho AS manager FROM NhanVien e LEFT JOIN NhanVien m ON e.MaNguoiQuanLy = m.MaNhanVien;"
+    },
+    {
+      "id": 255,
+      "question": "Nhân viên do ai quản lý",
+      "intent": "join",
+      "sql_keywords": [
+        "NhanVien",
+        "MaNguoiQuanLy",
+        "NhanVien",
+        "WHERE"
+      ],
+      "tables": [
+        "NhanVien",
+        "NhanVien"
+      ],
+      "note": "",
+      "gold_sql": "SELECT e.Ten || ' ' || e.Ho AS employee, m.Ten || ' ' || m.Ho AS manager FROM NhanVien e INNER JOIN NhanVien m ON e.MaNguoiQuanLy = m.MaNhanVien;"
+    },
+    {
+      "id": 256,
+      "question": "Tổng số nhân viên mỗi người quản lý",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "NhanVien",
+        "COUNT",
+        "MaNguoiQuanLy",
+        "GROUP BY"
+      ],
+      "tables": [
+        "NhanVien"
+      ],
+      "note": "",
+      "gold_sql": "SELECT m.Ten || ' ' || m.Ho AS manager, COUNT(e.MaNhanVien) AS total FROM NhanVien e INNER JOIN NhanVien m ON e.MaNguoiQuanLy = m.MaNhanVien GROUP BY m.MaNhanVien ORDER BY total DESC;"
+    },
+    {
+      "id": 257,
+      "question": "Top 5 nghệ sĩ có nhiều bài hát nhất",
+      "intent": "complex",
+      "sql_keywords": [
+        "NgheSi",
+        "Album",
+        "BaiHat",
+        "COUNT",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "NgheSi",
+        "Album",
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT NgheSi.Ten, COUNT(BaiHat.MaBaiHat) AS total_tracks FROM NgheSi INNER JOIN Album ON NgheSi.MaNgheSi = Album.MaNgheSi INNER JOIN BaiHat ON Album.MaAlbum = BaiHat.MaAlbum GROUP BY NgheSi.MaNgheSi ORDER BY total_tracks DESC LIMIT 5;"
+    },
+    {
+      "id": 258,
+      "question": "Thể loại nhạc nào có nhiều nghệ sĩ nhất",
+      "intent": "complex",
+      "sql_keywords": [
+        "TheLoai",
+        "BaiHat",
+        "Album",
+        "NgheSi",
+        "COUNT",
+        "GROUP BY"
+      ],
+      "tables": [
+        "TheLoai",
+        "BaiHat",
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT TheLoai.Ten, COUNT(DISTINCT Album.MaNgheSi) AS total_artists FROM TheLoai INNER JOIN BaiHat ON TheLoai.MaTheLoai = BaiHat.MaTheLoai INNER JOIN Album ON BaiHat.MaAlbum = Album.MaAlbum GROUP BY TheLoai.MaTheLoai ORDER BY total_artists DESC LIMIT 1;"
+    },
+    {
+      "id": 259,
+      "question": "Nghệ sĩ nào có nhiều bài hát thuộc thể loại Metal",
+      "intent": "complex",
+      "sql_keywords": [
+        "NgheSi",
+        "Album",
+        "BaiHat",
+        "TheLoai",
+        "WHERE",
+        "Metal",
+        "GROUP BY",
+        "COUNT"
+      ],
+      "tables": [
+        "NgheSi",
+        "Album",
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT NgheSi.Ten, COUNT(BaiHat.MaBaiHat) AS total FROM NgheSi INNER JOIN Album ON NgheSi.MaNgheSi = Album.MaNgheSi INNER JOIN BaiHat ON Album.MaAlbum = BaiHat.MaAlbum INNER JOIN TheLoai ON BaiHat.MaTheLoai = TheLoai.MaTheLoai WHERE TheLoai.Ten = 'Metal' GROUP BY NgheSi.MaNgheSi ORDER BY total DESC LIMIT 1;"
+    },
+    {
+      "id": 260,
+      "question": "Top 10 khách hàng nhiều tiền nhất",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "HoaDon",
+        "SUM",
+        "TongTien",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "KhachHang",
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT KhachHang.Ten, KhachHang.Ho, ROUND(SUM(HoaDon.TongTien), 2) AS total_spent FROM KhachHang INNER JOIN HoaDon ON KhachHang.MaKhachHang = HoaDon.MaKhachHang GROUP BY KhachHang.MaKhachHang ORDER BY total_spent DESC LIMIT 10;"
+    },
+    {
+      "id": 261,
+      "question": "Sản phẩm (track) nào bán chạy nhất",
+      "intent": "complex",
+      "sql_keywords": [
+        "BaiHat",
+        "ChiTietHoaDon",
+        "SUM",
+        "SoLuong",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC"
+      ],
+      "tables": [
+        "BaiHat",
+        "ChiTietHoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten, SUM(ChiTietHoaDon.SoLuong) AS total_sold FROM BaiHat INNER JOIN ChiTietHoaDon ON BaiHat.MaBaiHat = ChiTietHoaDon.MaBaiHat GROUP BY BaiHat.MaBaiHat ORDER BY total_sold DESC LIMIT 1;"
+    },
+    {
+      "id": 262,
+      "question": "Doanh thu thể loại nhạc nào cao nhất",
+      "intent": "complex",
+      "sql_keywords": [
+        "TheLoai",
+        "BaiHat",
+        "ChiTietHoaDon",
+        "SUM",
+        "DonGia",
+        "SoLuong",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC"
+      ],
+      "tables": [
+        "TheLoai",
+        "BaiHat",
+        "ChiTietHoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT TheLoai.Ten, ROUND(SUM(ChiTietHoaDon.DonGia * ChiTietHoaDon.SoLuong), 2) AS revenue FROM TheLoai INNER JOIN BaiHat ON TheLoai.MaTheLoai = BaiHat.MaTheLoai INNER JOIN ChiTietHoaDon ON BaiHat.MaBaiHat = ChiTietHoaDon.MaBaiHat GROUP BY TheLoai.MaTheLoai ORDER BY revenue DESC LIMIT 1;"
+    },
+    {
+      "id": 263,
+      "question": "Doanh thu theo tháng trong năm 2021",
+      "intent": "complex",
+      "sql_keywords": [
+        "HoaDon",
+        "strftime",
+        "SUM",
+        "TongTien",
+        "GROUP BY",
+        "ORDER BY"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT strftime('%Y-%m', NgayLapHoaDon) AS month, ROUND(SUM(TongTien), 2) AS revenue FROM HoaDon WHERE strftime('%Y', NgayLapHoaDon) = '2021' GROUP BY month ORDER BY month;"
+    },
+    {
+      "id": 264,
+      "question": "Số đơn hàng theo tháng 2021",
+      "intent": "complex",
+      "sql_keywords": [
+        "HoaDon",
+        "strftime",
+        "COUNT",
+        "GROUP BY"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT strftime('%Y-%m', NgayLapHoaDon) AS month, COUNT(*) AS total FROM HoaDon WHERE strftime('%Y', NgayLapHoaDon) = '2021' GROUP BY month ORDER BY month;"
+    },
+    {
+      "id": 265,
+      "question": "Top 5 quốc gia nhiều doanh thu nhất",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "HoaDon",
+        "SUM",
+        "TongTien",
+        "QuocGia",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "KhachHang",
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT KhachHang.QuocGia, ROUND(SUM(HoaDon.TongTien), 2) AS revenue FROM KhachHang INNER JOIN HoaDon ON KhachHang.MaKhachHang = HoaDon.MaKhachHang GROUP BY KhachHang.QuocGia ORDER BY revenue DESC LIMIT 5;"
+    },
+    {
+      "id": 266,
+      "question": "Thời gian trung bình bài hát theo thể loại",
+      "intent": "complex",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "AVG",
+        "ThoiLuong_ms",
+        "GROUP BY"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT TheLoai.Ten, ROUND(AVG(BaiHat.ThoiLuong_ms) / 60000.0, 2) AS avg_minutes FROM TheLoai INNER JOIN BaiHat ON TheLoai.MaTheLoai = BaiHat.MaTheLoai GROUP BY TheLoai.MaTheLoai ORDER BY avg_minutes DESC;"
+    },
+    {
+      "id": 267,
+      "question": "Thể loại nào có bài hát dài nhất",
+      "intent": "complex",
+      "sql_keywords": [
+        "BaiHat",
+        "TheLoai",
+        "MAX",
+        "ThoiLuong_ms",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC"
+      ],
+      "tables": [
+        "BaiHat",
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT TheLoai.Ten, MAX(BaiHat.ThoiLuong_ms) AS max_ms FROM TheLoai INNER JOIN BaiHat ON TheLoai.MaTheLoai = BaiHat.MaTheLoai GROUP BY TheLoai.MaTheLoai ORDER BY max_ms DESC LIMIT 1;"
+    },
+    {
+      "id": 268,
+      "question": "Tốc độ trung bình theo định dạng",
+      "intent": "complex",
+      "sql_keywords": [
+        "BaiHat",
+        "DinhDang",
+        "AVG",
+        "DungLuong_bytes",
+        "GROUP BY"
+      ],
+      "tables": [
+        "BaiHat",
+        "DinhDang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT DinhDang.Ten, ROUND(AVG(BaiHat.DungLuong_bytes) / 1024.0 / 1024.0, 2) AS avg_mb FROM DinhDang INNER JOIN BaiHat ON DinhDang.MaDinhDang = BaiHat.MaDinhDang GROUP BY DinhDang.MaDinhDang ORDER BY avg_mb DESC;"
+    },
+    {
+      "id": 269,
+      "question": "Nhân viên nào hỗ trợ nhiều khách hàng nhất",
+      "intent": "complex",
+      "sql_keywords": [
+        "NhanVien",
+        "KhachHang",
+        "COUNT",
+        "MaNhanVienHoTro",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC"
+      ],
+      "tables": [
+        "NhanVien",
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT NhanVien.Ten || ' ' || NhanVien.Ho AS employee, COUNT(KhachHang.MaKhachHang) AS total_customers FROM NhanVien INNER JOIN KhachHang ON NhanVien.MaNhanVien = KhachHang.SupportRepId GROUP BY NhanVien.MaNhanVien ORDER BY total_customers DESC LIMIT 1;"
+    },
+    {
+      "id": 270,
+      "question": "Doanh thu theo nhân viên hỗ trợ",
+      "intent": "complex",
+      "sql_keywords": [
+        "NhanVien",
+        "KhachHang",
+        "HoaDon",
+        "SUM",
+        "TongTien",
+        "GROUP BY"
+      ],
+      "tables": [
+        "NhanVien",
+        "KhachHang",
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT NhanVien.Ten || ' ' || NhanVien.Ho AS employee, ROUND(SUM(HoaDon.TongTien), 2) AS revenue FROM NhanVien INNER JOIN KhachHang ON NhanVien.MaNhanVien = KhachHang.SupportRepId INNER JOIN HoaDon ON KhachHang.MaKhachHang = HoaDon.MaKhachHang GROUP BY NhanVien.MaNhanVien ORDER BY revenue DESC;"
+    },
+    {
+      "id": 271,
+      "question": "So sánh doanh thu các năm",
+      "intent": "complex",
+      "sql_keywords": [
+        "HoaDon",
+        "strftime",
+        "SUM",
+        "TongTien",
+        "GROUP BY",
+        "ORDER BY"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT strftime('%Y', NgayLapHoaDon) AS year, ROUND(SUM(TongTien), 2) AS revenue FROM HoaDon GROUP BY year ORDER BY year;"
+    },
+    {
+      "id": 272,
+      "question": "Xu hướng doanh thu theo quý",
+      "intent": "complex",
+      "sql_keywords": [
+        "HoaDon",
+        "strftime",
+        "SUM",
+        "TongTien",
+        "GROUP BY",
+        "ORDER BY"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT strftime('%Y', NgayLapHoaDon) AS year, CAST(strftime('%m', NgayLapHoaDon) AS INTEGER) / 4 + 1 AS quarter, ROUND(SUM(TongTien), 2) AS revenue FROM HoaDon GROUP BY year, quarter ORDER BY year, quarter;"
+    },
+    {
+      "id": 273,
+      "question": "Giới hạn 10 bài hát đầu tiên",
+      "intent": "simple",
+      "sql_keywords": [
+        "BaiHat",
+        "LIMIT"
+      ],
+      "tables": [
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM BaiHat LIMIT 10;"
+    },
+    {
+      "id": 274,
+      "question": "Giới hạn 20 khách hàng đầu tiên",
+      "intent": "simple",
+      "sql_keywords": [
+        "KhachHang",
+        "LIMIT"
+      ],
+      "tables": [
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM KhachHang LIMIT 20;"
+    },
+    {
+      "id": 275,
+      "question": "Bài hát đầu tiên trong hệ thống",
+      "intent": "simple",
+      "sql_keywords": [
+        "BaiHat",
+        "ORDER BY",
+        "MaBaiHat",
+        "LIMIT"
+      ],
+      "tables": [
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM BaiHat ORDER BY MaBaiHat ASC LIMIT 1;"
+    },
+    {
+      "id": 276,
+      "question": "Nghệ sĩ cuối cùng",
+      "intent": "simple",
+      "sql_keywords": [
+        "NgheSi",
+        "ORDER BY",
+        "MaNgheSi",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM NgheSi ORDER BY MaNgheSi DESC LIMIT 1;"
+    },
+    {
+      "id": 277,
+      "question": "Hóa đơn mới nhất",
+      "intent": "simple",
+      "sql_keywords": [
+        "HoaDon",
+        "ORDER BY",
+        "NgayLapHoaDon",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM HoaDon ORDER BY NgayLapHoaDon DESC LIMIT 1;"
+    },
+    {
+      "id": 278,
+      "question": "Hóa đơn cũ nhất",
+      "intent": "simple",
+      "sql_keywords": [
+        "HoaDon",
+        "ORDER BY",
+        "NgayLapHoaDon",
+        "ASC",
+        "LIMIT"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM HoaDon ORDER BY NgayLapHoaDon ASC LIMIT 1;"
+    },
+    {
+      "id": 279,
+      "question": "Bài hát cuối cùng theo danh sách",
+      "intent": "simple",
+      "sql_keywords": [
+        "BaiHat",
+        "ORDER BY",
+        "MaBaiHat",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM BaiHat ORDER BY MaBaiHat DESC LIMIT 1;"
+    },
+    {
+      "id": 280,
+      "question": "Playlist đầu tiên",
+      "intent": "simple",
+      "sql_keywords": [
+        "DanhSachPhat",
+        "ORDER BY",
+        "MaDanhSachPhat",
+        "LIMIT"
+      ],
+      "tables": [
+        "DanhSachPhat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM DanhSachPhat ORDER BY MaDanhSachPhat ASC LIMIT 1;"
+    },
+    {
+      "id": 281,
+      "question": "Thể loại đầu tiên",
+      "intent": "simple",
+      "sql_keywords": [
+        "TheLoai",
+        "ORDER BY",
+        "MaTheLoai",
+        "LIMIT"
+      ],
+      "tables": [
+        "TheLoai"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM TheLoai ORDER BY MaTheLoai ASC LIMIT 1;"
+    },
+    {
+      "id": 282,
+      "question": "Ngày hóa đơn đầu tiên",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "MIN",
+        "NgayLapHoaDon"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT MIN(NgayLapHoaDon) AS first_invoice_date FROM HoaDon;"
+    },
+    {
+      "id": 283,
+      "question": "Ngày hóa đơn gần nhất",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "HoaDon",
+        "MAX",
+        "NgayLapHoaDon"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT MAX(NgayLapHoaDon) AS latest_invoice_date FROM HoaDon;"
+    },
+    {
+      "id": 284,
+      "question": "Giá trung bình bài hát",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "AVG",
+        "DonGia"
+      ],
+      "tables": [
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(AVG(DonGia), 2) AS avg_price FROM BaiHat;"
+    },
+    {
+      "id": 285,
+      "question": "Tổng kích thước (bytes) tất cả bài hát",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "SUM",
+        "DungLuong_bytes"
+      ],
+      "tables": [
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT SUM(DungLuong_bytes) AS total_bytes FROM BaiHat;"
+    },
+    {
+      "id": 286,
+      "question": "Số bài hát có giá trên 1$",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "BaiHat",
+        "COUNT",
+        "WHERE",
+        "DonGia",
+        ">"
+      ],
+      "tables": [
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM BaiHat WHERE DonGia > 1.0;"
+    },
+    {
+      "id": 287,
+      "question": "Khách hàng đầu tiên",
+      "intent": "simple",
+      "sql_keywords": [
+        "KhachHang",
+        "ORDER BY",
+        "MaKhachHang",
+        "LIMIT"
+      ],
+      "tables": [
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM KhachHang ORDER BY MaKhachHang ASC LIMIT 1;"
+    },
+    {
+      "id": 288,
+      "question": "Hóa đơn cuối cùng trong 2021",
+      "intent": "simple",
+      "sql_keywords": [
+        "HoaDon",
+        "WHERE",
+        "2021",
+        "ORDER BY",
+        "NgayLapHoaDon",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM HoaDon WHERE strftime('%Y', NgayLapHoaDon) = '2021' ORDER BY NgayLapHoaDon DESC LIMIT 1;"
+    },
+    {
+      "id": 289,
+      "question": "Bài hát đầu tiên theo album",
+      "intent": "simple",
+      "sql_keywords": [
+        "BaiHat",
+        "ORDER BY",
+        "MaAlbum",
+        "LIMIT"
+      ],
+      "tables": [
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM BaiHat ORDER BY MaAlbum ASC, MaBaiHat ASC LIMIT 1;"
+    },
+    {
+      "id": 290,
+      "question": "Tổng số quốc gia có khách hàng",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "KhachHang",
+        "COUNT",
+        "DISTINCT",
+        "QuocGia"
+      ],
+      "tables": [
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(DISTINCT QuocGia) AS total_countries FROM KhachHang;"
+    },
+    {
+      "id": 291,
+      "question": "Số khách hàng có địa chỉ đầy đủ",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "KhachHang",
+        "COUNT",
+        "WHERE",
+        "DiaChi",
+        "IS NOT NULL"
+      ],
+      "tables": [
+        "KhachHang"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM KhachHang WHERE DiaChi IS NOT NULL AND ThanhPho IS NOT NULL AND QuocGia IS NOT NULL;"
+    },
+    {
+      "id": 292,
+      "question": "Bài hát của nghệ sĩ có ID = 10",
+      "intent": "simple",
+      "sql_keywords": [
+        "NgheSi",
+        "Album",
+        "BaiHat",
+        "WHERE",
+        "MaNgheSi",
+        "10"
+      ],
+      "tables": [
+        "NgheSi",
+        "Album",
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten FROM BaiHat INNER JOIN Album ON BaiHat.MaAlbum = Album.MaAlbum INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.MaNgheSi = 10;"
+    },
+    {
+      "id": 293,
+      "question": "Doanh thu theo ngày trong tuần",
+      "intent": "complex",
+      "sql_keywords": [
+        "HoaDon",
+        "strftime",
+        "SUM",
+        "TongTien",
+        "GROUP BY"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT strftime('%w', NgayLapHoaDon) AS day_of_week, ROUND(SUM(TongTien), 2) AS revenue FROM HoaDon GROUP BY day_of_week ORDER BY revenue DESC;"
+    },
+    {
+      "id": 294,
+      "question": "Ngày nào có nhiều hóa đơn nhất",
+      "intent": "complex",
+      "sql_keywords": [
+        "HoaDon",
+        "strftime",
+        "COUNT",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC"
+      ],
+      "tables": [
+        "HoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT NgayLapHoaDon, COUNT(*) AS total FROM HoaDon GROUP BY NgayLapHoaDon ORDER BY total DESC LIMIT 1;"
+    },
+    {
+      "id": 295,
+      "question": "Khách hàng nào đã mua bài hát Iron Maiden",
+      "intent": "complex",
+      "sql_keywords": [
+        "KhachHang",
+        "HoaDon",
+        "ChiTietHoaDon",
+        "BaiHat",
+        "Album",
+        "NgheSi",
+        "WHERE",
+        "Iron Maiden"
+      ],
+      "tables": [
+        "KhachHang",
+        "HoaDon",
+        "ChiTietHoaDon",
+        "BaiHat",
+        "Album",
+        "NgheSi"
+      ],
+      "note": "",
+      "gold_sql": "SELECT DISTINCT KhachHang.Ten, KhachHang.Ho FROM KhachHang INNER JOIN HoaDon ON KhachHang.MaKhachHang = HoaDon.MaKhachHang INNER JOIN ChiTietHoaDon ON HoaDon.MaHoaDon = ChiTietHoaDon.MaHoaDon INNER JOIN BaiHat ON ChiTietHoaDon.MaBaiHat = BaiHat.MaBaiHat INNER JOIN Album ON BaiHat.MaAlbum = Album.MaAlbum INNER JOIN NgheSi ON Album.MaNgheSi = NgheSi.MaNgheSi WHERE NgheSi.Ten = 'Iron Maiden';"
+    },
+    {
+      "id": 296,
+      "question": "Bài hát nào tốn nhiều bộ nhớ nhất",
+      "intent": "simple",
+      "sql_keywords": [
+        "BaiHat",
+        "ORDER BY",
+        "DungLuong_bytes",
+        "DESC"
+      ],
+      "tables": [
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Ten, DungLuong_bytes FROM BaiHat ORDER BY DungLuong_bytes DESC LIMIT 1;"
+    },
+    {
+      "id": 297,
+      "question": "Bài hát nào tốn ít bộ nhớ nhất",
+      "intent": "simple",
+      "sql_keywords": [
+        "BaiHat",
+        "ORDER BY",
+        "DungLuong_bytes",
+        "ASC"
+      ],
+      "tables": [
+        "BaiHat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Ten, DungLuong_bytes FROM BaiHat WHERE DungLuong_bytes IS NOT NULL ORDER BY DungLuong_bytes ASC LIMIT 1;"
+    },
+    {
+      "id": 298,
+      "question": "Tổng số playlistTrack trong hệ thống",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "ChiTietDanhSachPhat",
+        "COUNT"
+      ],
+      "tables": [
+        "ChiTietDanhSachPhat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM ChiTietDanhSachPhat;"
+    },
+    {
+      "id": 299,
+      "question": "Track nào nằm trong nhiều playlist nhất",
+      "intent": "complex",
+      "sql_keywords": [
+        "BaiHat",
+        "ChiTietDanhSachPhat",
+        "COUNT",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "BaiHat",
+        "ChiTietDanhSachPhat"
+      ],
+      "note": "",
+      "gold_sql": "SELECT BaiHat.Ten FROM BaiHat INNER JOIN ChiTietDanhSachPhat ON BaiHat.MaBaiHat = ChiTietDanhSachPhat.MaBaiHat GROUP BY BaiHat.MaBaiHat ORDER BY COUNT(ChiTietDanhSachPhat.MaDanhSachPhat) DESC LIMIT 1;"
+    },
+    {
+      "id": 300,
+      "question": "Nhạc sĩ nào có tổng doanh thu cao nhất",
+      "intent": "complex",
+      "sql_keywords": [
+        "NgheSi",
+        "Album",
+        "BaiHat",
+        "ChiTietHoaDon",
+        "SUM",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC"
+      ],
+      "tables": [
+        "NgheSi",
+        "Album",
+        "BaiHat",
+        "ChiTietHoaDon"
+      ],
+      "note": "",
+      "gold_sql": "SELECT NgheSi.Ten, ROUND(SUM(ChiTietHoaDon.DonGia * ChiTietHoaDon.SoLuong), 2) AS total_revenue FROM NgheSi INNER JOIN Album ON NgheSi.MaNgheSi = Album.MaNgheSi INNER JOIN BaiHat ON Album.MaAlbum = BaiHat.MaAlbum INNER JOIN ChiTietHoaDon ON BaiHat.MaBaiHat = ChiTietHoaDon.MaBaiHat GROUP BY NgheSi.MaNgheSi ORDER BY total_revenue DESC LIMIT 1;"
+    }
+  ]
+}

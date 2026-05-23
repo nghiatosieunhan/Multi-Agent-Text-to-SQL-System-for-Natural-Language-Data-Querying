@@ -1,0 +1,7 @@
+﻿Customer_Name,Phone,Product,Price,Quantity,Order_Date
+ Nguyễn Văn A ,0901234567,Laptop Dell," 15,000,000 ",1.0,2023/10/01
+Trần Thị B,098-765-4321,Chuột Logitech ,500.000,2.0,02-10-2023
+ Lê Văn C,O912345678,Bàn phím cơ,1.500.000,,2023-10-03
+Nguyễn Văn a,0901234567,Laptop Dell,15000000,1.0,2023/10/01
+Hoàng Thị D,,Màn hình LG,"3,500,000",-5.0,2023-10-05
+,0933333333,Tai nghe Sony,2000000,3.0,10/06/2023

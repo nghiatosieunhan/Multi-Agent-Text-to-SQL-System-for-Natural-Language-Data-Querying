@@ -1,0 +1,5355 @@
+{
+  "metadata": {
+    "dataset": "Chinook (Kaggle: ranasabrii/chinook)",
+    "total_questions": 300,
+    "categories": {
+      "album": 73,
+      "artist": 82,
+      "track": 150,
+      "customer": 41,
+      "invoice": 79,
+      "genre": 80,
+      "playlist": 23,
+      "employee": 10,
+      "complex": 21,
+      "simple": 67,
+      "aggregate": 186,
+      "join": 26
+    },
+    "has_gold_sql": true,
+    "gold_sql_version": "1.0"
+  },
+  "questions": [
+    {
+      "id": 1,
+      "question": "Danh sách album của nghệ sĩ AC/DC",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "WHERE",
+        "AC/DC"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.Title FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'AC/DC';"
+    },
+    {
+      "id": 2,
+      "question": "Số lượng album của nghệ sĩ AC/DC",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        "AC/DC"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'AC/DC';"
+    },
+    {
+      "id": 3,
+      "question": "Tổng số bài hát trong album của AC/DC",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Track",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "Track",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(Track.TrackId) AS total_tracks FROM Track INNER JOIN Album ON Track.AlbumId = Album.AlbumId INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'AC/DC';"
+    },
+    {
+      "id": 4,
+      "question": "Danh sách album của nghệ sĩ Aerosmith",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "WHERE",
+        "Aerosmith"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.Title FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Aerosmith';"
+    },
+    {
+      "id": 5,
+      "question": "Số lượng album của nghệ sĩ Aerosmith",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        "Aerosmith"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Aerosmith';"
+    },
+    {
+      "id": 6,
+      "question": "Tổng số bài hát trong album của Aerosmith",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Track",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "Track",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(Track.TrackId) AS total_tracks FROM Track INNER JOIN Album ON Track.AlbumId = Album.AlbumId INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Aerosmith';"
+    },
+    {
+      "id": 7,
+      "question": "Danh sách album của nghệ sĩ Alanis Morissette",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "WHERE",
+        "Alanis Morissette"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.Title FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Alanis Morissette';"
+    },
+    {
+      "id": 8,
+      "question": "Số lượng album của nghệ sĩ Alanis Morissette",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        "Alanis Morissette"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Alanis Morissette';"
+    },
+    {
+      "id": 9,
+      "question": "Tổng số bài hát trong album của Alanis Morissette",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Track",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "Track",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(Track.TrackId) AS total_tracks FROM Track INNER JOIN Album ON Track.AlbumId = Album.AlbumId INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Alanis Morissette';"
+    },
+    {
+      "id": 10,
+      "question": "Danh sách album của nghệ sĩ Apocalyptica",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "WHERE",
+        "Apocalyptica"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.Title FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Apocalyptica';"
+    },
+    {
+      "id": 11,
+      "question": "Số lượng album của nghệ sĩ Apocalyptica",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        "Apocalyptica"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Apocalyptica';"
+    },
+    {
+      "id": 12,
+      "question": "Tổng số bài hát trong album của Apocalyptica",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Track",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "Track",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(Track.TrackId) AS total_tracks FROM Track INNER JOIN Album ON Track.AlbumId = Album.AlbumId INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Apocalyptica';"
+    },
+    {
+      "id": 13,
+      "question": "Danh sách album của nghệ sĩ Iron Maiden",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "WHERE",
+        "Iron Maiden"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.Title FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Iron Maiden';"
+    },
+    {
+      "id": 14,
+      "question": "Số lượng album của nghệ sĩ Iron Maiden",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        "Iron Maiden"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Iron Maiden';"
+    },
+    {
+      "id": 15,
+      "question": "Tổng số bài hát trong album của Iron Maiden",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Track",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "Track",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(Track.TrackId) AS total_tracks FROM Track INNER JOIN Album ON Track.AlbumId = Album.AlbumId INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Iron Maiden';"
+    },
+    {
+      "id": 16,
+      "question": "Danh sách album của nghệ sĩ U2",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "WHERE",
+        "U2"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.Title FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'U2';"
+    },
+    {
+      "id": 17,
+      "question": "Số lượng album của nghệ sĩ U2",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        "U2"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'U2';"
+    },
+    {
+      "id": 18,
+      "question": "Tổng số bài hát trong album của U2",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Track",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "Track",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(Track.TrackId) AS total_tracks FROM Track INNER JOIN Album ON Track.AlbumId = Album.AlbumId INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'U2';"
+    },
+    {
+      "id": 19,
+      "question": "Danh sách album của nghệ sĩ Led Zeppelin",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "WHERE",
+        "Led Zeppelin"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.Title FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Led Zeppelin';"
+    },
+    {
+      "id": 20,
+      "question": "Số lượng album của nghệ sĩ Led Zeppelin",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        "Led Zeppelin"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Led Zeppelin';"
+    },
+    {
+      "id": 21,
+      "question": "Tổng số bài hát trong album của Led Zeppelin",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Track",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "Track",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(Track.TrackId) AS total_tracks FROM Track INNER JOIN Album ON Track.AlbumId = Album.AlbumId INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Led Zeppelin';"
+    },
+    {
+      "id": 22,
+      "question": "Danh sách album của nghệ sĩ Metallica",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "WHERE",
+        "Metallica"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.Title FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Metallica';"
+    },
+    {
+      "id": 23,
+      "question": "Số lượng album của nghệ sĩ Metallica",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        "Metallica"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Metallica';"
+    },
+    {
+      "id": 24,
+      "question": "Tổng số bài hát trong album của Metallica",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Track",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "Track",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(Track.TrackId) AS total_tracks FROM Track INNER JOIN Album ON Track.AlbumId = Album.AlbumId INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Metallica';"
+    },
+    {
+      "id": 25,
+      "question": "Danh sách album của nghệ sĩ Pink Floyd",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "WHERE",
+        "Pink Floyd"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.Title FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Pink Floyd';"
+    },
+    {
+      "id": 26,
+      "question": "Số lượng album của nghệ sĩ Pink Floyd",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        "Pink Floyd"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Pink Floyd';"
+    },
+    {
+      "id": 27,
+      "question": "Tổng số bài hát trong album của Pink Floyd",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Track",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "Track",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(Track.TrackId) AS total_tracks FROM Track INNER JOIN Album ON Track.AlbumId = Album.AlbumId INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Pink Floyd';"
+    },
+    {
+      "id": 28,
+      "question": "Danh sách album của nghệ sĩ The Doors",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "WHERE",
+        "The Doors"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.Title FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'The Doors';"
+    },
+    {
+      "id": 29,
+      "question": "Số lượng album của nghệ sĩ The Doors",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        "The Doors"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'The Doors';"
+    },
+    {
+      "id": 30,
+      "question": "Tổng số bài hát trong album của The Doors",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Track",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "Track",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(Track.TrackId) AS total_tracks FROM Track INNER JOIN Album ON Track.AlbumId = Album.AlbumId INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'The Doors';"
+    },
+    {
+      "id": 31,
+      "question": "Danh sách album của nghệ sĩ Queen",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "WHERE",
+        "Queen"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.Title FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Queen';"
+    },
+    {
+      "id": 32,
+      "question": "Số lượng album của nghệ sĩ Queen",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        "Queen"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Queen';"
+    },
+    {
+      "id": 33,
+      "question": "Tổng số bài hát trong album của Queen",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Track",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "Track",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(Track.TrackId) AS total_tracks FROM Track INNER JOIN Album ON Track.AlbumId = Album.AlbumId INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Queen';"
+    },
+    {
+      "id": 34,
+      "question": "Danh sách album của nghệ sĩ The Beatles",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "WHERE",
+        "The Beatles"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.Title FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'The Beatles';"
+    },
+    {
+      "id": 35,
+      "question": "Số lượng album của nghệ sĩ The Beatles",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        "The Beatles"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'The Beatles';"
+    },
+    {
+      "id": 36,
+      "question": "Tổng số bài hát trong album của The Beatles",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Track",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "Track",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(Track.TrackId) AS total_tracks FROM Track INNER JOIN Album ON Track.AlbumId = Album.AlbumId INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'The Beatles';"
+    },
+    {
+      "id": 37,
+      "question": "Danh sách album của nghệ sĩ Nirvana",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "WHERE",
+        "Nirvana"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.Title FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Nirvana';"
+    },
+    {
+      "id": 38,
+      "question": "Số lượng album của nghệ sĩ Nirvana",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        "Nirvana"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Nirvana';"
+    },
+    {
+      "id": 39,
+      "question": "Tổng số bài hát trong album của Nirvana",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Track",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "Track",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(Track.TrackId) AS total_tracks FROM Track INNER JOIN Album ON Track.AlbumId = Album.AlbumId INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Nirvana';"
+    },
+    {
+      "id": 40,
+      "question": "Danh sách album của nghệ sĩ Red Hot Chili Peppers",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "WHERE",
+        "Red Hot Chili Peppers"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.Title FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Red Hot Chili Peppers';"
+    },
+    {
+      "id": 41,
+      "question": "Số lượng album của nghệ sĩ Red Hot Chili Peppers",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        "Red Hot Chili Peppers"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Guns N'' Roses';"
+    },
+    {
+      "id": 42,
+      "question": "Tổng số bài hát trong album của Red Hot Chili Peppers",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Track",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "Track",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(Track.TrackId) AS total_tracks FROM Track INNER JOIN Album ON Track.AlbumId = Album.AlbumId INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Red Hot Chili Peppers';"
+    },
+    {
+      "id": 43,
+      "question": "Danh sách album của nghệ sĩ Guns N' Roses",
+      "intent": "join",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "WHERE",
+        " Guns N' Roses"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.Title FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Guns N'' Roses';"
+    },
+    {
+      "id": 44,
+      "question": "Số lượng album của nghệ sĩ Guns N' Roses",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        " Guns N' Roses"
+      ],
+      "tables": [
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Guns N'' Roses';"
+    },
+    {
+      "id": 45,
+      "question": "Tổng số bài hát trong album của Guns N' Roses",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Track",
+        "Artist",
+        "COUNT",
+        "WHERE",
+        "INNER JOIN"
+      ],
+      "tables": [
+        "Album",
+        "Track",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(Track.TrackId) AS total_tracks FROM Track INNER JOIN Album ON Track.AlbumId = Album.AlbumId INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Guns N'' Roses';"
+    },
+    {
+      "id": 46,
+      "question": "Album nào có nhiều bài hát nhất",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Track",
+        "COUNT",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC"
+      ],
+      "tables": [
+        "Album",
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.Title FROM Album INNER JOIN Track ON Album.AlbumId = Track.AlbumId GROUP BY Album.AlbumId ORDER BY COUNT(Track.TrackId) DESC LIMIT 1;"
+    },
+    {
+      "id": 47,
+      "question": "Album nào có ít bài hát nhất",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Track",
+        "COUNT",
+        "GROUP BY",
+        "ORDER BY",
+        "ASC"
+      ],
+      "tables": [
+        "Album",
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.Title FROM Album INNER JOIN Track ON Album.AlbumId = Track.AlbumId GROUP BY Album.AlbumId ORDER BY COUNT(Track.TrackId) ASC LIMIT 1;"
+    },
+    {
+      "id": 48,
+      "question": "Album dài nhất theo thời gian",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "Track",
+        "SUM",
+        "Milliseconds",
+        "GROUP BY"
+      ],
+      "tables": [
+        "Album",
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Album.Title FROM Album INNER JOIN Track ON Album.AlbumId = Track.AlbumId GROUP BY Album.AlbumId ORDER BY SUM(Track.Milliseconds) DESC LIMIT 1;"
+    },
+    {
+      "id": 49,
+      "question": "Tổng số album trong hệ thống",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Album",
+        "COUNT"
+      ],
+      "tables": [
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) FROM Album;"
+    },
+    {
+      "id": 50,
+      "question": "Danh sách album theo thứ tự alphabet",
+      "intent": "simple",
+      "sql_keywords": [
+        "Album",
+        "ORDER BY",
+        "Title"
+      ],
+      "tables": [
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT AlbumId, Title FROM Album ORDER BY Title ASC;"
+    },
+    {
+      "id": 51,
+      "question": "Album đầu tiên trong hệ thống",
+      "intent": "simple",
+      "sql_keywords": [
+        "Album",
+        "ORDER BY",
+        "LIMIT"
+      ],
+      "tables": [
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT AlbumId, Title FROM Album ORDER BY AlbumId ASC LIMIT 1;"
+    },
+    {
+      "id": 52,
+      "question": "Album cuối cùng trong hệ thống",
+      "intent": "simple",
+      "sql_keywords": [
+        "Album",
+        "ORDER BY",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT AlbumId, Title FROM Album ORDER BY AlbumId DESC LIMIT 1;"
+    },
+    {
+      "id": 53,
+      "question": "Thông tin nghệ sĩ AC/DC",
+      "intent": "simple",
+      "sql_keywords": [
+        "Artist",
+        "WHERE",
+        "AC/DC"
+      ],
+      "tables": [
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Artist WHERE Name = 'AC/DC';"
+    },
+    {
+      "id": 54,
+      "question": "Nghệ sĩ AC/DC có bao nhiêu album",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Artist",
+        "Album",
+        "COUNT",
+        "WHERE",
+        "AC/DC"
+      ],
+      "tables": [
+        "Artist",
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'AC/DC';"
+    },
+    {
+      "id": 55,
+      "question": "Thông tin nghệ sĩ Aerosmith",
+      "intent": "simple",
+      "sql_keywords": [
+        "Artist",
+        "WHERE",
+        "Aerosmith"
+      ],
+      "tables": [
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Artist WHERE Name = 'Aerosmith';"
+    },
+    {
+      "id": 56,
+      "question": "Nghệ sĩ Aerosmith có bao nhiêu album",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Artist",
+        "Album",
+        "COUNT",
+        "WHERE",
+        "Aerosmith"
+      ],
+      "tables": [
+        "Artist",
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Aerosmith';"
+    },
+    {
+      "id": 57,
+      "question": "Thông tin nghệ sĩ Alanis Morissette",
+      "intent": "simple",
+      "sql_keywords": [
+        "Artist",
+        "WHERE",
+        "Alanis Morissette"
+      ],
+      "tables": [
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Artist WHERE Name = 'Alanis Morissette';"
+    },
+    {
+      "id": 58,
+      "question": "Nghệ sĩ Alanis Morissette có bao nhiêu album",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Artist",
+        "Album",
+        "COUNT",
+        "WHERE",
+        "Alanis Morissette"
+      ],
+      "tables": [
+        "Artist",
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Alanis Morissette';"
+    },
+    {
+      "id": 59,
+      "question": "Thông tin nghệ sĩ Apocalyptica",
+      "intent": "simple",
+      "sql_keywords": [
+        "Artist",
+        "WHERE",
+        "Apocalyptica"
+      ],
+      "tables": [
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Artist WHERE Name = 'Apocalyptica';"
+    },
+    {
+      "id": 60,
+      "question": "Nghệ sĩ Apocalyptica có bao nhiêu album",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Artist",
+        "Album",
+        "COUNT",
+        "WHERE",
+        "Apocalyptica"
+      ],
+      "tables": [
+        "Artist",
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Apocalyptica';"
+    },
+    {
+      "id": 61,
+      "question": "Thông tin nghệ sĩ Iron Maiden",
+      "intent": "simple",
+      "sql_keywords": [
+        "Artist",
+        "WHERE",
+        "Iron Maiden"
+      ],
+      "tables": [
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Artist WHERE Name = 'Iron Maiden';"
+    },
+    {
+      "id": 62,
+      "question": "Nghệ sĩ Iron Maiden có bao nhiêu album",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Artist",
+        "Album",
+        "COUNT",
+        "WHERE",
+        "Iron Maiden"
+      ],
+      "tables": [
+        "Artist",
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Iron Maiden';"
+    },
+    {
+      "id": 63,
+      "question": "Thông tin nghệ sĩ U2",
+      "intent": "simple",
+      "sql_keywords": [
+        "Artist",
+        "WHERE",
+        "U2"
+      ],
+      "tables": [
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Artist WHERE Name = 'U2';"
+    },
+    {
+      "id": 64,
+      "question": "Nghệ sĩ U2 có bao nhiêu album",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Artist",
+        "Album",
+        "COUNT",
+        "WHERE",
+        "U2"
+      ],
+      "tables": [
+        "Artist",
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'U2';"
+    },
+    {
+      "id": 65,
+      "question": "Thông tin nghệ sĩ Led Zeppelin",
+      "intent": "simple",
+      "sql_keywords": [
+        "Artist",
+        "WHERE",
+        "Led Zeppelin"
+      ],
+      "tables": [
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Artist WHERE Name = 'Led Zeppelin';"
+    },
+    {
+      "id": 66,
+      "question": "Nghệ sĩ Led Zeppelin có bao nhiêu album",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Artist",
+        "Album",
+        "COUNT",
+        "WHERE",
+        "Led Zeppelin"
+      ],
+      "tables": [
+        "Artist",
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Led Zeppelin';"
+    },
+    {
+      "id": 67,
+      "question": "Thông tin nghệ sĩ Metallica",
+      "intent": "simple",
+      "sql_keywords": [
+        "Artist",
+        "WHERE",
+        "Metallica"
+      ],
+      "tables": [
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Artist WHERE Name = 'Metallica';"
+    },
+    {
+      "id": 68,
+      "question": "Nghệ sĩ Metallica có bao nhiêu album",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Artist",
+        "Album",
+        "COUNT",
+        "WHERE",
+        "Metallica"
+      ],
+      "tables": [
+        "Artist",
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Metallica';"
+    },
+    {
+      "id": 69,
+      "question": "Thông tin nghệ sĩ Pink Floyd",
+      "intent": "simple",
+      "sql_keywords": [
+        "Artist",
+        "WHERE",
+        "Pink Floyd"
+      ],
+      "tables": [
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Artist WHERE Name = 'Pink Floyd';"
+    },
+    {
+      "id": 70,
+      "question": "Nghệ sĩ Pink Floyd có bao nhiêu album",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Artist",
+        "Album",
+        "COUNT",
+        "WHERE",
+        "Pink Floyd"
+      ],
+      "tables": [
+        "Artist",
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Pink Floyd';"
+    },
+    {
+      "id": 71,
+      "question": "Thông tin nghệ sĩ The Doors",
+      "intent": "simple",
+      "sql_keywords": [
+        "Artist",
+        "WHERE",
+        "The Doors"
+      ],
+      "tables": [
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Artist WHERE Name = 'The Doors';"
+    },
+    {
+      "id": 72,
+      "question": "Nghệ sĩ The Doors có bao nhiêu album",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Artist",
+        "Album",
+        "COUNT",
+        "WHERE",
+        "The Doors"
+      ],
+      "tables": [
+        "Artist",
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_albums FROM Album INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'The Doors';"
+    },
+    {
+      "id": 73,
+      "question": "Tất cả nghệ sĩ theo thứ tự tên",
+      "intent": "simple",
+      "sql_keywords": [
+        "Artist",
+        "ORDER BY",
+        "Name"
+      ],
+      "tables": [
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ArtistId, Name FROM Artist ORDER BY Name ASC;"
+    },
+    {
+      "id": 74,
+      "question": "Nghệ sĩ nhiều album nhất",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Artist",
+        "Album",
+        "COUNT",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Artist",
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Artist.Name FROM Artist INNER JOIN Album ON Artist.ArtistId = Album.ArtistId GROUP BY Artist.ArtistId ORDER BY COUNT(Album.AlbumId) DESC LIMIT 1;"
+    },
+    {
+      "id": 75,
+      "question": "Nghệ sĩ ít album nhất",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Artist",
+        "Album",
+        "COUNT",
+        "GROUP BY",
+        "ORDER BY",
+        "ASC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Artist",
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Artist.Name FROM Artist INNER JOIN Album ON Artist.ArtistId = Album.ArtistId GROUP BY Artist.ArtistId ORDER BY COUNT(Album.AlbumId) ASC LIMIT 1;"
+    },
+    {
+      "id": 76,
+      "question": "Tổng số nghệ sĩ trong hệ thống",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Artist",
+        "COUNT"
+      ],
+      "tables": [
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_artists FROM Artist;"
+    },
+    {
+      "id": 77,
+      "question": "Tìm nghệ sĩ có tên bắt đầu bằng chữ A",
+      "intent": "simple",
+      "sql_keywords": [
+        "Artist",
+        "WHERE",
+        "LIKE",
+        "A%"
+      ],
+      "tables": [
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Artist WHERE Name LIKE 'A%';"
+    },
+    {
+      "id": 78,
+      "question": "Tìm nghệ sĩ có chữ 'Rock' trong tên",
+      "intent": "simple",
+      "sql_keywords": [
+        "Artist",
+        "WHERE",
+        "LIKE",
+        "%Rock%"
+      ],
+      "tables": [
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Artist WHERE Name LIKE '%Rock%';"
+    },
+    {
+      "id": 79,
+      "question": "Danh sách 10 nghệ sĩ đầu tiên",
+      "intent": "simple",
+      "sql_keywords": [
+        "Artist",
+        "LIMIT"
+      ],
+      "tables": [
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ArtistId, Name FROM Artist LIMIT 10;"
+    },
+    {
+      "id": 80,
+      "question": "Nghệ sĩ không có album nào",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Artist",
+        "LEFT JOIN",
+        "Album",
+        "WHERE",
+        "NULL"
+      ],
+      "tables": [
+        "Artist",
+        "Album"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Artist.Name FROM Artist LEFT JOIN Album ON Artist.ArtistId = Album.ArtistId WHERE Album.AlbumId IS NULL;"
+    },
+    {
+      "id": 81,
+      "question": "Tất cả bài hát của nghệ sĩ Nirvana",
+      "intent": "join",
+      "sql_keywords": [
+        "Artist",
+        "Album",
+        "Track",
+        "WHERE",
+        "Nirvana"
+      ],
+      "tables": [
+        "Artist",
+        "Album",
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name FROM Track INNER JOIN Album ON Track.AlbumId = Album.AlbumId INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Nirvana';"
+    },
+    {
+      "id": 82,
+      "question": "Tổng số bài hát của nghệ sĩ Metallica",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Artist",
+        "Album",
+        "Track",
+        "COUNT",
+        "WHERE",
+        "Metallica"
+      ],
+      "tables": [
+        "Artist",
+        "Album",
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(Track.TrackId) AS total_tracks FROM Track INNER JOIN Album ON Track.AlbumId = Album.AlbumId INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Metallica';"
+    },
+    {
+      "id": 83,
+      "question": "Bài hát dài hơn 5 phút",
+      "intent": "simple",
+      "sql_keywords": [
+        "Track",
+        "WHERE",
+        "Milliseconds",
+        ">",
+        "300000"
+      ],
+      "tables": [
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Name, Milliseconds FROM Track WHERE Milliseconds > 300000 ORDER BY Milliseconds DESC;"
+    },
+    {
+      "id": 84,
+      "question": "Bài hát dài hơn 10 phút",
+      "intent": "simple",
+      "sql_keywords": [
+        "Track",
+        "WHERE",
+        "Milliseconds",
+        ">",
+        "600000"
+      ],
+      "tables": [
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Name, Milliseconds FROM Track WHERE Milliseconds > 600000 ORDER BY Milliseconds DESC;"
+    },
+    {
+      "id": 85,
+      "question": "Bài hát ngắn hơn 2 phút",
+      "intent": "simple",
+      "sql_keywords": [
+        "Track",
+        "WHERE",
+        "Milliseconds",
+        "<",
+        "120000"
+      ],
+      "tables": [
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Name, Milliseconds FROM Track WHERE Milliseconds < 120000 ORDER BY Milliseconds ASC;"
+    },
+    {
+      "id": 86,
+      "question": "Bài hát dài nhất",
+      "intent": "simple",
+      "sql_keywords": [
+        "Track",
+        "ORDER BY",
+        "Milliseconds",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Name, Milliseconds FROM Track ORDER BY Milliseconds DESC LIMIT 1;"
+    },
+    {
+      "id": 87,
+      "question": "Bài hát ngắn nhất",
+      "intent": "simple",
+      "sql_keywords": [
+        "Track",
+        "ORDER BY",
+        "Milliseconds",
+        "ASC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Name, Milliseconds FROM Track ORDER BY Milliseconds ASC LIMIT 1;"
+    },
+    {
+      "id": 88,
+      "question": "Bài hát có giá 0.99",
+      "intent": "simple",
+      "sql_keywords": [
+        "Track",
+        "WHERE",
+        "UnitPrice",
+        "0.99"
+      ],
+      "tables": [
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Name, UnitPrice FROM Track WHERE UnitPrice = 0.99;"
+    },
+    {
+      "id": 89,
+      "question": "Bài hát có giá cao nhất",
+      "intent": "simple",
+      "sql_keywords": [
+        "Track",
+        "ORDER BY",
+        "UnitPrice",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Name, UnitPrice FROM Track ORDER BY UnitPrice DESC LIMIT 1;"
+    },
+    {
+      "id": 90,
+      "question": "Bài hát miễn phí (giá = 0)",
+      "intent": "simple",
+      "sql_keywords": [
+        "Track",
+        "WHERE",
+        "UnitPrice",
+        "0"
+      ],
+      "tables": [
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Name, UnitPrice FROM Track WHERE UnitPrice = 0;"
+    },
+    {
+      "id": 91,
+      "question": "Tổng số bài hát",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "COUNT"
+      ],
+      "tables": [
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_tracks FROM Track;"
+    },
+    {
+      "id": 92,
+      "question": "Bài hát thể loại Rock",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "WHERE",
+        "Rock"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Rock';"
+    },
+    {
+      "id": 93,
+      "question": "Có bao nhiêu bài hát thể loại Rock",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Rock"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Rock';"
+    },
+    {
+      "id": 94,
+      "question": "Tổng số bài hát thể loại Rock",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Rock"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Rock';"
+    },
+    {
+      "id": 95,
+      "question": "Bài hát thể loại Jazz",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "WHERE",
+        "Jazz"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Jazz';"
+    },
+    {
+      "id": 96,
+      "question": "Có bao nhiêu bài hát thể loại Jazz",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Jazz"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Jazz';"
+    },
+    {
+      "id": 97,
+      "question": "Tổng số bài hát thể loại Jazz",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Jazz"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Jazz';"
+    },
+    {
+      "id": 98,
+      "question": "Bài hát thể loại Metal",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "WHERE",
+        "Metal"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Metal';"
+    },
+    {
+      "id": 99,
+      "question": "Có bao nhiêu bài hát thể loại Metal",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Metal"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Metal';"
+    },
+    {
+      "id": 100,
+      "question": "Tổng số bài hát thể loại Metal",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Metal"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Metal';"
+    },
+    {
+      "id": 101,
+      "question": "Bài hát thể loại Alternative & Punk",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "WHERE",
+        "Alternative & Punk"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Alternative & Punk';"
+    },
+    {
+      "id": 102,
+      "question": "Có bao nhiêu bài hát thể loại Alternative & Punk",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Alternative & Punk"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Alternative & Punk';"
+    },
+    {
+      "id": 103,
+      "question": "Tổng số bài hát thể loại Alternative & Punk",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Alternative & Punk"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Alternative & Punk';"
+    },
+    {
+      "id": 104,
+      "question": "Bài hát thể loại Blues",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "WHERE",
+        "Blues"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Blues';"
+    },
+    {
+      "id": 105,
+      "question": "Có bao nhiêu bài hát thể loại Blues",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Blues"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Blues';"
+    },
+    {
+      "id": 106,
+      "question": "Tổng số bài hát thể loại Blues",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Blues"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Blues';"
+    },
+    {
+      "id": 107,
+      "question": "Bài hát thể loại Latin",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "WHERE",
+        "Latin"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Latin';"
+    },
+    {
+      "id": 108,
+      "question": "Có bao nhiêu bài hát thể loại Latin",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Latin"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Latin';"
+    },
+    {
+      "id": 109,
+      "question": "Tổng số bài hát thể loại Latin",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Latin"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Latin';"
+    },
+    {
+      "id": 110,
+      "question": "Bài hát thể loại Reggae",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "WHERE",
+        "Reggae"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Reggae';"
+    },
+    {
+      "id": 111,
+      "question": "Có bao nhiêu bài hát thể loại Reggae",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Reggae"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Reggae';"
+    },
+    {
+      "id": 112,
+      "question": "Tổng số bài hát thể loại Reggae",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Reggae"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Reggae';"
+    },
+    {
+      "id": 113,
+      "question": "Bài hát thể loại Pop",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "WHERE",
+        "Pop"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Pop';"
+    },
+    {
+      "id": 114,
+      "question": "Có bao nhiêu bài hát thể loại Pop",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Pop"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Pop';"
+    },
+    {
+      "id": 115,
+      "question": "Tổng số bài hát thể loại Pop",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Pop"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Pop';"
+    },
+    {
+      "id": 116,
+      "question": "Bài hát thể loại Classical",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "WHERE",
+        "Classical"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Classical';"
+    },
+    {
+      "id": 117,
+      "question": "Có bao nhiêu bài hát thể loại Classical",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Classical"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Classical';"
+    },
+    {
+      "id": 118,
+      "question": "Tổng số bài hát thể loại Classical",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Classical"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Classical';"
+    },
+    {
+      "id": 119,
+      "question": "Bài hát thể loại Heavy Metal",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "WHERE",
+        "Heavy Metal"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Heavy Metal';"
+    },
+    {
+      "id": 120,
+      "question": "Có bao nhiêu bài hát thể loại Heavy Metal",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Heavy Metal"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Heavy Metal';"
+    },
+    {
+      "id": 121,
+      "question": "Tổng số bài hát thể loại Heavy Metal",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Heavy Metal"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Heavy Metal';"
+    },
+    {
+      "id": 122,
+      "question": "Bài hát định dạng MPEG audio file",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "MediaType",
+        "WHERE",
+        "MPEG audio file"
+      ],
+      "tables": [
+        "Track",
+        "MediaType"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name FROM Track INNER JOIN MediaType ON Track.MediaTypeId = MediaType.MediaTypeId WHERE MediaType.Name = 'MPEG audio file';"
+    },
+    {
+      "id": 123,
+      "question": "Có bao nhiêu bài hát định dạng MPEG audio file",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "MediaType",
+        "COUNT",
+        "WHERE",
+        "MPEG audio file"
+      ],
+      "tables": [
+        "Track",
+        "MediaType"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN MediaType ON Track.MediaTypeId = MediaType.MediaTypeId WHERE MediaType.Name = 'MPEG audio file';"
+    },
+    {
+      "id": 124,
+      "question": "Bài hát định dạng Protected AAC audio file",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "MediaType",
+        "WHERE",
+        "Protected AAC audio file"
+      ],
+      "tables": [
+        "Track",
+        "MediaType"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name FROM Track INNER JOIN MediaType ON Track.MediaTypeId = MediaType.MediaTypeId WHERE MediaType.Name = 'Protected AAC audio file';"
+    },
+    {
+      "id": 125,
+      "question": "Có bao nhiêu bài hát định dạng Protected AAC audio file",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "MediaType",
+        "COUNT",
+        "WHERE",
+        "Protected AAC audio file"
+      ],
+      "tables": [
+        "Track",
+        "MediaType"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN MediaType ON Track.MediaTypeId = MediaType.MediaTypeId WHERE MediaType.Name = 'Protected AAC audio file';"
+    },
+    {
+      "id": 126,
+      "question": "Bài hát định dạng AAC audio file",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "MediaType",
+        "WHERE",
+        "AAC audio file"
+      ],
+      "tables": [
+        "Track",
+        "MediaType"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name FROM Track INNER JOIN MediaType ON Track.MediaTypeId = MediaType.MediaTypeId WHERE MediaType.Name = 'AAC audio file';"
+    },
+    {
+      "id": 127,
+      "question": "Có bao nhiêu bài hát định dạng AAC audio file",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "MediaType",
+        "COUNT",
+        "WHERE",
+        "AAC audio file"
+      ],
+      "tables": [
+        "Track",
+        "MediaType"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN MediaType ON Track.MediaTypeId = MediaType.MediaTypeId WHERE MediaType.Name = 'AAC audio file';"
+    },
+    {
+      "id": 128,
+      "question": "Bài hát nào có nhiều lượt mua nhất",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "InvoiceLine",
+        "SUM",
+        "Quantity",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC"
+      ],
+      "tables": [
+        "Track",
+        "InvoiceLine"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name, SUM(InvoiceLine.Quantity) AS total_sold FROM Track INNER JOIN InvoiceLine ON Track.TrackId = InvoiceLine.TrackId GROUP BY Track.TrackId ORDER BY total_sold DESC LIMIT 1;"
+    },
+    {
+      "id": 129,
+      "question": "Tổng doanh thu theo bài hát",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "InvoiceLine",
+        "SUM",
+        "UnitPrice",
+        "Quantity",
+        "GROUP BY"
+      ],
+      "tables": [
+        "Track",
+        "InvoiceLine"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name, ROUND(SUM(InvoiceLine.UnitPrice * InvoiceLine.Quantity), 2) AS revenue FROM Track INNER JOIN InvoiceLine ON Track.TrackId = InvoiceLine.TrackId GROUP BY Track.TrackId ORDER BY revenue DESC;"
+    },
+    {
+      "id": 130,
+      "question": "Bài hát nào không bao giờ được mua",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "LEFT JOIN",
+        "InvoiceLine",
+        "WHERE",
+        "NULL"
+      ],
+      "tables": [
+        "Track",
+        "InvoiceLine"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name FROM Track LEFT JOIN InvoiceLine ON Track.TrackId = InvoiceLine.TrackId WHERE InvoiceLine.TrackId IS NULL;"
+    },
+    {
+      "id": 131,
+      "question": "Tất cả khách hàng",
+      "intent": "simple",
+      "sql_keywords": [
+        "Customer"
+      ],
+      "tables": [
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Customer;"
+    },
+    {
+      "id": 132,
+      "question": "Tổng số khách hàng",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Customer",
+        "COUNT"
+      ],
+      "tables": [
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_customers FROM Customer;"
+    },
+    {
+      "id": 133,
+      "question": "Số lượng khách hàng theo quốc gia",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Customer",
+        "COUNT",
+        "Country",
+        "GROUP BY"
+      ],
+      "tables": [
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Country, COUNT(*) AS total FROM Customer GROUP BY Country ORDER BY total DESC;"
+    },
+    {
+      "id": 134,
+      "question": "Quốc gia nào có nhiều khách hàng nhất",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Customer",
+        "COUNT",
+        "Country",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC"
+      ],
+      "tables": [
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Country, COUNT(*) AS total FROM Customer GROUP BY Country ORDER BY total DESC LIMIT 1;"
+    },
+    {
+      "id": 135,
+      "question": "Khách hàng tại Brazil",
+      "intent": "simple",
+      "sql_keywords": [
+        "Customer",
+        "WHERE",
+        "Brazil"
+      ],
+      "tables": [
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Customer WHERE Country = 'Brazil';"
+    },
+    {
+      "id": 136,
+      "question": "Khách hàng tại USA",
+      "intent": "simple",
+      "sql_keywords": [
+        "Customer",
+        "WHERE",
+        "USA"
+      ],
+      "tables": [
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Customer WHERE Country = 'USA';"
+    },
+    {
+      "id": 137,
+      "question": "Khách hàng tại Germany",
+      "intent": "simple",
+      "sql_keywords": [
+        "Customer",
+        "WHERE",
+        "Germany"
+      ],
+      "tables": [
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Customer WHERE Country = 'Germany';"
+    },
+    {
+      "id": 138,
+      "question": "Khách hàng theo thành phố",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Customer",
+        "COUNT",
+        "City",
+        "GROUP BY"
+      ],
+      "tables": [
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT City, COUNT(*) AS total FROM Customer GROUP BY City ORDER BY total DESC;"
+    },
+    {
+      "id": 139,
+      "question": "Khách hàng theo state",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Customer",
+        "COUNT",
+        "State",
+        "GROUP BY"
+      ],
+      "tables": [
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT State, COUNT(*) AS total FROM Customer GROUP BY State ORDER BY total DESC;"
+    },
+    {
+      "id": 140,
+      "question": "Khách hàng nào có email gmail",
+      "intent": "simple",
+      "sql_keywords": [
+        "Customer",
+        "WHERE",
+        "LIKE",
+        "%gmail%"
+      ],
+      "tables": [
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Customer WHERE Email LIKE '%@gmail.com';"
+    },
+    {
+      "id": 141,
+      "question": "Tổng chi tiêu của mỗi khách hàng",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Customer",
+        "Invoice",
+        "SUM",
+        "Total",
+        "GROUP BY"
+      ],
+      "tables": [
+        "Customer",
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Customer.FirstName, Customer.LastName, ROUND(SUM(Invoice.Total), 2) AS total_spent FROM Customer INNER JOIN Invoice ON Customer.CustomerId = Invoice.CustomerId GROUP BY Customer.CustomerId ORDER BY total_spent DESC;"
+    },
+    {
+      "id": 142,
+      "question": "Khách hàng nào chi nhiều tiền nhất",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Customer",
+        "Invoice",
+        "SUM",
+        "Total",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC"
+      ],
+      "tables": [
+        "Customer",
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Customer.FirstName, Customer.LastName, ROUND(SUM(Invoice.Total), 2) AS total_spent FROM Customer INNER JOIN Invoice ON Customer.CustomerId = Invoice.CustomerId GROUP BY Customer.CustomerId ORDER BY total_spent DESC LIMIT 1;"
+    },
+    {
+      "id": 143,
+      "question": "Khách hàng nào chi ít tiền nhất",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Customer",
+        "Invoice",
+        "SUM",
+        "Total",
+        "GROUP BY",
+        "ORDER BY",
+        "ASC"
+      ],
+      "tables": [
+        "Customer",
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Customer.FirstName, Customer.LastName, ROUND(SUM(Invoice.Total), 2) AS total_spent FROM Customer INNER JOIN Invoice ON Customer.CustomerId = Invoice.CustomerId GROUP BY Customer.CustomerId ORDER BY total_spent ASC LIMIT 1;"
+    },
+    {
+      "id": 144,
+      "question": "Số đơn hàng của mỗi khách hàng",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Customer",
+        "Invoice",
+        "COUNT",
+        "GROUP BY"
+      ],
+      "tables": [
+        "Customer",
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Customer.FirstName, Customer.LastName, COUNT(Invoice.InvoiceId) AS order_count FROM Customer INNER JOIN Invoice ON Customer.CustomerId = Invoice.CustomerId GROUP BY Customer.CustomerId ORDER BY order_count DESC;"
+    },
+    {
+      "id": 145,
+      "question": "Khách hàng nào có nhiều đơn hàng nhất",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Customer",
+        "Invoice",
+        "COUNT",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC"
+      ],
+      "tables": [
+        "Customer",
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Customer.FirstName, Customer.LastName, COUNT(Invoice.InvoiceId) AS order_count FROM Customer INNER JOIN Invoice ON Customer.CustomerId = Invoice.CustomerId GROUP BY Customer.CustomerId ORDER BY order_count DESC LIMIT 1;"
+    },
+    {
+      "id": 146,
+      "question": "Khách hàng nào chưa mua gì",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Customer",
+        "LEFT JOIN",
+        "Invoice",
+        "WHERE",
+        "NULL"
+      ],
+      "tables": [
+        "Customer",
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Customer.FirstName, Customer.LastName FROM Customer LEFT JOIN Invoice ON Customer.CustomerId = Invoice.CustomerId WHERE Invoice.InvoiceId IS NULL;"
+    },
+    {
+      "id": 147,
+      "question": "Tất cả hóa đơn",
+      "intent": "simple",
+      "sql_keywords": [
+        "Invoice"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Invoice;"
+    },
+    {
+      "id": 148,
+      "question": "Tổng số hóa đơn",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "COUNT"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_invoices FROM Invoice;"
+    },
+    {
+      "id": 149,
+      "question": "Tổng doanh thu",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "SUM",
+        "Total"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(Total), 2) AS total_revenue FROM Invoice;"
+    },
+    {
+      "id": 150,
+      "question": "Doanh thu trung bình mỗi hóa đơn",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "AVG",
+        "Total"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(AVG(Total), 2) AS avg_invoice FROM Invoice;"
+    },
+    {
+      "id": 151,
+      "question": "Hóa đơn có giá trị cao nhất",
+      "intent": "simple",
+      "sql_keywords": [
+        "Invoice",
+        "ORDER BY",
+        "Total",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Invoice ORDER BY Total DESC LIMIT 1;"
+    },
+    {
+      "id": 152,
+      "question": "Hóa đơn có giá trị thấp nhất",
+      "intent": "simple",
+      "sql_keywords": [
+        "Invoice",
+        "ORDER BY",
+        "Total",
+        "ASC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Invoice ORDER BY Total ASC LIMIT 1;"
+    },
+    {
+      "id": 153,
+      "question": "Doanh thu năm 2021",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "SUM",
+        "Total",
+        "WHERE",
+        "2021"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(Total), 2) AS revenue FROM Invoice WHERE strftime('%Y', InvoiceDate) = '2021';"
+    },
+    {
+      "id": 154,
+      "question": "Số hóa đơn năm 2021",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "COUNT",
+        "WHERE",
+        "2021"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Invoice WHERE strftime('%Y', InvoiceDate) = '2021';"
+    },
+    {
+      "id": 155,
+      "question": "Doanh thu năm 2020",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "SUM",
+        "Total",
+        "WHERE",
+        "2020"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(Total), 2) AS revenue FROM Invoice WHERE strftime('%Y', InvoiceDate) = '2020';"
+    },
+    {
+      "id": 156,
+      "question": "Số hóa đơn năm 2020",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "COUNT",
+        "WHERE",
+        "2020"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Invoice WHERE strftime('%Y', InvoiceDate) = '2020';"
+    },
+    {
+      "id": 157,
+      "question": "Doanh thu năm 2019",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "SUM",
+        "Total",
+        "WHERE",
+        "2019"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(Total), 2) AS revenue FROM Invoice WHERE strftime('%Y', InvoiceDate) = '2019';"
+    },
+    {
+      "id": 158,
+      "question": "Số hóa đơn năm 2019",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "COUNT",
+        "WHERE",
+        "2019"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Invoice WHERE strftime('%Y', InvoiceDate) = '2019';"
+    },
+    {
+      "id": 159,
+      "question": "Doanh thu năm 2017",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "SUM",
+        "Total",
+        "WHERE",
+        "2017"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(Total), 2) AS revenue FROM Invoice WHERE strftime('%Y', InvoiceDate) = '2017';"
+    },
+    {
+      "id": 160,
+      "question": "Số hóa đơn năm 2017",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "COUNT",
+        "WHERE",
+        "2017"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Invoice WHERE strftime('%Y', InvoiceDate) = '2017';"
+    },
+    {
+      "id": 161,
+      "question": "Doanh thu tháng January",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "SUM",
+        "Total",
+        "WHERE",
+        "January"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(Total), 2) AS revenue FROM Invoice WHERE strftime('%m', InvoiceDate) = '01';"
+    },
+    {
+      "id": 162,
+      "question": "Doanh thu tháng February",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "SUM",
+        "Total",
+        "WHERE",
+        "February"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(Total), 2) AS revenue FROM Invoice WHERE strftime('%m', InvoiceDate) = '02';"
+    },
+    {
+      "id": 163,
+      "question": "Doanh thu tháng March",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "SUM",
+        "Total",
+        "WHERE",
+        "March"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(Total), 2) AS revenue FROM Invoice WHERE strftime('%m', InvoiceDate) = '03';"
+    },
+    {
+      "id": 164,
+      "question": "Doanh thu tháng April",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "SUM",
+        "Total",
+        "WHERE",
+        "April"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(Total), 2) AS revenue FROM Invoice WHERE strftime('%m', InvoiceDate) = '04';"
+    },
+    {
+      "id": 165,
+      "question": "Doanh thu tháng May",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "SUM",
+        "Total",
+        "WHERE",
+        "May"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(Total), 2) AS revenue FROM Invoice WHERE strftime('%m', InvoiceDate) = '05';"
+    },
+    {
+      "id": 166,
+      "question": "Doanh thu tháng June",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "SUM",
+        "Total",
+        "WHERE",
+        "June"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(Total), 2) AS revenue FROM Invoice WHERE strftime('%m', InvoiceDate) = '06';"
+    },
+    {
+      "id": 167,
+      "question": "Doanh thu tại Brazil",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "Customer",
+        "SUM",
+        "Total",
+        "WHERE",
+        "Brazil"
+      ],
+      "tables": [
+        "Invoice",
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(Invoice.Total), 2) AS revenue FROM Invoice INNER JOIN Customer ON Invoice.CustomerId = Customer.CustomerId WHERE Customer.Country = 'Brazil';"
+    },
+    {
+      "id": 168,
+      "question": "Số hóa đơn tại Brazil",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "Customer",
+        "COUNT",
+        "WHERE",
+        "Brazil"
+      ],
+      "tables": [
+        "Invoice",
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Invoice INNER JOIN Customer ON Invoice.CustomerId = Customer.CustomerId WHERE Customer.Country = 'Brazil';"
+    },
+    {
+      "id": 169,
+      "question": "Doanh thu tại Germany",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "Customer",
+        "SUM",
+        "Total",
+        "WHERE",
+        "Germany"
+      ],
+      "tables": [
+        "Invoice",
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(Invoice.Total), 2) AS revenue FROM Invoice INNER JOIN Customer ON Invoice.CustomerId = Customer.CustomerId WHERE Customer.Country = 'Germany';"
+    },
+    {
+      "id": 170,
+      "question": "Số hóa đơn tại Germany",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "Customer",
+        "COUNT",
+        "WHERE",
+        "Germany"
+      ],
+      "tables": [
+        "Invoice",
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Invoice INNER JOIN Customer ON Invoice.CustomerId = Customer.CustomerId WHERE Customer.Country = 'Germany';"
+    },
+    {
+      "id": 171,
+      "question": "Doanh thu tại Canada",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "Customer",
+        "SUM",
+        "Total",
+        "WHERE",
+        "Canada"
+      ],
+      "tables": [
+        "Invoice",
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(Invoice.Total), 2) AS revenue FROM Invoice INNER JOIN Customer ON Invoice.CustomerId = Customer.CustomerId WHERE Customer.Country = 'Canada';"
+    },
+    {
+      "id": 172,
+      "question": "Số hóa đơn tại Canada",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "Customer",
+        "COUNT",
+        "WHERE",
+        "Canada"
+      ],
+      "tables": [
+        "Invoice",
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Invoice INNER JOIN Customer ON Invoice.CustomerId = Customer.CustomerId WHERE Customer.Country = 'Canada';"
+    },
+    {
+      "id": 173,
+      "question": "Doanh thu tại Norway",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "Customer",
+        "SUM",
+        "Total",
+        "WHERE",
+        "Norway"
+      ],
+      "tables": [
+        "Invoice",
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(Invoice.Total), 2) AS revenue FROM Invoice INNER JOIN Customer ON Invoice.CustomerId = Customer.CustomerId WHERE Customer.Country = 'Norway';"
+    },
+    {
+      "id": 174,
+      "question": "Số hóa đơn tại Norway",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "Customer",
+        "COUNT",
+        "WHERE",
+        "Norway"
+      ],
+      "tables": [
+        "Invoice",
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Invoice INNER JOIN Customer ON Invoice.CustomerId = Customer.CustomerId WHERE Customer.Country = 'Norway';"
+    },
+    {
+      "id": 175,
+      "question": "Doanh thu tại Czech Republic",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "Customer",
+        "SUM",
+        "Total",
+        "WHERE",
+        "Czech Republic"
+      ],
+      "tables": [
+        "Invoice",
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(Invoice.Total), 2) AS revenue FROM Invoice INNER JOIN Customer ON Invoice.CustomerId = Customer.CustomerId WHERE Customer.Country = 'Czech Republic';"
+    },
+    {
+      "id": 176,
+      "question": "Số hóa đơn tại Czech Republic",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "Customer",
+        "COUNT",
+        "WHERE",
+        "Czech Republic"
+      ],
+      "tables": [
+        "Invoice",
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Invoice INNER JOIN Customer ON Invoice.CustomerId = Customer.CustomerId WHERE Customer.Country = 'Czech Republic';"
+    },
+    {
+      "id": 177,
+      "question": "Doanh thu tại Austria",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "Customer",
+        "SUM",
+        "Total",
+        "WHERE",
+        "Austria"
+      ],
+      "tables": [
+        "Invoice",
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(Invoice.Total), 2) AS revenue FROM Invoice INNER JOIN Customer ON Invoice.CustomerId = Customer.CustomerId WHERE Customer.Country = 'Austria';"
+    },
+    {
+      "id": 178,
+      "question": "Số hóa đơn tại Austria",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "Customer",
+        "COUNT",
+        "WHERE",
+        "Austria"
+      ],
+      "tables": [
+        "Invoice",
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Invoice INNER JOIN Customer ON Invoice.CustomerId = Customer.CustomerId WHERE Customer.Country = 'Austria';"
+    },
+    {
+      "id": 179,
+      "question": "Doanh thu tại Belgium",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "Customer",
+        "SUM",
+        "Total",
+        "WHERE",
+        "Belgium"
+      ],
+      "tables": [
+        "Invoice",
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(Invoice.Total), 2) AS revenue FROM Invoice INNER JOIN Customer ON Invoice.CustomerId = Customer.CustomerId WHERE Customer.Country = 'Belgium';"
+    },
+    {
+      "id": 180,
+      "question": "Số hóa đơn tại Belgium",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "Customer",
+        "COUNT",
+        "WHERE",
+        "Belgium"
+      ],
+      "tables": [
+        "Invoice",
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Invoice INNER JOIN Customer ON Invoice.CustomerId = Customer.CustomerId WHERE Customer.Country = 'Belgium';"
+    },
+    {
+      "id": 181,
+      "question": "Doanh thu tại Denmark",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "Customer",
+        "SUM",
+        "Total",
+        "WHERE",
+        "Denmark"
+      ],
+      "tables": [
+        "Invoice",
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(Invoice.Total), 2) AS revenue FROM Invoice INNER JOIN Customer ON Invoice.CustomerId = Customer.CustomerId WHERE Customer.Country = 'Denmark';"
+    },
+    {
+      "id": 182,
+      "question": "Số hóa đơn tại Denmark",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "Customer",
+        "COUNT",
+        "WHERE",
+        "Denmark"
+      ],
+      "tables": [
+        "Invoice",
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Invoice INNER JOIN Customer ON Invoice.CustomerId = Customer.CustomerId WHERE Customer.Country = 'Denmark';"
+    },
+    {
+      "id": 183,
+      "question": "Tổng số sản phẩm đã bán",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "InvoiceLine",
+        "SUM",
+        "Quantity"
+      ],
+      "tables": [
+        "InvoiceLine"
+      ],
+      "note": "",
+      "gold_sql": "SELECT SUM(Quantity) AS total_sold FROM InvoiceLine;"
+    },
+    {
+      "id": 184,
+      "question": "Tổng doanh thu (InvoiceLine)",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "InvoiceLine",
+        "SUM",
+        "UnitPrice",
+        "Quantity"
+      ],
+      "tables": [
+        "InvoiceLine"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(UnitPrice * Quantity), 2) AS total_revenue FROM InvoiceLine;"
+    },
+    {
+      "id": 185,
+      "question": "Tất cả thể loại nhạc",
+      "intent": "simple",
+      "sql_keywords": [
+        "Genre"
+      ],
+      "tables": [
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Genre ORDER BY Name ASC;"
+    },
+    {
+      "id": 186,
+      "question": "Tổng số thể loại",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Genre",
+        "COUNT"
+      ],
+      "tables": [
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_genres FROM Genre;"
+    },
+    {
+      "id": 187,
+      "question": "Số lượng bài hát thể loại Rock",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Rock"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Rock';"
+    },
+    {
+      "id": 188,
+      "question": "Tổng doanh thu thể loại Rock",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "InvoiceLine",
+        "SUM",
+        "WHERE",
+        "Rock"
+      ],
+      "tables": [
+        "Track",
+        "Genre",
+        "InvoiceLine"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(InvoiceLine.UnitPrice * InvoiceLine.Quantity), 2) AS revenue FROM InvoiceLine INNER JOIN Track ON InvoiceLine.TrackId = Track.TrackId INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Rock';"
+    },
+    {
+      "id": 189,
+      "question": "Bài hát dài nhất thể loại Rock",
+      "intent": "simple",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "WHERE",
+        "Rock",
+        "ORDER BY",
+        "Milliseconds",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name, Track.Milliseconds FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Rock' ORDER BY Track.Milliseconds DESC LIMIT 1;"
+    },
+    {
+      "id": 190,
+      "question": "Số lượng bài hát thể loại Jazz",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Jazz"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Jazz';"
+    },
+    {
+      "id": 191,
+      "question": "Tổng doanh thu thể loại Jazz",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "InvoiceLine",
+        "SUM",
+        "WHERE",
+        "Jazz"
+      ],
+      "tables": [
+        "Track",
+        "Genre",
+        "InvoiceLine"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(InvoiceLine.UnitPrice * InvoiceLine.Quantity), 2) AS revenue FROM InvoiceLine INNER JOIN Track ON InvoiceLine.TrackId = Track.TrackId INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Jazz';"
+    },
+    {
+      "id": 192,
+      "question": "Bài hát dài nhất thể loại Jazz",
+      "intent": "simple",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "WHERE",
+        "Jazz",
+        "ORDER BY",
+        "Milliseconds",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name, Track.Milliseconds FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Jazz' ORDER BY Track.Milliseconds DESC LIMIT 1;"
+    },
+    {
+      "id": 193,
+      "question": "Số lượng bài hát thể loại Metal",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Metal"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Metal';"
+    },
+    {
+      "id": 194,
+      "question": "Tổng doanh thu thể loại Metal",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "InvoiceLine",
+        "SUM",
+        "WHERE",
+        "Metal"
+      ],
+      "tables": [
+        "Track",
+        "Genre",
+        "InvoiceLine"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(InvoiceLine.UnitPrice * InvoiceLine.Quantity), 2) AS revenue FROM InvoiceLine INNER JOIN Track ON InvoiceLine.TrackId = Track.TrackId INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Metal';"
+    },
+    {
+      "id": 195,
+      "question": "Bài hát dài nhất thể loại Metal",
+      "intent": "simple",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "WHERE",
+        "Metal",
+        "ORDER BY",
+        "Milliseconds",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name, Track.Milliseconds FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Metal' ORDER BY Track.Milliseconds DESC LIMIT 1;"
+    },
+    {
+      "id": 196,
+      "question": "Số lượng bài hát thể loại Alternative & Punk",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Alternative & Punk"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Alternative & Punk';"
+    },
+    {
+      "id": 197,
+      "question": "Tổng doanh thu thể loại Alternative & Punk",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "InvoiceLine",
+        "SUM",
+        "WHERE",
+        "Alternative & Punk"
+      ],
+      "tables": [
+        "Track",
+        "Genre",
+        "InvoiceLine"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(InvoiceLine.UnitPrice * InvoiceLine.Quantity), 2) AS revenue FROM InvoiceLine INNER JOIN Track ON InvoiceLine.TrackId = Track.TrackId INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Alternative & Punk';"
+    },
+    {
+      "id": 198,
+      "question": "Bài hát dài nhất thể loại Alternative & Punk",
+      "intent": "simple",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "WHERE",
+        "Alternative & Punk",
+        "ORDER BY",
+        "Milliseconds",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name, Track.Milliseconds FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Alternative & Punk' ORDER BY Track.Milliseconds DESC LIMIT 1;"
+    },
+    {
+      "id": 199,
+      "question": "Số lượng bài hát thể loại Blues",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Blues"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Blues';"
+    },
+    {
+      "id": 200,
+      "question": "Tổng doanh thu thể loại Blues",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "InvoiceLine",
+        "SUM",
+        "WHERE",
+        "Blues"
+      ],
+      "tables": [
+        "Track",
+        "Genre",
+        "InvoiceLine"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(InvoiceLine.UnitPrice * InvoiceLine.Quantity), 2) AS revenue FROM InvoiceLine INNER JOIN Track ON InvoiceLine.TrackId = Track.TrackId INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Blues';"
+    },
+    {
+      "id": 201,
+      "question": "Bài hát dài nhất thể loại Blues",
+      "intent": "simple",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "WHERE",
+        "Blues",
+        "ORDER BY",
+        "Milliseconds",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Blues' ORDER BY Track.Milliseconds DESC LIMIT 1;"
+    },
+    {
+      "id": 202,
+      "question": "Số lượng bài hát thể loại Latin",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Latin"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Latin';"
+    },
+    {
+      "id": 203,
+      "question": "Tổng doanh thu thể loại Latin",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "InvoiceLine",
+        "SUM",
+        "WHERE",
+        "Latin"
+      ],
+      "tables": [
+        "Track",
+        "Genre",
+        "InvoiceLine"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(InvoiceLine.UnitPrice * InvoiceLine.Quantity), 2) AS revenue FROM InvoiceLine INNER JOIN Track ON InvoiceLine.TrackId = Track.TrackId INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Latin';"
+    },
+    {
+      "id": 204,
+      "question": "Bài hát dài nhất thể loại Latin",
+      "intent": "simple",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "WHERE",
+        "Latin",
+        "ORDER BY",
+        "Milliseconds",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name, Track.Milliseconds FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Latin' ORDER BY Track.Milliseconds DESC LIMIT 1;"
+    },
+    {
+      "id": 205,
+      "question": "Số lượng bài hát thể loại Reggae",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Reggae"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Reggae';"
+    },
+    {
+      "id": 206,
+      "question": "Tổng doanh thu thể loại Reggae",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "InvoiceLine",
+        "SUM",
+        "WHERE",
+        "Reggae"
+      ],
+      "tables": [
+        "Track",
+        "Genre",
+        "InvoiceLine"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(InvoiceLine.UnitPrice * InvoiceLine.Quantity), 2) AS revenue FROM InvoiceLine INNER JOIN Track ON InvoiceLine.TrackId = Track.TrackId INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Reggae';"
+    },
+    {
+      "id": 207,
+      "question": "Bài hát dài nhất thể loại Reggae",
+      "intent": "simple",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "WHERE",
+        "Reggae",
+        "ORDER BY",
+        "Milliseconds",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name, Track.Milliseconds FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Reggae' ORDER BY Track.Milliseconds DESC LIMIT 1;"
+    },
+    {
+      "id": 208,
+      "question": "Số lượng bài hát thể loại Pop",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Pop"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Pop';"
+    },
+    {
+      "id": 209,
+      "question": "Tổng doanh thu thể loại Pop",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "InvoiceLine",
+        "SUM",
+        "WHERE",
+        "Pop"
+      ],
+      "tables": [
+        "Track",
+        "Genre",
+        "InvoiceLine"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(InvoiceLine.UnitPrice * InvoiceLine.Quantity), 2) AS revenue FROM InvoiceLine INNER JOIN Track ON InvoiceLine.TrackId = Track.TrackId INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Pop';"
+    },
+    {
+      "id": 210,
+      "question": "Bài hát dài nhất thể loại Pop",
+      "intent": "simple",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "WHERE",
+        "Pop",
+        "ORDER BY",
+        "Milliseconds",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Pop' ORDER BY Track.Milliseconds DESC LIMIT 1;"
+    },
+    {
+      "id": 211,
+      "question": "Số lượng bài hát thể loại Classical",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Classical"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Classical';"
+    },
+    {
+      "id": 212,
+      "question": "Tổng doanh thu thể loại Classical",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "InvoiceLine",
+        "SUM",
+        "WHERE",
+        "Classical"
+      ],
+      "tables": [
+        "Track",
+        "Genre",
+        "InvoiceLine"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(InvoiceLine.UnitPrice * InvoiceLine.Quantity), 2) AS revenue FROM InvoiceLine INNER JOIN Track ON InvoiceLine.TrackId = Track.TrackId INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Classical';"
+    },
+    {
+      "id": 213,
+      "question": "Bài hát dài nhất thể loại Classical",
+      "intent": "simple",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "WHERE",
+        "Classical",
+        "ORDER BY",
+        "Milliseconds",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name, Track.Milliseconds FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Classical' ORDER BY Track.Milliseconds DESC LIMIT 1;"
+    },
+    {
+      "id": 214,
+      "question": "Số lượng bài hát thể loại Heavy Metal",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Heavy Metal"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Heavy Metal';"
+    },
+    {
+      "id": 215,
+      "question": "Tổng doanh thu thể loại Heavy Metal",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "InvoiceLine",
+        "SUM",
+        "WHERE",
+        "Heavy Metal"
+      ],
+      "tables": [
+        "Track",
+        "Genre",
+        "InvoiceLine"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(InvoiceLine.UnitPrice * InvoiceLine.Quantity), 2) AS revenue FROM InvoiceLine INNER JOIN Track ON InvoiceLine.TrackId = Track.TrackId INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Heavy Metal';"
+    },
+    {
+      "id": 216,
+      "question": "Bài hát dài nhất thể loại Heavy Metal",
+      "intent": "simple",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "WHERE",
+        "Heavy Metal",
+        "ORDER BY",
+        "Milliseconds",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name, Track.Milliseconds FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Heavy Metal' ORDER BY Track.Milliseconds DESC LIMIT 1;"
+    },
+    {
+      "id": 217,
+      "question": "Số lượng bài hát thể loại R&B/Soul",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "R&B/Soul"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'R&B/Soul';"
+    },
+    {
+      "id": 218,
+      "question": "Tổng doanh thu thể loại R&B/Soul",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "InvoiceLine",
+        "SUM",
+        "WHERE",
+        "R&B/Soul"
+      ],
+      "tables": [
+        "Track",
+        "Genre",
+        "InvoiceLine"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(InvoiceLine.UnitPrice * InvoiceLine.Quantity), 2) AS revenue FROM InvoiceLine INNER JOIN Track ON InvoiceLine.TrackId = Track.TrackId INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'R&B/Soul';"
+    },
+    {
+      "id": 219,
+      "question": "Bài hát dài nhất thể loại R&B/Soul",
+      "intent": "simple",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "WHERE",
+        "R&B/Soul",
+        "ORDER BY",
+        "Milliseconds",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name, Track.Milliseconds FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'R&B/Soul' ORDER BY Track.Milliseconds DESC LIMIT 1;"
+    },
+    {
+      "id": 220,
+      "question": "Số lượng bài hát thể loại Hip Hop/Rap",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Hip Hop/Rap"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Hip Hop/Rap';"
+    },
+    {
+      "id": 221,
+      "question": "Tổng doanh thu thể loại Hip Hop/Rap",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "InvoiceLine",
+        "SUM",
+        "WHERE",
+        "Hip Hop/Rap"
+      ],
+      "tables": [
+        "Track",
+        "Genre",
+        "InvoiceLine"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(InvoiceLine.UnitPrice * InvoiceLine.Quantity), 2) AS revenue FROM InvoiceLine INNER JOIN Track ON InvoiceLine.TrackId = Track.TrackId INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Hip Hop/Rap';"
+    },
+    {
+      "id": 222,
+      "question": "Bài hát dài nhất thể loại Hip Hop/Rap",
+      "intent": "simple",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "WHERE",
+        "Hip Hop/Rap",
+        "ORDER BY",
+        "Milliseconds",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Hip Hop/Rap' ORDER BY Track.Milliseconds DESC LIMIT 1;"
+    },
+    {
+      "id": 223,
+      "question": "Số lượng bài hát thể loại Alternative",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Alternative"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Alternative';"
+    },
+    {
+      "id": 224,
+      "question": "Tổng doanh thu thể loại Alternative",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "InvoiceLine",
+        "SUM",
+        "WHERE",
+        "Alternative"
+      ],
+      "tables": [
+        "Track",
+        "Genre",
+        "InvoiceLine"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(InvoiceLine.UnitPrice * InvoiceLine.Quantity), 2) AS revenue FROM InvoiceLine INNER JOIN Track ON InvoiceLine.TrackId = Track.TrackId INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Alternative';"
+    },
+    {
+      "id": 225,
+      "question": "Bài hát dài nhất thể loại Alternative",
+      "intent": "simple",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "WHERE",
+        "Alternative",
+        "ORDER BY",
+        "Milliseconds",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name, Track.Milliseconds FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Alternative' ORDER BY Track.Milliseconds DESC LIMIT 1;"
+    },
+    {
+      "id": 226,
+      "question": "Số lượng bài hát thể loại Bossa Nova",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "COUNT",
+        "WHERE",
+        "Bossa Nova"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Bossa Nova';"
+    },
+    {
+      "id": 227,
+      "question": "Tổng doanh thu thể loại Bossa Nova",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "InvoiceLine",
+        "SUM",
+        "WHERE",
+        "Bossa Nova"
+      ],
+      "tables": [
+        "Track",
+        "Genre",
+        "InvoiceLine"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(SUM(InvoiceLine.UnitPrice * InvoiceLine.Quantity), 2) AS revenue FROM InvoiceLine INNER JOIN Track ON InvoiceLine.TrackId = Track.TrackId INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Bossa Nova';"
+    },
+    {
+      "id": 228,
+      "question": "Bài hát dài nhất thể loại Bossa Nova",
+      "intent": "simple",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "WHERE",
+        "Bossa Nova",
+        "ORDER BY",
+        "Milliseconds",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name, Track.Milliseconds FROM Track INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Bossa Nova' ORDER BY Track.Milliseconds DESC LIMIT 1;"
+    },
+    {
+      "id": 229,
+      "question": "Tất cả playlist",
+      "intent": "simple",
+      "sql_keywords": [
+        "Playlist"
+      ],
+      "tables": [
+        "Playlist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Playlist ORDER BY Name ASC;"
+    },
+    {
+      "id": 230,
+      "question": "Tổng số playlist",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Playlist",
+        "COUNT"
+      ],
+      "tables": [
+        "Playlist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_playlists FROM Playlist;"
+    },
+    {
+      "id": 231,
+      "question": "Số bài hát trong playlist Music",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Playlist",
+        "PlaylistTrack",
+        "COUNT",
+        "WHERE",
+        "Music"
+      ],
+      "tables": [
+        "Playlist",
+        "PlaylistTrack"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM PlaylistTrack INNER JOIN Playlist ON PlaylistTrack.PlaylistId = Playlist.PlaylistId WHERE Playlist.Name = 'Music';"
+    },
+    {
+      "id": 232,
+      "question": "Danh sách bài hát trong playlist Music",
+      "intent": "join",
+      "sql_keywords": [
+        "Playlist",
+        "PlaylistTrack",
+        "Track",
+        "WHERE",
+        "Music"
+      ],
+      "tables": [
+        "Playlist",
+        "PlaylistTrack",
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name FROM Track INNER JOIN PlaylistTrack ON Track.TrackId = PlaylistTrack.TrackId INNER JOIN Playlist ON PlaylistTrack.PlaylistId = Playlist.PlaylistId WHERE Playlist.Name = 'Music';"
+    },
+    {
+      "id": 233,
+      "question": "Số bài hát trong playlist Movies",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Playlist",
+        "PlaylistTrack",
+        "COUNT",
+        "WHERE",
+        "Movies"
+      ],
+      "tables": [
+        "Playlist",
+        "PlaylistTrack"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM PlaylistTrack INNER JOIN Playlist ON PlaylistTrack.PlaylistId = Playlist.PlaylistId WHERE Playlist.Name = 'Movies';"
+    },
+    {
+      "id": 234,
+      "question": "Danh sách bài hát trong playlist Movies",
+      "intent": "join",
+      "sql_keywords": [
+        "Playlist",
+        "PlaylistTrack",
+        "Track",
+        "WHERE",
+        "Movies"
+      ],
+      "tables": [
+        "Playlist",
+        "PlaylistTrack",
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name FROM Track INNER JOIN PlaylistTrack ON Track.TrackId = PlaylistTrack.TrackId INNER JOIN Playlist ON PlaylistTrack.PlaylistId = Playlist.PlaylistId WHERE Playlist.Name = 'Movies';"
+    },
+    {
+      "id": 235,
+      "question": "Số bài hát trong playlist TV Shows",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Playlist",
+        "PlaylistTrack",
+        "COUNT",
+        "WHERE",
+        "TV Shows"
+      ],
+      "tables": [
+        "Playlist",
+        "PlaylistTrack"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM PlaylistTrack INNER JOIN Playlist ON PlaylistTrack.PlaylistId = Playlist.PlaylistId WHERE Playlist.Name = 'TV Shows';"
+    },
+    {
+      "id": 236,
+      "question": "Danh sách bài hát trong playlist TV Shows",
+      "intent": "join",
+      "sql_keywords": [
+        "Playlist",
+        "PlaylistTrack",
+        "Track",
+        "WHERE",
+        "TV Shows"
+      ],
+      "tables": [
+        "Playlist",
+        "PlaylistTrack",
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name FROM Track INNER JOIN PlaylistTrack ON Track.TrackId = PlaylistTrack.TrackId INNER JOIN Playlist ON PlaylistTrack.PlaylistId = Playlist.PlaylistId WHERE Playlist.Name = 'TV Shows';"
+    },
+    {
+      "id": 237,
+      "question": "Số bài hát trong playlist Audiobooks",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Playlist",
+        "PlaylistTrack",
+        "COUNT",
+        "WHERE",
+        "Audiobooks"
+      ],
+      "tables": [
+        "Playlist",
+        "PlaylistTrack"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM PlaylistTrack INNER JOIN Playlist ON PlaylistTrack.PlaylistId = Playlist.PlaylistId WHERE Playlist.Name = 'Audiobooks';"
+    },
+    {
+      "id": 238,
+      "question": "Danh sách bài hát trong playlist Audiobooks",
+      "intent": "join",
+      "sql_keywords": [
+        "Playlist",
+        "PlaylistTrack",
+        "Track",
+        "WHERE",
+        "Audiobooks"
+      ],
+      "tables": [
+        "Playlist",
+        "PlaylistTrack",
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name FROM Track INNER JOIN PlaylistTrack ON Track.TrackId = PlaylistTrack.TrackId INNER JOIN Playlist ON PlaylistTrack.PlaylistId = Playlist.PlaylistId WHERE Playlist.Name = 'Audiobooks';"
+    },
+    {
+      "id": 239,
+      "question": "Số bài hát trong playlist 90's Music",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Playlist",
+        "PlaylistTrack",
+        "COUNT",
+        "WHERE",
+        "90's Music"
+      ],
+      "tables": [
+        "Playlist",
+        "PlaylistTrack"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM PlaylistTrack INNER JOIN Playlist ON PlaylistTrack.PlaylistId = Playlist.PlaylistId WHERE Playlist.Name = '90''s Music';"
+    },
+    {
+      "id": 240,
+      "question": "Danh sách bài hát trong playlist 90's Music",
+      "intent": "join",
+      "sql_keywords": [
+        "Playlist",
+        "PlaylistTrack",
+        "Track",
+        "WHERE",
+        "90's Music"
+      ],
+      "tables": [
+        "Playlist",
+        "PlaylistTrack",
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name FROM Track INNER JOIN PlaylistTrack ON Track.TrackId = PlaylistTrack.TrackId INNER JOIN Playlist ON PlaylistTrack.PlaylistId = Playlist.PlaylistId WHERE Playlist.Name = '90''s Music';"
+    },
+    {
+      "id": 241,
+      "question": "Số bài hát trong playlist Classical",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Playlist",
+        "PlaylistTrack",
+        "COUNT",
+        "WHERE",
+        "Classical"
+      ],
+      "tables": [
+        "Playlist",
+        "PlaylistTrack"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM PlaylistTrack INNER JOIN Playlist ON PlaylistTrack.PlaylistId = Playlist.PlaylistId WHERE Playlist.Name = 'Classical';"
+    },
+    {
+      "id": 242,
+      "question": "Danh sách bài hát trong playlist Classical",
+      "intent": "join",
+      "sql_keywords": [
+        "Playlist",
+        "PlaylistTrack",
+        "Track",
+        "WHERE",
+        "Classical"
+      ],
+      "tables": [
+        "Playlist",
+        "PlaylistTrack",
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name FROM Track INNER JOIN PlaylistTrack ON Track.TrackId = PlaylistTrack.TrackId INNER JOIN Playlist ON PlaylistTrack.PlaylistId = Playlist.PlaylistId WHERE Playlist.Name = 'Classical';"
+    },
+    {
+      "id": 243,
+      "question": "Số bài hát trong playlist Grunge",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Playlist",
+        "PlaylistTrack",
+        "COUNT",
+        "WHERE",
+        "Grunge"
+      ],
+      "tables": [
+        "Playlist",
+        "PlaylistTrack"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM PlaylistTrack INNER JOIN Playlist ON PlaylistTrack.PlaylistId = Playlist.PlaylistId WHERE Playlist.Name = 'Grunge';"
+    },
+    {
+      "id": 244,
+      "question": "Danh sách bài hát trong playlist Grunge",
+      "intent": "join",
+      "sql_keywords": [
+        "Playlist",
+        "PlaylistTrack",
+        "Track",
+        "WHERE",
+        "Grunge"
+      ],
+      "tables": [
+        "Playlist",
+        "PlaylistTrack",
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name FROM Track INNER JOIN PlaylistTrack ON Track.TrackId = PlaylistTrack.TrackId INNER JOIN Playlist ON PlaylistTrack.PlaylistId = Playlist.PlaylistId WHERE Playlist.Name = 'Grunge';"
+    },
+    {
+      "id": 245,
+      "question": "Số bài hát trong playlist Heavy Metal Classic",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Playlist",
+        "PlaylistTrack",
+        "COUNT",
+        "WHERE",
+        "Heavy Metal Classic"
+      ],
+      "tables": [
+        "Playlist",
+        "PlaylistTrack"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM PlaylistTrack INNER JOIN Playlist ON PlaylistTrack.PlaylistId = Playlist.PlaylistId WHERE Playlist.Name = 'Heavy Metal Classic';"
+    },
+    {
+      "id": 246,
+      "question": "Danh sách bài hát trong playlist Heavy Metal Classic",
+      "intent": "join",
+      "sql_keywords": [
+        "Playlist",
+        "PlaylistTrack",
+        "Track",
+        "WHERE",
+        "Heavy Metal Classic"
+      ],
+      "tables": [
+        "Playlist",
+        "PlaylistTrack",
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name FROM Track INNER JOIN PlaylistTrack ON Track.TrackId = PlaylistTrack.TrackId INNER JOIN Playlist ON PlaylistTrack.PlaylistId = Playlist.PlaylistId WHERE Playlist.Name = 'Heavy Metal Classic';"
+    },
+    {
+      "id": 247,
+      "question": "Playlist nào có nhiều bài hát nhất",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Playlist",
+        "PlaylistTrack",
+        "COUNT",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC"
+      ],
+      "tables": [
+        "Playlist",
+        "PlaylistTrack"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Playlist.Name, COUNT(PlaylistTrack.TrackId) AS total FROM Playlist INNER JOIN PlaylistTrack ON Playlist.PlaylistId = PlaylistTrack.PlaylistId GROUP BY Playlist.PlaylistId ORDER BY total DESC LIMIT 1;"
+    },
+    {
+      "id": 248,
+      "question": "Playlist nào có ít bài hát nhất",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Playlist",
+        "PlaylistTrack",
+        "COUNT",
+        "GROUP BY",
+        "ORDER BY",
+        "ASC"
+      ],
+      "tables": [
+        "Playlist",
+        "PlaylistTrack"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Playlist.Name, COUNT(PlaylistTrack.TrackId) AS total FROM Playlist INNER JOIN PlaylistTrack ON Playlist.PlaylistId = PlaylistTrack.PlaylistId GROUP BY Playlist.PlaylistId ORDER BY total ASC LIMIT 1;"
+    },
+    {
+      "id": 249,
+      "question": "Tất cả nhân viên",
+      "intent": "simple",
+      "sql_keywords": [
+        "Employee"
+      ],
+      "tables": [
+        "Employee"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Employee;"
+    },
+    {
+      "id": 250,
+      "question": "Tổng số nhân viên",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Employee",
+        "COUNT"
+      ],
+      "tables": [
+        "Employee"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total_employees FROM Employee;"
+    },
+    {
+      "id": 251,
+      "question": "Số nhân viên theo chức vụ",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Employee",
+        "COUNT",
+        "Title",
+        "GROUP BY"
+      ],
+      "tables": [
+        "Employee"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Title, COUNT(*) AS total FROM Employee GROUP BY Title ORDER BY total DESC;"
+    },
+    {
+      "id": 252,
+      "question": "Nhân viên quản lý (General Manager)",
+      "intent": "simple",
+      "sql_keywords": [
+        "Employee",
+        "WHERE",
+        "Title",
+        "General Manager"
+      ],
+      "tables": [
+        "Employee"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Employee WHERE Title = 'General Manager';"
+    },
+    {
+      "id": 253,
+      "question": "Nhân viên hỗ trợ bán hàng",
+      "intent": "simple",
+      "sql_keywords": [
+        "Employee",
+        "WHERE",
+        "Title",
+        "Sales Support Agent"
+      ],
+      "tables": [
+        "Employee"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Employee WHERE Title LIKE '%Sales%Support%';"
+    },
+    {
+      "id": 254,
+      "question": "Nhân viên và người quản lý trực tiếp",
+      "intent": "join",
+      "sql_keywords": [
+        "Employee",
+        "ReportsTo",
+        "Employee"
+      ],
+      "tables": [
+        "Employee",
+        "Employee"
+      ],
+      "note": "",
+      "gold_sql": "SELECT e.FirstName || ' ' || e.LastName AS employee, m.FirstName || ' ' || m.LastName AS manager FROM Employee e LEFT JOIN Employee m ON e.ReportsTo = m.EmployeeId;"
+    },
+    {
+      "id": 255,
+      "question": "Nhân viên do ai quản lý",
+      "intent": "join",
+      "sql_keywords": [
+        "Employee",
+        "ReportsTo",
+        "Employee",
+        "WHERE"
+      ],
+      "tables": [
+        "Employee",
+        "Employee"
+      ],
+      "note": "",
+      "gold_sql": "SELECT e.FirstName || ' ' || e.LastName AS employee, m.FirstName || ' ' || m.LastName AS manager FROM Employee e INNER JOIN Employee m ON e.ReportsTo = m.EmployeeId;"
+    },
+    {
+      "id": 256,
+      "question": "Tổng số nhân viên mỗi người quản lý",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Employee",
+        "COUNT",
+        "ReportsTo",
+        "GROUP BY"
+      ],
+      "tables": [
+        "Employee"
+      ],
+      "note": "",
+      "gold_sql": "SELECT m.FirstName || ' ' || m.LastName AS manager, COUNT(e.EmployeeId) AS total FROM Employee e INNER JOIN Employee m ON e.ReportsTo = m.EmployeeId GROUP BY m.EmployeeId ORDER BY total DESC;"
+    },
+    {
+      "id": 257,
+      "question": "Top 5 nghệ sĩ có nhiều bài hát nhất",
+      "intent": "complex",
+      "sql_keywords": [
+        "Artist",
+        "Album",
+        "Track",
+        "COUNT",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Artist",
+        "Album",
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Artist.Name, COUNT(Track.TrackId) AS total_tracks FROM Artist INNER JOIN Album ON Artist.ArtistId = Album.ArtistId INNER JOIN Track ON Album.AlbumId = Track.AlbumId GROUP BY Artist.ArtistId ORDER BY total_tracks DESC LIMIT 5;"
+    },
+    {
+      "id": 258,
+      "question": "Thể loại nhạc nào có nhiều nghệ sĩ nhất",
+      "intent": "complex",
+      "sql_keywords": [
+        "Genre",
+        "Track",
+        "Album",
+        "Artist",
+        "COUNT",
+        "GROUP BY"
+      ],
+      "tables": [
+        "Genre",
+        "Track",
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Genre.Name, COUNT(DISTINCT Album.ArtistId) AS total_artists FROM Genre INNER JOIN Track ON Genre.GenreId = Track.GenreId INNER JOIN Album ON Track.AlbumId = Album.AlbumId GROUP BY Genre.GenreId ORDER BY total_artists DESC LIMIT 1;"
+    },
+    {
+      "id": 259,
+      "question": "Nghệ sĩ nào có nhiều bài hát thuộc thể loại Metal",
+      "intent": "complex",
+      "sql_keywords": [
+        "Artist",
+        "Album",
+        "Track",
+        "Genre",
+        "WHERE",
+        "Metal",
+        "GROUP BY",
+        "COUNT"
+      ],
+      "tables": [
+        "Artist",
+        "Album",
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Artist.Name, COUNT(Track.TrackId) AS total FROM Artist INNER JOIN Album ON Artist.ArtistId = Album.ArtistId INNER JOIN Track ON Album.AlbumId = Track.AlbumId INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name = 'Metal' GROUP BY Artist.ArtistId ORDER BY total DESC LIMIT 1;"
+    },
+    {
+      "id": 260,
+      "question": "Top 10 khách hàng nhiều tiền nhất",
+      "intent": "complex",
+      "sql_keywords": [
+        "Customer",
+        "Invoice",
+        "SUM",
+        "Total",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Customer",
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Customer.FirstName, Customer.LastName, ROUND(SUM(Invoice.Total), 2) AS total_spent FROM Customer INNER JOIN Invoice ON Customer.CustomerId = Invoice.CustomerId GROUP BY Customer.CustomerId ORDER BY total_spent DESC LIMIT 10;"
+    },
+    {
+      "id": 261,
+      "question": "Sản phẩm (track) nào bán chạy nhất",
+      "intent": "complex",
+      "sql_keywords": [
+        "Track",
+        "InvoiceLine",
+        "SUM",
+        "Quantity",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC"
+      ],
+      "tables": [
+        "Track",
+        "InvoiceLine"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name, SUM(InvoiceLine.Quantity) AS total_sold FROM Track INNER JOIN InvoiceLine ON Track.TrackId = InvoiceLine.TrackId GROUP BY Track.TrackId ORDER BY total_sold DESC LIMIT 1;"
+    },
+    {
+      "id": 262,
+      "question": "Doanh thu thể loại nhạc nào cao nhất",
+      "intent": "complex",
+      "sql_keywords": [
+        "Genre",
+        "Track",
+        "InvoiceLine",
+        "SUM",
+        "UnitPrice",
+        "Quantity",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC"
+      ],
+      "tables": [
+        "Genre",
+        "Track",
+        "InvoiceLine"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Genre.Name, ROUND(SUM(InvoiceLine.UnitPrice * InvoiceLine.Quantity), 2) AS revenue FROM Genre INNER JOIN Track ON Genre.GenreId = Track.GenreId INNER JOIN InvoiceLine ON Track.TrackId = InvoiceLine.TrackId GROUP BY Genre.GenreId ORDER BY revenue DESC LIMIT 1;"
+    },
+    {
+      "id": 263,
+      "question": "Doanh thu theo tháng trong năm 2021",
+      "intent": "complex",
+      "sql_keywords": [
+        "Invoice",
+        "strftime",
+        "SUM",
+        "Total",
+        "GROUP BY",
+        "ORDER BY"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT strftime('%Y-%m', InvoiceDate) AS month, ROUND(SUM(Total), 2) AS revenue FROM Invoice WHERE strftime('%Y', InvoiceDate) = '2021' GROUP BY month ORDER BY month;"
+    },
+    {
+      "id": 264,
+      "question": "Số đơn hàng theo tháng 2021",
+      "intent": "complex",
+      "sql_keywords": [
+        "Invoice",
+        "strftime",
+        "COUNT",
+        "GROUP BY"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT strftime('%Y-%m', InvoiceDate) AS month, COUNT(*) AS total FROM Invoice WHERE strftime('%Y', InvoiceDate) = '2021' GROUP BY month ORDER BY month;"
+    },
+    {
+      "id": 265,
+      "question": "Top 5 quốc gia nhiều doanh thu nhất",
+      "intent": "complex",
+      "sql_keywords": [
+        "Customer",
+        "Invoice",
+        "SUM",
+        "Total",
+        "Country",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Customer",
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Customer.Country, ROUND(SUM(Invoice.Total), 2) AS revenue FROM Customer INNER JOIN Invoice ON Customer.CustomerId = Invoice.CustomerId GROUP BY Customer.Country ORDER BY revenue DESC LIMIT 5;"
+    },
+    {
+      "id": 266,
+      "question": "Thời gian trung bình bài hát theo thể loại",
+      "intent": "complex",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "AVG",
+        "Milliseconds",
+        "GROUP BY"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Genre.Name, ROUND(AVG(Track.Milliseconds) / 60000.0, 2) AS avg_minutes FROM Genre INNER JOIN Track ON Genre.GenreId = Track.GenreId GROUP BY Genre.GenreId ORDER BY avg_minutes DESC;"
+    },
+    {
+      "id": 267,
+      "question": "Thể loại nào có bài hát dài nhất",
+      "intent": "complex",
+      "sql_keywords": [
+        "Track",
+        "Genre",
+        "MAX",
+        "Milliseconds",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC"
+      ],
+      "tables": [
+        "Track",
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Genre.Name, MAX(Track.Milliseconds) AS max_ms FROM Genre INNER JOIN Track ON Genre.GenreId = Track.GenreId GROUP BY Genre.GenreId ORDER BY max_ms DESC LIMIT 1;"
+    },
+    {
+      "id": 268,
+      "question": "Tốc độ trung bình theo định dạng",
+      "intent": "complex",
+      "sql_keywords": [
+        "Track",
+        "MediaType",
+        "AVG",
+        "Bytes",
+        "GROUP BY"
+      ],
+      "tables": [
+        "Track",
+        "MediaType"
+      ],
+      "note": "",
+      "gold_sql": "SELECT MediaType.Name, ROUND(AVG(Track.Bytes) / 1024.0 / 1024.0, 2) AS avg_mb FROM MediaType INNER JOIN Track ON MediaType.MediaTypeId = Track.MediaTypeId GROUP BY MediaType.MediaTypeId ORDER BY avg_mb DESC;"
+    },
+    {
+      "id": 269,
+      "question": "Nhân viên nào hỗ trợ nhiều khách hàng nhất",
+      "intent": "complex",
+      "sql_keywords": [
+        "Employee",
+        "Customer",
+        "COUNT",
+        "SupportRepId",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC"
+      ],
+      "tables": [
+        "Employee",
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Employee.FirstName || ' ' || Employee.LastName AS employee, COUNT(Customer.CustomerId) AS total_customers FROM Employee INNER JOIN Customer ON Employee.EmployeeId = Customer.SupportRepId GROUP BY Employee.EmployeeId ORDER BY total_customers DESC LIMIT 1;"
+    },
+    {
+      "id": 270,
+      "question": "Doanh thu theo nhân viên hỗ trợ",
+      "intent": "complex",
+      "sql_keywords": [
+        "Employee",
+        "Customer",
+        "Invoice",
+        "SUM",
+        "Total",
+        "GROUP BY"
+      ],
+      "tables": [
+        "Employee",
+        "Customer",
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Employee.FirstName || ' ' || Employee.LastName AS employee, ROUND(SUM(Invoice.Total), 2) AS revenue FROM Employee INNER JOIN Customer ON Employee.EmployeeId = Customer.SupportRepId INNER JOIN Invoice ON Customer.CustomerId = Invoice.CustomerId GROUP BY Employee.EmployeeId ORDER BY revenue DESC;"
+    },
+    {
+      "id": 271,
+      "question": "So sánh doanh thu các năm",
+      "intent": "complex",
+      "sql_keywords": [
+        "Invoice",
+        "strftime",
+        "SUM",
+        "Total",
+        "GROUP BY",
+        "ORDER BY"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT strftime('%Y', InvoiceDate) AS year, ROUND(SUM(Total), 2) AS revenue FROM Invoice GROUP BY year ORDER BY year;"
+    },
+    {
+      "id": 272,
+      "question": "Xu hướng doanh thu theo quý",
+      "intent": "complex",
+      "sql_keywords": [
+        "Invoice",
+        "strftime",
+        "SUM",
+        "Total",
+        "GROUP BY",
+        "ORDER BY"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT strftime('%Y', InvoiceDate) AS year, CAST(strftime('%m', InvoiceDate) AS INTEGER) / 4 + 1 AS quarter, ROUND(SUM(Total), 2) AS revenue FROM Invoice GROUP BY year, quarter ORDER BY year, quarter;"
+    },
+    {
+      "id": 273,
+      "question": "Giới hạn 10 bài hát đầu tiên",
+      "intent": "simple",
+      "sql_keywords": [
+        "Track",
+        "LIMIT"
+      ],
+      "tables": [
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Track LIMIT 10;"
+    },
+    {
+      "id": 274,
+      "question": "Giới hạn 20 khách hàng đầu tiên",
+      "intent": "simple",
+      "sql_keywords": [
+        "Customer",
+        "LIMIT"
+      ],
+      "tables": [
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Customer LIMIT 20;"
+    },
+    {
+      "id": 275,
+      "question": "Bài hát đầu tiên trong hệ thống",
+      "intent": "simple",
+      "sql_keywords": [
+        "Track",
+        "ORDER BY",
+        "TrackId",
+        "LIMIT"
+      ],
+      "tables": [
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Track ORDER BY TrackId ASC LIMIT 1;"
+    },
+    {
+      "id": 276,
+      "question": "Nghệ sĩ cuối cùng",
+      "intent": "simple",
+      "sql_keywords": [
+        "Artist",
+        "ORDER BY",
+        "ArtistId",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Artist ORDER BY ArtistId DESC LIMIT 1;"
+    },
+    {
+      "id": 277,
+      "question": "Hóa đơn mới nhất",
+      "intent": "simple",
+      "sql_keywords": [
+        "Invoice",
+        "ORDER BY",
+        "InvoiceDate",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Invoice ORDER BY InvoiceDate DESC LIMIT 1;"
+    },
+    {
+      "id": 278,
+      "question": "Hóa đơn cũ nhất",
+      "intent": "simple",
+      "sql_keywords": [
+        "Invoice",
+        "ORDER BY",
+        "InvoiceDate",
+        "ASC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Invoice ORDER BY InvoiceDate ASC LIMIT 1;"
+    },
+    {
+      "id": 279,
+      "question": "Bài hát cuối cùng theo danh sách",
+      "intent": "simple",
+      "sql_keywords": [
+        "Track",
+        "ORDER BY",
+        "TrackId",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Track ORDER BY TrackId DESC LIMIT 1;"
+    },
+    {
+      "id": 280,
+      "question": "Playlist đầu tiên",
+      "intent": "simple",
+      "sql_keywords": [
+        "Playlist",
+        "ORDER BY",
+        "PlaylistId",
+        "LIMIT"
+      ],
+      "tables": [
+        "Playlist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Playlist ORDER BY PlaylistId ASC LIMIT 1;"
+    },
+    {
+      "id": 281,
+      "question": "Thể loại đầu tiên",
+      "intent": "simple",
+      "sql_keywords": [
+        "Genre",
+        "ORDER BY",
+        "GenreId",
+        "LIMIT"
+      ],
+      "tables": [
+        "Genre"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Genre ORDER BY GenreId ASC LIMIT 1;"
+    },
+    {
+      "id": 282,
+      "question": "Ngày hóa đơn đầu tiên",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "MIN",
+        "InvoiceDate"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT MIN(InvoiceDate) AS first_invoice_date FROM Invoice;"
+    },
+    {
+      "id": 283,
+      "question": "Ngày hóa đơn gần nhất",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Invoice",
+        "MAX",
+        "InvoiceDate"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT MAX(InvoiceDate) AS latest_invoice_date FROM Invoice;"
+    },
+    {
+      "id": 284,
+      "question": "Giá trung bình bài hát",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "AVG",
+        "UnitPrice"
+      ],
+      "tables": [
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT ROUND(AVG(UnitPrice), 2) AS avg_price FROM Track;"
+    },
+    {
+      "id": 285,
+      "question": "Tổng kích thước (bytes) tất cả bài hát",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "SUM",
+        "Bytes"
+      ],
+      "tables": [
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT SUM(Bytes) AS total_bytes FROM Track;"
+    },
+    {
+      "id": 286,
+      "question": "Số bài hát có giá trên 1$",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Track",
+        "COUNT",
+        "WHERE",
+        "UnitPrice",
+        ">"
+      ],
+      "tables": [
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Track WHERE UnitPrice > 1.0;"
+    },
+    {
+      "id": 287,
+      "question": "Khách hàng đầu tiên",
+      "intent": "simple",
+      "sql_keywords": [
+        "Customer",
+        "ORDER BY",
+        "CustomerId",
+        "LIMIT"
+      ],
+      "tables": [
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Customer ORDER BY CustomerId ASC LIMIT 1;"
+    },
+    {
+      "id": 288,
+      "question": "Hóa đơn cuối cùng trong 2021",
+      "intent": "simple",
+      "sql_keywords": [
+        "Invoice",
+        "WHERE",
+        "2021",
+        "ORDER BY",
+        "InvoiceDate",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Invoice WHERE strftime('%Y', InvoiceDate) = '2021' ORDER BY InvoiceDate DESC LIMIT 1;"
+    },
+    {
+      "id": 289,
+      "question": "Bài hát đầu tiên theo album",
+      "intent": "simple",
+      "sql_keywords": [
+        "Track",
+        "ORDER BY",
+        "AlbumId",
+        "LIMIT"
+      ],
+      "tables": [
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT * FROM Track ORDER BY AlbumId ASC, TrackId ASC LIMIT 1;"
+    },
+    {
+      "id": 290,
+      "question": "Tổng số quốc gia có khách hàng",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Customer",
+        "COUNT",
+        "DISTINCT",
+        "Country"
+      ],
+      "tables": [
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(DISTINCT Country) AS total_countries FROM Customer;"
+    },
+    {
+      "id": 291,
+      "question": "Số khách hàng có địa chỉ đầy đủ",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "Customer",
+        "COUNT",
+        "WHERE",
+        "Address",
+        "IS NOT NULL"
+      ],
+      "tables": [
+        "Customer"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM Customer WHERE Address IS NOT NULL AND City IS NOT NULL AND Country IS NOT NULL;"
+    },
+    {
+      "id": 292,
+      "question": "Bài hát của nghệ sĩ có ID = 10",
+      "intent": "simple",
+      "sql_keywords": [
+        "Artist",
+        "Album",
+        "Track",
+        "WHERE",
+        "ArtistId",
+        "10"
+      ],
+      "tables": [
+        "Artist",
+        "Album",
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name FROM Track INNER JOIN Album ON Track.AlbumId = Album.AlbumId INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.ArtistId = 10;"
+    },
+    {
+      "id": 293,
+      "question": "Doanh thu theo ngày trong tuần",
+      "intent": "complex",
+      "sql_keywords": [
+        "Invoice",
+        "strftime",
+        "SUM",
+        "Total",
+        "GROUP BY"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT strftime('%w', InvoiceDate) AS day_of_week, ROUND(SUM(Total), 2) AS revenue FROM Invoice GROUP BY day_of_week ORDER BY revenue DESC;"
+    },
+    {
+      "id": 294,
+      "question": "Ngày nào có nhiều hóa đơn nhất",
+      "intent": "complex",
+      "sql_keywords": [
+        "Invoice",
+        "strftime",
+        "COUNT",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC"
+      ],
+      "tables": [
+        "Invoice"
+      ],
+      "note": "",
+      "gold_sql": "SELECT InvoiceDate, COUNT(*) AS total FROM Invoice GROUP BY InvoiceDate ORDER BY total DESC LIMIT 1;"
+    },
+    {
+      "id": 295,
+      "question": "Khách hàng nào đã mua bài hát Iron Maiden",
+      "intent": "complex",
+      "sql_keywords": [
+        "Customer",
+        "Invoice",
+        "InvoiceLine",
+        "Track",
+        "Album",
+        "Artist",
+        "WHERE",
+        "Iron Maiden"
+      ],
+      "tables": [
+        "Customer",
+        "Invoice",
+        "InvoiceLine",
+        "Track",
+        "Album",
+        "Artist"
+      ],
+      "note": "",
+      "gold_sql": "SELECT DISTINCT Customer.FirstName, Customer.LastName FROM Customer INNER JOIN Invoice ON Customer.CustomerId = Invoice.CustomerId INNER JOIN InvoiceLine ON Invoice.InvoiceId = InvoiceLine.InvoiceId INNER JOIN Track ON InvoiceLine.TrackId = Track.TrackId INNER JOIN Album ON Track.AlbumId = Album.AlbumId INNER JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name = 'Iron Maiden';"
+    },
+    {
+      "id": 296,
+      "question": "Bài hát nào tốn nhiều bộ nhớ nhất",
+      "intent": "simple",
+      "sql_keywords": [
+        "Track",
+        "ORDER BY",
+        "Bytes",
+        "DESC"
+      ],
+      "tables": [
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Name, Bytes FROM Track ORDER BY Bytes DESC LIMIT 1;"
+    },
+    {
+      "id": 297,
+      "question": "Bài hát nào tốn ít bộ nhớ nhất",
+      "intent": "simple",
+      "sql_keywords": [
+        "Track",
+        "ORDER BY",
+        "Bytes",
+        "ASC"
+      ],
+      "tables": [
+        "Track"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Name, Bytes FROM Track WHERE Bytes IS NOT NULL ORDER BY Bytes ASC LIMIT 1;"
+    },
+    {
+      "id": 298,
+      "question": "Tổng số playlistTrack trong hệ thống",
+      "intent": "aggregate",
+      "sql_keywords": [
+        "PlaylistTrack",
+        "COUNT"
+      ],
+      "tables": [
+        "PlaylistTrack"
+      ],
+      "note": "",
+      "gold_sql": "SELECT COUNT(*) AS total FROM PlaylistTrack;"
+    },
+    {
+      "id": 299,
+      "question": "Track nào nằm trong nhiều playlist nhất",
+      "intent": "complex",
+      "sql_keywords": [
+        "Track",
+        "PlaylistTrack",
+        "COUNT",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC",
+        "LIMIT"
+      ],
+      "tables": [
+        "Track",
+        "PlaylistTrack"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Track.Name FROM Track INNER JOIN PlaylistTrack ON Track.TrackId = PlaylistTrack.TrackId GROUP BY Track.TrackId ORDER BY COUNT(PlaylistTrack.PlaylistId) DESC LIMIT 1;"
+    },
+    {
+      "id": 300,
+      "question": "Nhạc sĩ nào có tổng doanh thu cao nhất",
+      "intent": "complex",
+      "sql_keywords": [
+        "Artist",
+        "Album",
+        "Track",
+        "InvoiceLine",
+        "SUM",
+        "GROUP BY",
+        "ORDER BY",
+        "DESC"
+      ],
+      "tables": [
+        "Artist",
+        "Album",
+        "Track",
+        "InvoiceLine"
+      ],
+      "note": "",
+      "gold_sql": "SELECT Artist.Name, ROUND(SUM(InvoiceLine.UnitPrice * InvoiceLine.Quantity), 2) AS total_revenue FROM Artist INNER JOIN Album ON Artist.ArtistId = Album.ArtistId INNER JOIN Track ON Album.AlbumId = Track.AlbumId INNER JOIN InvoiceLine ON Track.TrackId = InvoiceLine.TrackId GROUP BY Artist.ArtistId ORDER BY total_revenue DESC LIMIT 1;"
+    }
+  ]
+}

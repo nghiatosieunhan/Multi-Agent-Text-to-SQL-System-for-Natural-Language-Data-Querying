@@ -35,7 +35,7 @@ def generate_batch(db_path: str, existing_questions: list[str], batch_num: int, 
 
     db = DatabaseManager(db_path=db_path)
     schema = db.get_schema()
-    schema_text = "\n".join([f"Table {t.table_name}: " + ", ".join([c.name for c in t.columns]) for t in schema.tables])
+    schema_text = "\n".join([f"Table {t.table_name}: " + ", ".join([c['name'] for c in t.columns]) for t in schema.tables])
     fk_text = "\n".join([f"{fk['from_table']}.{fk['from_column']} -> {fk['to_table']}.{fk['to_column']}" for fk in schema.relationships])
 
     # Đưa existing vào prompt để Gemini tránh trùng

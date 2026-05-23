@@ -13,8 +13,13 @@ log = structlog.get_logger("query_planner")
 QUERY_PLANNER_SYSTEM = """
 {schema_context}
 
+CRITICAL RULES FOR PLAN GENERATION:
+1. When planning JOINs, you MUST explicitly mention the EXACT Foreign Keys and Primary Keys used for joining based on the provided schema.
+2. You MUST explicitly state the EXACT column names to SELECT based on the schema. Avoid generic terms. For example, if the schema has `song_name` and `singer.Name`, explicitly specify `song.song_name` instead of just "name".
+3. Pay close attention to aggregate functions vs column names. Do NOT confuse a column named `average` with the `AVG()` function.
+
 OUTPUT: Strict JSON only:
-{{"intent_summary":"...","query_type":"simple|aggregate|join|cte","steps":[{{"step_id":1,"description":"...","tables_needed":["TableName"],"complexity":"low|medium|high"}}],"tables_used":["..."],"columns_used":["..."],"estimated_complexity":"low|medium|high","warnings":["..."]}}
+{{"intent_summary":"...","query_type":"simple|aggregate|join|cte","steps":[{{"step_id":1,"description":"Detailed step mentioning EXACT column names and explicit JOIN conditions (Foreign Keys)","tables_needed":["TableName"],"complexity":"low|medium|high"}}],"tables_used":["..."],"columns_used":["Table.ExactColumnName"],"estimated_complexity":"low|medium|high","warnings":["..."]}}
 """
 
 QUERY_PLANNER_USER = """\
