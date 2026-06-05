@@ -32,20 +32,21 @@ def render_sidebar():
         if not sorted_sessions:
             st.write("Chưa có lịch sử.")
         else:
-            for sid, sdata in sorted_sessions[:10]: # Hiển thị 10 chat gần nhất
-                title = sdata.get("title", "Trò chuyện mới")
-                if len(title) > 25:
-                    title = title[:25] + "..."
-                
-                # Highlight current session
-                is_current = (sid == st.session_state.session_id)
-                btn_label = f"📝 {title}" if is_current else f"🕒 {title}"
-                
-                # type="tertiary" removes the box border, making it look like a sleek list item
-                if st.button(btn_label, key=f"hist_{sid}", use_container_width=True, type="tertiary"):
-                    st.session_state.session_id = sid
-                    st.session_state.messages = sdata["messages"]
-                    st.rerun()
+            with st.container(height=250, border=False):
+                for sid, sdata in sorted_sessions[:20]: # Hiển thị 20 chat gần nhất, có thanh cuộn
+                    title = sdata.get("title", "Trò chuyện mới")
+                    if len(title) > 25:
+                        title = title[:25] + "..."
+                    
+                    # Highlight current session
+                    is_current = (sid == st.session_state.session_id)
+                    btn_label = f"📝 {title}" if is_current else f"🕒 {title}"
+                    
+                    # type="tertiary" removes the box border, making it look like a sleek list item
+                    if st.button(btn_label, key=f"hist_{sid}", use_container_width=True, type="tertiary"):
+                        st.session_state.session_id = sid
+                        st.session_state.messages = sdata["messages"]
+                        st.rerun()
 
         st.divider()
 

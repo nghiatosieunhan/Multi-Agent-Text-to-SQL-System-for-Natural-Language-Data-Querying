@@ -20,7 +20,7 @@ def init_or_switch_db(db_path: str, force_refresh: bool = False):
 
     # Rebuild schema index with semantic descriptions
     try:
-        schema, _ = get_current_db_schema(db_path, force_refresh=force_refresh)
+        schema, _ = get_current_db_schema(db_path)
         rebuild_schema_index(get_db_manager(db_path), db_path=db_path)
         st.session_state.system_ready = True
         st.session_state.schema_info = {
