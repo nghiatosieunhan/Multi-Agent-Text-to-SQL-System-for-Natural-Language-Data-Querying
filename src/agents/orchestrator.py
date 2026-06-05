@@ -1,6 +1,6 @@
 """
-Orchestrator Agent — điều phối toàn bộ pipeline.
-Là "brain" trung tâm của multi-agent system.
+Orchestrator Agent — orchestrates the entire pipeline.
+The central "brain" of the multi-agent system.
 """
 import json
 import re
@@ -40,6 +40,10 @@ def _safe_json_parse(text: str) -> dict:
     text = re.sub(r'^```(?:json)?\s*', '', text, flags=re.MULTILINE)
     text = re.sub(r'\s*```$', '', text, flags=re.MULTILINE)
     text = text.strip()
+    
+    # Replace literal newlines to prevent json.loads Unterminated string errors
+    text = text.replace('\n', ' ')
+    
     try:
         return json.loads(text)
     except json.JSONDecodeError:
@@ -52,10 +56,16 @@ def _safe_json_parse(text: str) -> dict:
         raise
 
 
-def _retrieve_schema(question: str) -> str:
-    """Lấy schema context cho question (ChromaDB hoặc fallback)."""
+def _retrieve_schema(question: str, db_path: str = None) -> str:
+    """Retrieve schema context for question (ChromaDB or fallback)."""
     try:
-        context = get_schema_context_for_query(question, top_k=6)
+        from src.rag.schema_indexer import get_schema_context_for_query
+        db = None
+        if db_path:
+            from src.db import DatabaseManager
+            db = DatabaseManager(db_path)
+            
+        context = get_schema_context_for_query(question, db=db, top_k=6)
         if not context:
             return "No schema context available."
         return context
@@ -66,23 +76,33 @@ def _retrieve_schema(question: str) -> str:
 def orchestrator_node(state: AgentState) -> AgentState:
     """
     Node: Orchestrator
-    - Phân tích câu hỏi
-    - Quyết định có dùng cache không
-    - Lấy schema context
-    - Route đến agent tiếp theo
+    - Analyze question
+    - Decide whether to use cache
+    - Retrieve schema context
+    - Route to the next agent
     """
     log.info("orchestrator_run", question=state.user_question[:80])
 
     if not state.cache_checked:
-        # NOTE: orchestrator-level semantic cache disabled (embedding similarity
-        # too loose — "số lượng album" matches "danh sách album" but returns wrong SQL)
+        from src.memory.semantic_cache import get_semantic_cache
+        cache = get_semantic_cache()
+        cached_data = cache.get(state.user_question)
         state.cache_checked = True
+        
+        if cached_data:
+            cached_result, cached_sql = cached_data
+            log.info("orchestrator_cache_hit", question=state.user_question[:50])
+            state.cache_hit = True
+            state.cached_result = cached_result
+            state.generated_sql = cached_sql
+            state.next_agent = "result_formatter"
+            return state
 
     # Step 2: Retrieve schema context
     if state.override_schema_context:
         schema_context = state.override_schema_context
     else:
-        schema_context = _retrieve_schema(state.user_question)
+        schema_context = _retrieve_schema(state.user_question, state.current_db_path)
     state.schema_context = schema_context
 
     # Step 4: LLM Decision
@@ -94,7 +114,7 @@ def orchestrator_node(state: AgentState) -> AgentState:
     try:
         raw_response = invoke(
             prompt=user_prompt,
-            model=config.LLM_MODEL,
+            model=config.LLM_MODEL_PRO,
             temperature=config.ORCHESTRATOR_TEMPERATURE,
             max_tokens=1024,
             system_prompt=ORCHESTRATOR_SYSTEM.format(schema_context=state.schema_context),

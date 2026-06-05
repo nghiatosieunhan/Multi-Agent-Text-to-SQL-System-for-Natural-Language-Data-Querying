@@ -1,8 +1,8 @@
 """
 Column Pruner Agent (Idea B: Column Pruning)
-- Nhận danh sách các bảng ĐÃ ĐƯỢC CHỌN cùng toàn bộ cột của chúng.
-- Dùng LLM để loại bỏ các cột không liên quan đến câu hỏi.
-- Bắt buộc giữ lại Primary Keys và Foreign Keys để đảm bảo SQL Generator có thể JOIN.
+- Receives the list of SELECTED tables and all their columns.
+- Uses LLM to remove columns irrelevant to the question.
+- Mandatory to keep Primary Keys and Foreign Keys to ensure SQL Generator can JOIN.
 """
 import json
 import re
@@ -94,7 +94,7 @@ def prune_columns_for_query(question: str, db: DatabaseManager, selected_tables:
     try:
         raw_resp = invoke(
             prompt=prompt,
-            model=config.LLM_MODEL,
+            model=config.LLM_MODEL_FLASH,
             temperature=0.0,
             max_tokens=1024,
             system_prompt=COLUMN_PRUNER_SYSTEM

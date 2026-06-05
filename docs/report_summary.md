@@ -64,3 +64,25 @@ Tài liệu này ghi chú lại tuần tự toàn bộ quá trình tiến hóa c
 - **Vấn đề cuối cùng:** Khi User nạp một DB mới toanh vào giao diện Web, hệ thống bị rơi vào Zero-shot (Cold-start) khiến độ chính xác ở câu đầu tiên thấp.
 - **Giải pháp (Zero-Touch Onboarding):** Tích hợp tính năng "Sinh kinh nghiệm ảo" (`auto_fewshot.py`) thẳng vào nút [Onboard & Use] trên giao diện.
 - **Kết quả:** Khi bấm nút, hệ thống âm thầm quét DB -> Tự sinh 15 câu ví dụ -> Nạp thẳng vào FAISS Vector DB. Người dùng lập tức có được trải nghiệm truy vấn Few-shot RAG độ chính xác >90% ngay ở lần Chat đầu tiên mà không cần cấu hình bằng tay. Hệ thống đạt trạng thái Self-Learning (Tự học) hoàn chỉnh.
+
+---
+
+## GIAI ĐOẠN 6: Tối ưu Kiến trúc Prompt & Hệ thống Đánh giá Benchmark
+*Mục tiêu: Đạt điểm SOTA (State-of-the-Art) trên tập Benchmark tiếng Việt thông qua tinh chỉnh LLM và Hệ thống.*
+
+**1. Sáng lập "18-Rule Multi-Layer Prompt Architecture":**
+- Khắc phục tình trạng Prompt bị phân mảnh và "hardcode" bằng cách tổng hợp thành một hệ thống **18 Đạo luật Tổng quát (Universal Meta-Rules)** tại `sql_generator.py`.
+- **Semantic Grounding:** Dùng ví dụ minh họa (`e.g.`) để định hướng LLM mà không trói buộc vào bất kỳ Schema cụ thể nào (100% Generalized).
+- **Anti-Value Bleeding (Luật 11):** Xóa bỏ hoàn toàn "Bóng ma dữ liệu" (Hiện tượng AI copy nguyên xi các giá trị từ câu Few-shot vào SQL mới) bằng chỉ thị *Strict Literal Preservation*.
+- **Quantitative Intents (Luật 16):** Xử lý triệt để các câu hỏi bị hiểu nhầm ý định (từ Danh sách sang Số đếm) bằng cách bắt cứng các keyword ngữ nghĩa tiếng Việt (`"số lượng"`, `"bao nhiêu"`, `"tổng số"`).
+
+**2. Tiếng Việt hóa Jaccard Semantic Cache:**
+- Thay thế cơ chế tách từ (tokenization) thô sơ bằng khoảng trắng bằng thư viện NLP chuyên dụng **`underthesea`**. 
+- Điều này giúp bảo toàn chính xác các "từ ghép" tiếng Việt, nâng cao thuật toán Jaccard Similarity, tăng tỷ lệ Cache Hit (Tái sử dụng SQL cũ) lên mức hoàn hảo.
+
+**3. Đột phá Hạ tầng Đánh giá (Multithreaded Evaluator):**
+- Đập đi xây lại luồng đánh giá `evaluate.py`. Tích hợp **ThreadPoolExecutor** giúp chạy Đa luồng (Concurrency), giảm thời gian chấm điểm hàng trăm câu hỏi từ 1.5 tiếng xuống chỉ còn dưới 10 phút.
+- Xây dựng cơ chế **Checkpoint Manager** tự động lưu tiến trình. Xử lý khéo léo lỗi Rate-Limit (Vertex AI TPM drop) bằng cách giới hạn `max_workers=3` và cung cấp khả năng tự động Resume (chạy tiếp) thông minh.
+
+**4. Cập nhật Trái tim AI (Gemini 2.5 Flash):**
+- Lựa chọn **Gemini 2.5 Flash** làm Core Engine cuối cùng. Tận dụng được tốc độ xử lý siêu tốc của Flash Lite nhưng lại sở hữu năng lực suy luận sâu (Deep Reasoning) và bám sát lệnh (Instruction-following) của bản Pro, giúp hệ thống không bao giờ "ngợp" trước bộ luật 18 điều khổng lồ.

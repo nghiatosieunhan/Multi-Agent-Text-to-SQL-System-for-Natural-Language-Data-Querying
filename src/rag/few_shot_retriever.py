@@ -27,7 +27,7 @@ class FewShotRetriever:
                 self.vector_db = None
         return self.vector_db
 
-    def index_dataset(self, data_path: str, dataset_type: str = "spider"):
+    def index_dataset(self, data_path: str, dataset_type: str = "spider", start_offset: int = 0):
         """
         Thêm một dataset vào Vector DB.
         dataset_type: 'spider', 'bird', hoặc 'custom'
@@ -42,6 +42,10 @@ class FewShotRetriever:
         # Hỗ trợ format có chứa root key "questions" (như data_vn.json)
         if isinstance(train_data, dict) and "questions" in train_data:
             train_data = train_data["questions"]
+            
+        if start_offset > 0:
+            train_data = train_data[start_offset:]
+            print(f"Resuming from offset {start_offset}. Remaining items: {len(train_data)}")
         
         texts = []
         metadatas = []
@@ -73,19 +77,33 @@ class FewShotRetriever:
         # Load DB hiện tại nếu có
         self._get_db()
         
+        import time
         batch_size = 100
         for i in range(0, len(texts), batch_size):
             batch_texts = texts[i:i+batch_size]
             batch_metadatas = metadatas[i:i+batch_size]
             
-            if self.vector_db is None:
-                self.vector_db = FAISS.from_texts(batch_texts, self.embeddings, metadatas=batch_metadatas)
-            else:
-                self.vector_db.add_texts(texts=batch_texts, metadatas=batch_metadatas)
+            success = False
+            for attempt in range(10):
+                try:
+                    if self.vector_db is None:
+                        self.vector_db = FAISS.from_texts(batch_texts, self.embeddings, metadatas=batch_metadatas)
+                    else:
+                        self.vector_db.add_texts(texts=batch_texts, metadatas=batch_metadatas)
+                    success = True
+                    break
+                except Exception as e:
+                    print(f"Lỗi RateLimit ở mốc {i}, chờ 30s rồi thử lại (Lần {attempt+1}/10)...")
+                    time.sleep(30)
+            
+            if not success:
+                print("Thất bại nạp dữ liệu do Rate Limit kéo dài. Bỏ qua các câu còn lại.")
+                break
             
             print(f"✅ Đã index {min(i + batch_size, len(texts))} / {len(texts)} ...")
             # Cứ mỗi lần add xong thì lưu lại ổ cứng
             self.vector_db.save_local(self.persist_directory)
+            time.sleep(3) # Delay nhỏ để tránh spam API liên tục
         
         print(f"✅ Đã index xong tập {dataset_type} từ {data_path} vào FAISS DB!")
 
@@ -107,7 +125,8 @@ class FewShotRetriever:
         
         try:
             # FAISS hỗ trợ filter metadata tương tự
-            docs = db.similarity_search(search_text, k=k, filter=filter_dict)
+            # CẦN THÊM fetch_k RẤT LỚN VÌ FAISS LẤY fetch_k TRƯỚC RỒI MỚI LỌC FILTER!
+            docs = db.similarity_search(search_text, k=k, filter=filter_dict, fetch_k=100000)
         except Exception as e:
             print(f"Retrieve Error: {e}")
             return []

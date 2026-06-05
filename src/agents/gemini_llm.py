@@ -12,9 +12,9 @@ from src.config import config
 
 log = structlog.get_logger("gemini_llm")
 
-def get_llm(model: str = None, temperature: float = 0.0, max_tokens: int = 1024) -> ChatVertexAI:
+def get_llm(model: str = None, temperature: float = 0.0, max_tokens: int = 4096) -> ChatVertexAI:
     """Khởi tạo ChatVertexAI client."""
-    model_name = model or config.LLM_MODEL
+    model_name = model or config.LLM_MODEL_PRO
     return ChatVertexAI(
         model_name=model_name,
         temperature=temperature,
@@ -33,7 +33,7 @@ def invoke(
     prompt: str,
     model: str = None,
     temperature: float = 0.0,
-    max_tokens: int = 1024,
+    max_tokens: int = 4096,
     system_prompt: str = None,
     **kwargs
 ) -> str:
@@ -47,6 +47,12 @@ def invoke(
     
     try:
         response = llm.invoke(messages)
+        finish_reason = response.response_metadata.get("finish_reason", "unknown") if hasattr(response, "response_metadata") else "unknown"
+        if finish_reason != "STOP":
+            log.warning("gemini_abnormal_finish", finish_reason=finish_reason, content_length=len(response.content))
+            # If it hits MAX_TOKENS but output is tiny, it's a silent Vertex AI quota drop!
+            if finish_reason == "MAX_TOKENS" and len(response.content) < max_tokens:
+                raise RuntimeError(f"Vertex AI silent TPM drop detected: MAX_TOKENS at len {len(response.content)}")
         return response.content
     except Exception as e:
         log.warning("gemini_invoke_failed", error=str(e), model=model)
@@ -62,7 +68,7 @@ async def ainvoke(
     prompt: str,
     model: str = None,
     temperature: float = 0.0,
-    max_tokens: int = 1024,
+    max_tokens: int = 4096,
     system_prompt: str = None,
     **kwargs
 ) -> str:

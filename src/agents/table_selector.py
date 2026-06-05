@@ -1,8 +1,8 @@
 """
 Table Selector Agent (Idea A: Two-Stage Table Selection)
-- Nhận danh sách TẤT CẢ các bảng (chỉ gồm Tên và Mô tả ngắn).
-- Dùng LLM để suy luận và CHỌN ra danh sách chính xác các bảng cần thiết.
-- Giúp giảm thiểu Context Size và tăng độ chính xác của SQL Generator.
+- Receives a list of ALL tables (Name and short Description only).
+- Uses LLM to infer and SELECT the exact list of necessary tables.
+- Helps reduce Context Size and increase SQL Generator accuracy.
 """
 import json
 import re
@@ -87,7 +87,7 @@ def select_tables_for_query(question: str, db: DatabaseManager, semantic_descrip
     try:
         raw_resp = invoke(
             prompt=prompt,
-            model=config.LLM_MODEL,
+            model=config.LLM_MODEL_FLASH,
             temperature=0.0,
             max_tokens=512,
             system_prompt=TABLE_SELECTOR_SYSTEM

@@ -46,11 +46,19 @@ def _get_db(db_path: str = ""):
 def _extract_table_names(sql: str) -> list[str]:
     """Extract table names from FROM/JOIN (case-insensitive, unique)."""
     tables = set()
+    
+    # Identify CTE aliases (e.g., WITH CTE_NAME AS ( ... ) or , CTE_NAME AS ( ... ))
+    cte_aliases = set()
+    for m in re.finditer(r'(?:WITH|,)\s*([A-Za-z_][A-Za-z0-9_]*)\s+AS\s*\(', sql, re.IGNORECASE):
+        cte_aliases.add(m.group(1).lower())
+        
     # Hỗ trợ cả bảng không ngoặc và bảng có ngoặc kép/backticks/brackets (ví dụ: "Order Details")
     for m in re.finditer(r'\b(?:FROM|JOIN)\s+(?:`([^`]+)`|"([^"]+)"|\[([^\]]+)\]|([A-Za-z_][A-Za-z0-9_]*))', sql, re.IGNORECASE):
         t = m.group(1) or m.group(2) or m.group(3) or m.group(4)
         if t and t.upper() not in ("SELECT", "WITH"):
-            tables.add(t.lower())
+            t_lower = t.lower()
+            if t_lower not in cte_aliases:
+                tables.add(t_lower)
     return list(tables)
 
 
@@ -268,6 +276,7 @@ def validator_node(state: AgentState) -> AgentState:
         log.info("validation_passed", sql=sql[:80])
     else:
         issues_str = "; ".join(result.get("issues", []))
+        print(f"\\n[Validation Failed]\\nIssues: {issues_str}\\nSQL: {sql[:150]}\\n")
         log.warning("validation_failed", sql=sql[:80], issues=issues_str, retry=state.retry_count)
 
         if state.retry_count < state.max_retries:

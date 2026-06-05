@@ -48,10 +48,10 @@ class SemanticCache:
         return hashlib.sha256(text.strip().lower().encode()).hexdigest()[:16]
 
     # ── Public API ────────────────────────────────────────────────────────
-    def get(self, question: str) -> Optional[dict]:
+    def get(self, question: str) -> Optional[tuple[dict, str]]:
         """
         Kiểm tra xem câu hỏi đã có trong cache chưa.
-        Trả về cached result nếu similarity >= threshold, None nếu miss.
+        Trả về (cached result, sql) nếu similarity >= threshold, None nếu miss.
         """
         question_emb = embed_single(question)
         if not question_emb:
@@ -63,6 +63,36 @@ class SemanticCache:
                 continue
             similarity = self._cosine_similarity(question_emb, cached_emb)
             if similarity >= self.threshold:
+                # Anti-hallucination: Intent Matcher (Jaccard Similarity)
+                # Dù Cosine Similarity cao (Vector giống nhau), chúng ta vẫn phải kiểm tra
+                # xem các "Từ khóa thực thể" (Noun/Entities) có khớp nhau không.
+                # Anti-hallucination: Intent Matcher (Jaccard Similarity) với Underthesea
+                # Dùng thư viện tách từ Tiếng Việt để gom các từ ghép (VD: "bài hát" thay vì "bài", "hát")
+                import re
+                try:
+                    from underthesea import word_tokenize
+                except ImportError:
+                    # Fallback nếu chưa cài underthesea
+                    def word_tokenize(text, format):
+                        return re.findall(r'\b\w+\b', text)
+                        
+                def get_keywords(text: str) -> set:
+                    # Tách từ tiếng Việt, các từ ghép sẽ được nối bằng dấu '_'
+                    words = word_tokenize(text.lower(), format="text").split()
+                    stop_words = {"của", "trong", "có", "là", "những", "các", "cho", "biết", "bao", "nhiêu", "nào", "được", "với", "như", "thế"}
+                    return set(w.replace("_", " ") for w in words if w not in stop_words and len(w) > 1)
+                
+                kw1 = get_keywords(question)
+                kw2 = get_keywords(entry.get("question", ""))
+                
+                intersection = len(kw1.intersection(kw2))
+                union = len(kw1.union(kw2))
+                jaccard = intersection / union if union > 0 else 0
+                
+                if jaccard < self.threshold:
+                    log.info("cache_rejected_by_intent", original=question, cached=entry.get("question", ""), jaccard=round(jaccard, 2))
+                    continue  # Intent conflict, reject cache hit
+                
                 # Move to end (LRU update)
                 self._cache.move_to_end(key)
                 self._hits += 1
@@ -74,7 +104,7 @@ class SemanticCache:
                 )
                 result = entry["result"]
                 result["from_cache"] = True
-                return result
+                return result, entry["sql"]
 
         self._misses += 1
         return None

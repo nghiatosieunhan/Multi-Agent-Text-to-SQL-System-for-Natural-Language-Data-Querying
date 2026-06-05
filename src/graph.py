@@ -108,6 +108,8 @@ def build_graph() -> StateGraph:
     def orchestrator_route(state: AgentState) -> str:
         if state.error:
             return END
+        if state.cache_hit:
+            return "result_formatter"
         if state.plan_needed:
             return "query_planner"
         return "sql_generator"
@@ -116,6 +118,7 @@ def build_graph() -> StateGraph:
         source="orchestrator",
         path=orchestrator_route,
         path_map={
+            "result_formatter": "result_formatter",
             "sql_generator": "sql_generator",
             "query_planner": "query_planner",
         },
@@ -190,6 +193,7 @@ async def arun_query(
     db_path: str = "",
     override_schema_context: str = None,
     dataset_type: str = None,
+    evidence: str = None,
 ) -> AgentState:
     # Resolve và init DB (rebuild schema nếu đổi DB)
     # Khi db_path="" + có override_schema_context → Spider evaluation, không init DB
@@ -207,6 +211,7 @@ async def arun_query(
         current_db_path=resolved_db_path,
         override_schema_context=override_schema_context,
         dataset_type=dataset_type,
+        evidence=evidence or "",
     )
 
     workflow = get_workflow()
@@ -232,6 +237,7 @@ def run_query(
     db_path: str = "",
     override_schema_context: str = None,
     dataset_type: str = None,
+    evidence: str = None,
 ) -> AgentState:
     """
     Run a single query against the specified SQLite database.

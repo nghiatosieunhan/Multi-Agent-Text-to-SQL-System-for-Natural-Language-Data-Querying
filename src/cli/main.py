@@ -218,7 +218,11 @@ def batch_mode(questions: list[str], db_path: str = ""):
 def onboard_cmd(path: str):
     """CLI command: onboard a new database."""
     from src.agents.onboard import onboard_db
-    onboard_db(path)
+    from pathlib import Path
+    
+    db_id = Path(path).stem.lower()
+    description = f"Auto-onboarded DB: {db_id}"
+    onboard_db(path, db_id, description)
 
 
 def list_dbs_cmd():

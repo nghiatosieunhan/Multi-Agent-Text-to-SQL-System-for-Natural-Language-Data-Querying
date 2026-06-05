@@ -1,5 +1,5 @@
 """
-LangGraph State — định nghĩa state schema cho multi-agent graph.
+LangGraph State — defines state schema for multi-agent graph.
 """
 from typing import Optional, Any
 from pydantic import BaseModel, Field
@@ -9,34 +9,34 @@ from src.schema import SchemaContext
 
 class AgentState(BaseModel):
     """
-    Shared state giữa tất cả agents trong LangGraph.
-    Các field được cập nhật xuyên suốt pipeline.
+    Shared state across all agents in LangGraph.
+    Fields are updated throughout the pipeline.
     """
     # ── Input ─────────────────────────────────────────────────────────────
-    user_question: str = Field(default="", description="Câu hỏi gốc từ user")
-    session_id: str = Field(default="default", description="Session ID cho tracking")
+    user_question: str = Field(default="", description="Original user question")
+    session_id: str = Field(default="default", description="Session ID for tracking")
 
     # ── Multi-DB ──────────────────────────────────────────────────────────
-    current_db_path: str = Field(default="", description="Đường dẫn SQLite file hiện tại")
+    current_db_path: str = Field(default="", description="Current SQLite file path")
     current_db_schema: Optional[SchemaContext] = Field(
-        default=None, description="Schema context đã onboarded cho DB hiện tại"
+        default=None, description="Onboarded schema context for the current DB"
     )
 
     # ── Orchestrator ──────────────────────────────────────────────────────
-    intent_type: str = Field(default="unknown", description="Loại intent: simple|aggregate|join|complex|ambiguous")
+    intent_type: str = Field(default="unknown", description="Intent type: simple|aggregate|join|complex|ambiguous")
     intent_confidence: float = Field(default=0.0, ge=0.0, le=1.0)
     orchestrator_reasoning: str = Field(default="")
 
     # ── Cache ─────────────────────────────────────────────────────────────
     cache_checked: bool = Field(default=False)
     cache_hit: bool = Field(default=False)
-    cached_result: Optional[dict] = Field(default=None, description="Kết quả từ cache")
+    cached_result: Optional[dict] = Field(default=None, description="Cached result")
 
     # ── Schema / RAG ──────────────────────────────────────────────────────
-    schema_context: str = Field(default="", description="Schema context từ RAG retrieval")
+    schema_context: str = Field(default="", description="Schema context from RAG retrieval")
     override_schema_context: Optional[str] = Field(
         default=None,
-        description="Override schema — dùng thay thế RAG retrieval (Spider evaluation)"
+        description="Override schema — replaces RAG retrieval (Spider evaluation)"
     )
     tables_identified: list[str] = Field(default_factory=list)
     columns_identified: list[str] = Field(default_factory=list)

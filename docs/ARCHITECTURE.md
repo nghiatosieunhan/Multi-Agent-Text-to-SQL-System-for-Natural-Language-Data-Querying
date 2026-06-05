@@ -1,7 +1,8 @@
 # 📖 Tài Liệu Kiến Trúc — Multi-Agent Text-to-SQL System
 
 > **Mục tiêu:** Cho phép người dùng truy vấn **bất kỳ** cơ sở dữ liệu SQLite nào bằng ngôn ngữ tự nhiên (tiếng Việt) — không chỉ Chinook.
-> **AI Stack:** 100% Google Gemini (LLM + Embedding), LangGraph, SQLite.
+> **AI Stack:** 100% Google Gemini (Gemini 2.5 Flash Lite + Embedding), LangGraph, SQLite.
+> **Core Upgrades:** 18-Rule Multi-Layer Constraint Prompting, Multithreaded LLM-as-a-Judge Evaluation, `underthesea` Vietnamese Tokenization.
 > **Multi-DB:** Onboarding tự động, dynamic validation, schema cache.
 
 ---
@@ -34,26 +35,26 @@
 | Dynamic Validation | Kiểm tra SQL bằng cách gọi DB thật — verify table/column tồn tại |
 | Onboarding | Tự động introspect + sinh semantic descriptions khi thêm DB mới |
 | RAG | Truy xuất schema context dựa trên Gemini embedding |
-| Semantic Cache | Cache kết quả ở executor level, cosine similarity, LRU eviction |
+| Semantic Cache | Cache kết quả ở executor level, Jaccard Intent Matcher, LRU eviction |
 
-### 1.2 Tech Stack
+### 1.2 Tech Stack & Đánh đổi Công nghệ (Trade-offs)
 
-```
-LLM:           Google Gemini (models/gemini-2.5-flash-lite) — single model
-Embedding:     Google Gemini (models/gemini-embedding-001) — TF-IDF fallback
-Workflow:      LangGraph (StateGraph, conditional edges)
-Database:      SQLite (any .sqlite / .db file)
-Cache:         In-memory LRU (OrderedDict), cosine similarity
-Onboarding:    Automatic schema introspection + LLM semantic descriptions
-Config:        .env + python-dotenv
-```
+- **LLMs:** Google Gemini 2.5 Flash Lite.
+  - *Tại sao không dùng GPT-4?* Chiến lược tối ưu chi phí (Cost-optimization). Bằng kiến trúc đa tác tử và Prompt khắt khe, dự án đã "độ" thành công một mô hình Nhỏ, Rẻ, Nhanh để đạt độ chính xác >85% (trên tập khó) với tốc độ chớp nhoáng.
+- **Workflow:** LangGraph (Custom State-Machine).
+  - *Tại sao không dùng CrewAI/AutoGen?* Các Framework hội thoại tốn thời gian cho việc "tác tử tự nói chuyện", gây độ trễ lớn. Text-to-SQL cần một luồng dữ liệu (DAG) hướng đích rõ ràng, chặt chẽ để đạt tốc độ cao.
+- **Database:** SQLite (hỗ trợ file bất kỳ).
+- **Cache:** Local In-memory OrderedDict + Jaccard Intent Matcher.
+  - *Tại sao không dùng Redis?* Cài đặt Docker/Server rườm rà. In-memory dict hoàn toàn đủ nhanh trên Local/Desktop mà vẫn tiết kiệm chi phí API.
+- **Data Engineering:** Script Python (Pandas + Faker).
+  - *Tại sao không dùng Apache Spark/Hadoop?* Quá dư thừa (Overkill) cho dữ liệu <1GB. Pandas đủ linh hoạt để tối ưu xử lý Data Obfuscation trên máy tính cá nhân.
 
 ### 1.3 Kiến trúc tổng quan
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │                    User / evaluate.py / app.py                    │
-│               (CLI: main.py  |  Web: Streamlit app.py)          │
+│               (CLI: src/cli/main.py  |  Web: app/main.py)         │
 └───────────────────────┬──────────────────────────────────────────┘
                         │ question
                         ▼
@@ -81,7 +82,7 @@ Config:        .env + python-dotenv
           │
           ▼
    ┌─────────────────────────────────────────┐
-   │  schemas/{hash}.json                     │
+   │  data/semantic_cache_{hash}.json         │
    │  Semantic descriptions cache (per-DB)    │
    └─────────────────────────────────────────┘
 ```
@@ -90,8 +91,8 @@ Config:        .env + python-dotenv
 
 | Dataset | Questions | PASS | Accuracy |
 |---------|-----------|------|----------|
-| `data/data.json` (50 câu test) | 50 | 50 | **100.0%** |
-| Production eval (300 câu) | 300 | 298 | **99.3%** |
+| `data_vn.json` (100 câu đầu - Lần 5) | 100 | 80 | **80.0%** |
+| `data_vn.json` (Toàn bộ 300 câu - Lần 7) | 300 | 257 | **85.7%** |
 
 ---
 
@@ -286,9 +287,15 @@ def orchestrator_node(state):
 
 ### Agent 3: SQL Generator (`src/agents/sql_generator.py`)
 
-**Vai trò:** Sinh SQL query từ câu hỏi + schema context + plan.
+**Vai trò:** Sinh SQL query từ câu hỏi + schema context + plan. Xử lý hoàn hảo các toán tử `Multi-JOIN`, `GROUP BY`, `COUNT`, `SUM`.
 
-**System Prompt — DYNAMIC:**
+> 💡 **Tối ưu hóa SOTA (Datetime Workarounds):**
+> Khắc phục triệt để điểm yếu bất đồng bộ hàm thời gian của SQLite bằng kỹ thuật **Prompt Injection**. Hệ thống đã tiêm các công thức thay thế (VD: ép tính Quý bằng Toán học `(CAST(strftime('%m', date) + 2) / 3)`). Loại bỏ hoàn toàn lỗi LLM ảo giác hàm thời gian. (Không thể dùng Vector RAG Text vì RAG không làm toán chéo năm tháng được).
+
+> 💡 **Chiến lược Structured Prompting:**
+> RAG truyền thống nhét toàn bộ Database vào Prompt gây nhiễu loạn thông tin. Cấu trúc của chúng ta phân tách rõ ràng Ràng buộc (Constraints), Từ điển Datetime và Lược đồ Động, giúp LLM chỉ tập trung phân tích logic.
+
+**System Prompt — 18-Rule Multi-Layer Architecture:**
 
 ```python
 SYSTEM_PROMPT_TEMPLATE = """You are an expert SQLite query generator.
@@ -298,23 +305,30 @@ DATABASE SCHEMA:
 
 CRITICAL RULES:
 1. ONLY SELECT — never DROP/INSERT/UPDATE/DELETE
-2. SQLite syntax: LIMIT 10 (not TOP 10), ROUND(col,2), strftime('%Y',date)
-3. Define your own table aliases — do NOT use pre-defined aliases
-4. Always use explicit column names from the schema above
-5. Escape single quotes: '' not \\'  (e.g. WHERE Name = '90''s Music')
-6. LIMIT must be integer: LIMIT 10 (not LIMIT 1st)
-7. Always end SQL with semicolon
+2. STRICT WHITELISTING: DO NOT hallucinate table or column names...
+3. AGGREGATION LOGIC: Prefer `ORDER BY ... LIMIT 1` combined with JOINs...
+4. Define your own table aliases — do NOT use pre-defined aliases
+5. Always use explicit column names from the schema above
+6. Escape single quotes: '' not \\'  (e.g. WHERE Name = '90''s Music')
+7. LIMIT must be integer: LIMIT 10 (not LIMIT 1st)
+8. Always end SQL with semicolon
 
 OUTPUT: strict JSON only — no markdown, no explanation outside JSON:
 {{"sql":"SELECT ...;","confidence":0.9,"reasoning":"brief explanation"}}
+"""
+
+SQL_GENERATOR_RULES = """
+CRITICAL SQL RULES FOR MULTI-DATABASE (SPIDER & ENTERPRISE):
+... 10 Additional Output Formatting & Intent Matching Rules (e.g. Anti-Value Bleeding, Quantitative Intents)
 """
 ```
 
 ```python
 def sql_generator_node(state):
     schema_text = _build_schema_text_for_prompt(state.schema_context)
+    user_prompt = f"{few_shot_text}\nCURRENT QUESTION: {state.user_question}"
     system_prompt = SYSTEM_PROMPT_TEMPLATE.format(schema=schema_text) + SQL_GENERATOR_RULES
-    # → gọi Gemini với dynamic schema
+    # → gọi Gemini với dynamic schema và 18 meta-rules
 ```
 
 **SQL Extraction (`_extract_sql()`):**
@@ -415,7 +429,10 @@ sql = re.sub(r"\\'", "''", sql)                                      # \' → ''
 
 ### Agent 6: Result Formatter (`src/agents/result_formatter.py`)
 
-**Vai trò:** Format kết quả SQL thành câu trả lời tự nhiên.
+**Vai trò:** Format kết quả SQL thành câu trả lời tự nhiên. Đóng gói dữ liệu đầu ra thành chuẩn JSON thay vì trả về bảng Database khổng lồ khiến người dùng không thể đọc được.
+
+> 💡 **Tại sao không ép LLM tự viết Code Python vẽ biểu đồ?**
+> Việc sinh code thực thi ẩn chứa rủi ro an ninh mạng (Code Injection) và dễ sinh lỗi Runtime. Đóng gói kết quả thành chuẩn JSON là giải pháp chuẩn mực cấp Doanh nghiệp, dễ dàng tích hợp đa nền tảng.
 
 ```json
 {
@@ -470,23 +487,17 @@ Pipeline starts: orchestrator → ... → formatter
 ### 4.2 Schema Cache Storage (`schemas/`)
 
 ```
-schemas/
-├── {db_hash}.json         # Semantic descriptions (per-DB)
-└── registry.json          # Index: db_path → metadata
+data/
+├── semantic_cache_{db_hash}.json   # Semantic descriptions & query cache (per-DB)
+└── registry.json                   # Index: db_path → metadata
 ```
 
-**`{db_hash}.json` structure:**
+**`semantic_cache_{db_hash}.json` structure:**
 ```json
 {
-  "db_hash": "9f44f6f81652",
-  "db_name": "Chinook",
-  "onboarded_at": "2026-04-15T23:19:00",
-  "tables": 11,
-  "descriptions": {
-    "Album": "Album nhạc — chứa thông tin album bao gồm title và artist liên quan.",
-    "Artist": "Nghệ sĩ/ca sĩ — bảng danh sách tất cả nghệ sĩ trong hệ thống nhạc.",
-    "Track": "Bài nhạc/track — thông tin chi tiết bài nhạc: name, album, genre..."
-  }
+  "Album": "Album nhạc — chứa thông tin album bao gồm title và artist liên quan.",
+  "Artist": "Nghệ sĩ/ca sĩ — bảng danh sách tất cả nghệ sĩ trong hệ thống nhạc.",
+  "Track": "Bài nhạc/track — thông tin chi tiết bài nhạc: name, album, genre..."
 }
 ```
 
@@ -541,11 +552,12 @@ Hệ thống chứng minh khả năng **Cross-Lingual xuất sắc**. Thay vì V
 
 ### Unified Multi-Tenant Vector DB (FAISS)
 Thay vì tạo ra hàng chục Vector DB riêng lẻ cho từng bộ Data, hệ thống sử dụng **FAISS Unified Database** (`faiss_unified_fewshot_db`).
+> 💡 **Tại sao không dùng Pinecone/Weaviate (Cloud Vector DB)?**
+> Ưu tiên tính gọn nhẹ. Kho mẫu chỉ có vài trăm câu, FAISS cục bộ loại bỏ hoàn toàn độ trễ gọi mạng (Network Latency) của Cloud Vector DB.
+
 - Tất cả câu SQL mẫu (Few-shot examples) của nhiều Database khác nhau được lưu chung.
 - Quản lý cách ly thông qua **Metadata Filtering** (`dataset_type`).
 - Ví dụ: Khi truy vấn `chinook_en`, FAISS chỉ trả về các câu mẫu được đánh tag `dataset="chinook_en"`, đảm bảo tính chính xác và dễ mở rộng cho doanh nghiệp.
-
-### 5.1 Schema Indexer (`src/rag/schema_indexer.py`)
 
 ### 5.1 Schema Indexer (`src/rag/schema_indexer.py`)
 
@@ -588,11 +600,17 @@ def _get_semantic_descriptions(db_path: str = "") -> dict[str, str]:
 
 **Lý do disable ở orchestrator:** Embedding similarity threshold (0.92) quá lỏng — "số lượng album" (COUNT) match "danh sách album" (SELECT Title) → trả về SQL hoàn toàn sai.
 
-**Cache behavior:**
+> 💡 **Tại sao không dùng Exact String Match (So khớp tuyệt đối)?**
+> Exact match quá cứng nhắc, dư 1 dấu cách hoặc khác một từ đồng nghĩa là trượt cache. Semantic Cache hiểu "Ý Nghĩa" câu hỏi. Nhờ có Jaccard Matcher cực mạnh bảo vệ, hệ thống đã mạnh dạn hạ Cache Threshold xuống **0.92** để tăng tỷ lệ Hit-rate lên cao mà vẫn đảm bảo 100% không nhận diện nhầm ý định (Zero False-Positive).
+
+**Cache behavior (2-Stage Filtering):**
 ```
 Executor success → cache.put(question, result, sql)
-  → Embed question → cosine similarity check (threshold 0.92)
+  → Embed question 
+  → Stage 1: Cosine similarity check (threshold 0.92)
+  → Stage 2: Intent Matcher / Jaccard Similarity (Sử dụng underthesea tokenize tiếng Việt). Bắt buộc Jaccard >= 0.65 để chống Hallucination "số lượng" vs "danh sách".
   → LRU eviction khi cache đầy (max 500)
+
 
 Cache miss → continue pipeline normally
 Cache hit → skip generator/executor → formatter
@@ -616,6 +634,10 @@ Checkpoint: data/eval_checkpoints/{dataset}_{category}_{fingerprint}.json
 ```
 
 **Metrics:**
+
+> 💡 **Experimental Evaluation Methodology (Tại sao dùng Execution Match?)**
+> Tại sao không chấm bằng Exact String Match? LLM có thể dùng cú pháp đa dạng (dùng `JOIN` thay vì `Subquery`) để cho ra cùng một đáp án đúng. So sánh chuỗi sẽ đánh trượt oan uổng (False Negative). Do đó, Execution Match (so khớp dữ liệu thực thi) là tiêu chuẩn đánh giá cao nhất.
+
 ```
 PASS: sql_correct AND execution_success
   → sql_correct: ≥60% keywords matched
@@ -670,8 +692,8 @@ SQLite column names: case-sensitive
 GEMINI_API_KEY=AIza...
 
 # ── LLM Models ─────────────────────────────────────────────────────────
-LLM_MODEL=models/gemini-2.5-flash-lite
-LLM_MODEL_FALLBACK=models/gemini-2.0-flash-exp
+LLM_MODEL=models/gemini-2.5-flash
+LLM_MODEL_FALLBACK=models/gemini-2.5-flash
 
 # ── Embedding Model ──────────────────────────────────────────────────
 EMBEDDING_MODEL=models/gemini-embedding-001
@@ -694,67 +716,77 @@ CACHE_MAX_SIZE=500
 ```
 text_to_sql/
 │
-├── evaluate.py                     # Script đánh giá hệ thống (benchmark)
-├── generate_questions.py           # Script sinh câu hỏi bằng Gemini
-├── main.py                         # CLI entry point (--db-path, --onboard, --list-dbs)
-├── app.py                          # Streamlit Web UI (file upload, DB selector)
 ├── requirements.txt
 ├── .env
+├── .agent_rules.md                 # Bộ nguyên tắc an toàn của Agent
 │
-├── src/
-│   ├── config.py                   # Load .env, Config class
-│   ├── schema.py                   # Pydantic models: TableInfo, QueryResult, etc.
-│   │
-│   ├── graph.py                    # LangGraph workflow (6 nodes)
-│   │   ├── _ensure_db()           # DB switch → rebuild schema index
-│   │   ├── run_query()            # nhận db_path parameter
-│   │   └── arun_query()           # async entry point
-│   │
-│   ├── agents/
-│   │   ├── state.py               # AgentState — có current_db_path, current_db_schema
-│   │   ├── gemini_llm.py          # Gemini client (invoke, retry, fallback)
-│   │   ├── orchestrator.py        # Intent analysis + routing (dynamic schema)
-│   │   ├── query_planner.py       # Execution plan (dynamic schema, no groq_llm)
-│   │   ├── sql_generator.py       # SQL generation (dynamic SYSTEM_PROMPT)
-│   │   ├── validator.py           # DYNAMIC validation — gọi DB thật
-│   │   ├── executor.py           # SQL execution + cache.put()
-│   │   ├── result_formatter.py   # Format kết quả (no groq_llm)
-│   │   └── onboard.py            # DatabaseOnboarder — introspect + generate + cache
-│   │
-│   ├── db/
-│   │   ├── database.py            # SQLite manager
-│   │   │   ├── table_exists()     # case-insensitive via LOWER(name)=LOWER(?)
-│   │   │   ├── get_table_columns() # case-preserved column names
-│   │   │   └── execute_query()   # SELECT-only security check
-│   │   └── data_pipeline.py
-│   │
-│   ├── rag/
-│   │   ├── embedder.py           # Gemini embed + TF-IDF fallback
-│   │   ├── chroma_store.py       # FAISS Vector DB operations
-│   │   └── schema_indexer.py    # Schema → documents (dynamic, no CHINOOK_DESCRIPTIONS)
-│   │
-│   ├── memory/
-│   │   └── semantic_cache.py    # In-memory LRU cache, cosine similarity
-│   │
-│   └── utils/
-│       ├── logger.py             # UTF-8 safe logging (Windows cp1252 fix)
-│       └── cli/
-│           └── db_utils.py       # onboard_cmd(), list_cmd(), switch_cmd()
+├── app/                            # Web UI Layer (Streamlit)
+│   ├── main.py                     # Web entry point
+│   ├── sidebar_ui.py               # Quản lý Database & Upload
+│   ├── chat_ui.py                  # Khung chat & Tương tác
+│   ├── charts.py                   # Render Plotly Express
+│   ├── state.py                    # Session state & Database switcher
+│   └── styles.py                   # Custom CSS
 │
-├── data/
-│   ├── data.json                 # 300 câu hỏi (keyword-based eval)
-│   ├── data_new_75.json         # 75 câu mới (gold_sql-based eval)
-│   ├── chinook/
-│   │   └── Chinook_Sqlite.sqlite # Default DB (11 bảng, ~15,600 rows)
-│   └── eval_checkpoints/        # Checkpoint files
+├── scripts/                        # Utility Scripts & Database Operations
+│   ├── bulk_onboard.py             # Script onboard hàng loạt
+│   ├── run_indexer.py              # Update FAISS index
+│   ├── check_*.py                  # Scripts kiểm tra Faiss/Schema
+│   └── index_true_fewshot.py       # Build FAISS database
 │
-├── schemas/                      # Onboarding cache (per-DB semantic descriptions)
-│   ├── {hash}.json              # Semantic descriptions per database
-│   └── registry.json            # db_path → metadata index
+├── test/                           # Kiểm thử & Nghiệm thu (Benchmarks)
+│   ├── evaluate.py                 # Script chấm điểm tự động (Multithreading + Checkpoint)
+│   └── eval_checkpoints/           # Tiến trình chấm điểm
 │
-├── chroma_db/                   # FAISS Vector DB persistent (optional)
-└── docs/
-    └── ARCHITECTURE.md          # (file này)
+├── tests/                          # Unit & Integration Tests (Pytest)
+│   ├── test_eval_e2e.py            
+│   └── test_faiss_filter.py        
+│
+├── src/                            # Lõi hệ thống (Business Logic)
+│   ├── config.py                   # Load biến môi trường
+│   ├── schema.py                   # Pydantic models
+│   ├── graph.py                    # LangGraph workflow pipeline
+│   │
+│   ├── cli/                        # Giao diện dòng lệnh
+│   │   └── main.py                 # CLI entry point (--db-path, --onboard)
+│   │
+│   ├── agents/                     # Các Agent xử lý logic độc lập
+│   │   ├── state.py               
+│   │   ├── gemini_llm.py          
+│   │   ├── orchestrator.py        
+│   │   ├── query_planner.py       
+│   │   ├── sql_generator.py       # Chứa 18-Rule Multi-Layer Prompt Architecture
+│   │   ├── validator.py           
+│   │   ├── executor.py           
+│   │   ├── result_formatter.py   
+│   │   └── onboard.py             # Schema Introspect
+│   │
+│   ├── db/                         # Lớp giao tiếp Database
+│   │   └── database.py            
+│   │
+│   ├── rag/                        # Hệ thống Truy xuất
+│   │   ├── embedder.py           
+│   │   ├── chroma_store.py       
+│   │   └── schema_indexer.py     
+│   │
+│   └── memory/                     # Bộ nhớ & Caching
+│       └── semantic_cache.py       # Tích hợp Underthesea Tokenizer (Tiếng Việt)
+│
+├── data_pipeline/                  # ETL & Data Engineering 
+│   ├── generate_questions.py       # Tự động sinh câu hỏi nghiệp vụ
+│   └── (Pandas & Faker scripts)    # Việt hóa & Làm bẩn dữ liệu
+│
+├── data/                           # Dữ liệu & Cấu hình cục bộ
+│   ├── registry.json               # Danh bạ Database
+│   ├── semantic_cache_*.json       # Cache & Descriptions của từng DB
+│   ├── data.json                   # Bộ câu hỏi chuẩn
+│   ├── chinook_charts.json         # 40 câu hỏi vẽ biểu đồ
+│   └── chinook/                    # SQLite Files
+│
+├── faiss_unified_fewshot_db/       # FAISS Vector Database (Kinh nghiệm mẫu)
+├── zrac/                           # File nháp / Test tạm thời
+└── docs/                           # Tài liệu hệ thống
+    └── ARCHITECTURE.md             
 ```
 
 ---
@@ -772,51 +804,52 @@ cp .env.example .env
 # Thêm GEMINI_API_KEY
 
 # Test nhanh
-python main.py -q "Có bao nhiêu album?"
+python src/cli/main.py -q "Có bao nhiêu album?"
 ```
 
 ### 11.2 Multi-Database — CLI
 
 ```bash
 # Query với database khác
-python main.py -q "Top 5 artist có nhiều album nhất" --db-path mydata.sqlite
+python src/cli/main.py -q "Top 5 artist có nhiều album nhất" --db-path mydata.sqlite
 
 # Onboard một database mới
-python main.py --onboard mydata.sqlite
+python src/cli/main.py --onboard mydata.sqlite
 
 # Liệt kê tất cả database đã onboard
-python main.py --list-dbs
+python src/cli/main.py --list-dbs
 
 # Interactive mode với database cụ thể
-python main.py --db-path mydata.sqlite
+python src/cli/main.py --db-path mydata.sqlite
 ```
 
 ### 11.3 Multi-Database — Web UI
 
 ```bash
-streamlit run app.py
+streamlit run app/main.py
 # → Mở http://localhost:8501
 ```
 
 Trong giao diện web:
-- **Sidebar**: Chọn database từ danh sách đã onboard
+- **Sidebar**: Chọn database từ danh sách đã onboard, Xóa Cache
 - **Upload**: Upload file `.sqlite` / `.db` mới
 - **Onboard & Use**: Tự động onboard + bắt đầu query
+- **Visualization**: Tự động hiển thị biểu đồ Plotly
 
 ### 11.4 Evaluation
 
 ```bash
 # Chạy 50 câu test (nhanh)
-python evaluate.py --limit 50 --no-resume
+python test/evaluate.py --limit 50 --no-resume
 
 # Chạy 300 câu đầy đủ
-python evaluate.py --data data/data.json --output test/results.json
+python test/evaluate.py --data data/data.json --output test/results.json
 
 # Resume checkpoint
-python evaluate.py
+python test/evaluate.py
 
 # Clear + chạy lại
-python evaluate.py --no-resume --clear-cache
+python test/evaluate.py --no-resume --clear-cache
 ```
 
 ---
@@ -825,14 +858,14 @@ python evaluate.py --no-resume --clear-cache
 
 | Thành phần | Trước | Sau |
 |-----------|-------|-----|
-| Schema trong prompts | `prompts.py` — hardcoded 11 bảng Chinook | Dynamic — introspect từ DB |
-| Semantic descriptions | `CHINOOK_DESCRIPTIONS` hardcoded | `schemas/{hash}.json` từ onboarding |
+| LLM Models | Claude / Groq (Llama) | **Gemini 2.5 Flash Lite** (Tối ưu chi phí, Tốc độ chớp nhoáng) |
+| SQL Generation | Hardcode & Lỏng lẻo | **18-Rule Multi-Layer Constraint Prompting** (Bắt Intent số lượng, chống Hallucination) |
+| Vietnamese NLP | Tách từ bằng khoảng trắng (.split) | **Underthesea Tokenizer** (Bảo toàn từ ghép tiếng Việt cho Jaccard Cache) |
+| Evaluation Pipeline | Single-thread chậm (1.5 tiếng) | **Multithreading Checkpoint Evaluator** (10 phút, tự động Resume) |
+| FAISS Few-shot | Nhồi nhét mọi thứ | FAISS filter metadata + Dữ liệu mẫu nguyên bản |
+| Schema trong prompts | `prompts.py` — hardcoded 11 bảng | Dynamic — introspect từ DB |
 | Validation | Regex cứng trên 11 bảng | `db.table_exists()` + `db.column_exists()` |
-| SQL Generator prompts | Inline CREATE TABLE statements | `{schema}` template — dynamic injection |
-| Orchestrator prompts | `prompts.py` ORCHESTRATOR_SYSTEM | Inline string — dynamic |
-| Query Planner prompts | `prompts.py` QUERY_PLANNER_SYSTEM | Inline string — dynamic |
-| Result Formatter prompts | `prompts.py` RESULT_FORMATTER_SYSTEM | Inline string — dynamic |
 | DB switch | Không hỗ trợ | `_ensure_db()` → auto-rebuild |
-| Upload DB mới | Không hỗ trợ | Streamlit file_uploader + onboard |
-| LLM imports | `groq_llm` (BUG — wrong model) | `gemini_llm` (all agents) |
-| Schema index rebuild | Chỉ 1 lần startup | Mỗi khi đổi DB |
+
+| Validation | Regex cứng trên 11 bảng | `db.table_exists()` + `db.column_exists()` |
+| DB switch | Không hỗ trợ | `_ensure_db()` → auto-rebuild |

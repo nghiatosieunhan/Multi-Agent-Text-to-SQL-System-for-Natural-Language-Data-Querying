@@ -10,3 +10,11 @@
 {"tables": 13, "relationships": 13, "event": "introspection_complete", "level": "info", "timestamp": "2026-05-08T09:02:33.206116Z"}
 {"count": 13, "event": "generate_descriptions_success", "level": "info", "timestamp": "2026-05-08T09:02:39.785257Z"}
 {"db_hash": "9b6f5795aaa4", "cache_file": "I:\\AI\\text_to_sql\\schemas\\9b6f5795aaa4.json", "event": "save_cache_success", "level": "info", "timestamp": "2026-05-08T09:06:41.590174Z"}
+{"db": "chinook_vn", "path": "data/chinook/Chinook_VN.sqlite", "event": "onboarding", "level": "info", "timestamp": "2026-06-01T07:23:52.504224Z"}
+{"event": "onboard_success", "level": "info", "timestamp": "2026-06-01T07:24:17.330186Z"}
+{"db": "northwind", "path": "data/northwind/northwind.sqlite", "event": "onboarding", "level": "info", "timestamp": "2026-06-01T07:28:28.914212Z"}
+{"event": "onboard_success", "level": "info", "timestamp": "2026-06-01T07:28:53.875238Z"}
+{"db": "chinook_vn", "path": "data/chinook/Chinook_VN.sqlite", "event": "onboarding", "level": "info", "timestamp": "2026-06-03T04:34:50.212568Z"}
+{"event": "onboard_success", "level": "info", "timestamp": "2026-06-03T04:35:57.284526Z"}
+{"db": "northwind", "path": "data/northwind/northwind.sqlite", "event": "onboarding", "level": "info", "timestamp": "2026-06-03T06:54:50.334416Z"}
+{"event": "onboard_success", "level": "info", "timestamp": "2026-06-03T06:56:25.629421Z"}

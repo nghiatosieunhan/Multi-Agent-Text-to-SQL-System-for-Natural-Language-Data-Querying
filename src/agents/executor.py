@@ -46,6 +46,17 @@ def executor_node(state: AgentState) -> dict:
             state.next_agent = 'error'
             return state
     else:
+        # Zero-row self-correction logic (Content Matching)
+        if result.row_count == 0 and state.generation_attempts < state.max_retries:
+            # Check if SQL contains string equality (= 'val' or IN ('val'))
+            if re.search(r"(?:=|IN\s*\()\s*['\"][^'\"]+['\"]", sql_to_exec, re.IGNORECASE):
+                state.execution_error = "Execution successful, but returned 0 rows. Hint: The string in your WHERE clause might not perfectly match the database. Try using LIKE '%value%' (case-insensitive in SQLite) or check the spelling!"
+                state.current_step = 'execution_failed_zero_rows'
+                log.warning('sql_execution_zero_rows', sql=sql_to_exec[:80], retry=True, attempt=state.generation_attempts)
+                state.next_agent = 'sql_generator'
+                state.retry_count += 1
+                return state
+
         state.query_result = {
             'sql': result.sql,
             'columns': result.columns,

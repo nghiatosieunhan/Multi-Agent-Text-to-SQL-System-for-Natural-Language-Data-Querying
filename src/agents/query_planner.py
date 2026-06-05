@@ -1,5 +1,5 @@
 """
-Query Planner Agent — phân tích và lên kế hoạch SQL query phức tạp.
+Query Planner Agent — analyzes and plans complex SQL queries.
 """
 import json
 import re
@@ -35,6 +35,10 @@ def _safe_json_parse(text: str) -> dict:
     text = re.sub(r'^```(?:json)?\s*', '', text, flags=re.MULTILINE)
     text = re.sub(r'\s*```$', '', text, flags=re.MULTILINE)
     text = text.strip()
+    
+    # Replace literal newlines to prevent json.loads Unterminated string errors
+    text = text.replace('\n', ' ')
+    
     try:
         return json_module.loads(text)
     except json_module.JSONDecodeError:
@@ -64,8 +68,8 @@ def query_planner_node(state: AgentState) -> AgentState:
     try:
         raw_response = invoke(
             prompt=user_prompt,
-            model=config.LLM_MODEL,
-            temperature=0.1,
+            model=config.LLM_MODEL_PRO,
+            temperature=0.0,
             max_tokens=2048,
             system_prompt=QUERY_PLANNER_SYSTEM.format(schema_context=state.schema_context or "No schema available."),
         )

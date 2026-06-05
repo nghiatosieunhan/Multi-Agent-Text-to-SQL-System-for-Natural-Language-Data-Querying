@@ -1,5 +1,5 @@
 """
-Result Formatter Agent — format kết quả thành câu trả lời dễ hiểu.
+Result Formatter Agent — formats results into an easy-to-understand answer.
 """
 import json
 import structlog
@@ -23,27 +23,27 @@ SQL RESULT: {sql_result}
 def result_formatter_node(state: AgentState) -> AgentState:
     """
     Node: ResultFormatter
-    - Tạo câu trả lời tự nhiên từ kết quả SQL
-    - Đề xuất visualization
-    - Trả final result
+    - Generates a natural language answer from SQL results
+    - Recommends visualization
+    - Returns final result
     """
     log.info("formatter_run", row_count=state.query_result.get("row_count", 0) if state.query_result else 0)
 
     if state.cache_hit and state.cached_result:
-        # Cache hit — vẫn format nhưng đánh dấu cache
+        # Cache hit — format but mark as cached
         result_dict = state.cached_result
     elif state.query_result:
         result_dict = state.query_result
     else:
         result_dict = {"rows": [], "row_count": 0, "columns": [], "sql": ""}
 
-    # Build result string cho prompt
+    # Build result string for prompt
     if result_dict.get("rows"):
         rows_preview = result_dict["rows"][:10]
         rows_str = json.dumps(rows_preview, ensure_ascii=False, default=str)
-        result_summary = f"Kết quả: {result_dict['row_count']} dòng. Dữ liệu: {rows_str}"
+        result_summary = f"Result: {result_dict['row_count']} rows. Data: {rows_str}"
     else:
-        result_summary = "Không có dữ liệu trả về (0 dòng)."
+        result_summary = "No data returned (0 rows)."
 
     user_prompt = RESULT_FORMATTER_USER.format(
         question=state.user_question,
@@ -53,18 +53,28 @@ def result_formatter_node(state: AgentState) -> AgentState:
     try:
         raw_response = invoke(
             prompt=user_prompt,
-            model=config.LLM_MODEL,
+            model=config.LLM_MODEL_FLASH,
             temperature=0.2,
             max_tokens=1024,
             system_prompt=RESULT_FORMATTER_SYSTEM,
         )
 
+        # Strip markdown code blocks if present
+        clean_response = raw_response.strip()
+        if clean_response.startswith("```json"):
+            clean_response = clean_response[7:]
+        elif clean_response.startswith("```"):
+            clean_response = clean_response[3:]
+        if clean_response.endswith("```"):
+            clean_response = clean_response[:-3]
+        clean_response = clean_response.strip()
+
         try:
-            formatted = json.loads(raw_response)
+            formatted = json.loads(clean_response)
         except json.JSONDecodeError:
-            # Fallback: trả raw result
+            # Fallback: return raw result
             formatted = {
-                "summary": f"Kết quả: {result_dict.get('row_count', 0)} dòng.",
+                "summary": f"Result: {result_dict.get('row_count', 0)} rows.",
                 "detailed_answer": raw_response or result_summary,
                 "insights": [],
                 "visualization": {"recommended": False, "reason": "No specific insight to visualize."},
@@ -92,7 +102,7 @@ def result_formatter_node(state: AgentState) -> AgentState:
         log.error("formatter_error", error=str(e))
         # Fallback response
         state.formatted_answer = {
-            "summary": f"Kết quả: {result_dict.get('row_count', 0)} dòng.",
+            "summary": f"Result: {result_dict.get('row_count', 0)} rows.",
             "detailed_answer": str(state.query_result) if state.query_result else "No data.",
             "insights": [],
             "visualization": {"recommended": False, "reason": "Formatter error"},

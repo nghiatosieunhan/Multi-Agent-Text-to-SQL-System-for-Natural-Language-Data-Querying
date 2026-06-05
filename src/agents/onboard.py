@@ -14,7 +14,7 @@ def _db_hash(db_path: str) -> str:
     return hasher.hexdigest()
 
 def _load_registry() -> dict:
-    registry_path = config.BASE_DIR / "registry.json"
+    registry_path = config.DATA_DIR / "registry.json"
     if registry_path.exists():
         with open(registry_path, "r", encoding="utf-8") as f:
             return json.load(f)
@@ -25,7 +25,7 @@ def list_databases() -> dict:
 
 def load_cached(db_path: str) -> dict:
     db_id = _db_hash(str(db_path))
-    cache_path = config.BASE_DIR / f"semantic_cache_{db_id}.json"
+    cache_path = config.DATA_DIR / f"semantic_cache_{db_id}.json"
     if cache_path.exists():
         with open(cache_path, "r", encoding="utf-8") as f:
             return json.load(f)
@@ -33,7 +33,7 @@ def load_cached(db_path: str) -> dict:
 
 def save_cache(db_path: str, semantic_dict: dict):
     db_id = _db_hash(str(db_path))
-    cache_path = config.BASE_DIR / f"semantic_cache_{db_id}.json"
+    cache_path = config.DATA_DIR / f"semantic_cache_{db_id}.json"
     with open(cache_path, "w", encoding="utf-8") as f:
         json.dump(semantic_dict, f, ensure_ascii=False, indent=4)
 
@@ -65,7 +65,7 @@ def onboard_db(db_path: str, db_id: str, description: str):
     registry = _load_registry()
     registry[db_id] = description
     
-    registry_path = config.BASE_DIR / "registry.json"
+    registry_path = config.DATA_DIR / "registry.json"
     with open(registry_path, "w", encoding="utf-8") as f:
         json.dump(registry, f, ensure_ascii=False, indent=4)
         
