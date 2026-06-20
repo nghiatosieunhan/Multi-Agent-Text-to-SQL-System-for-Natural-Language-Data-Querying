@@ -97,7 +97,8 @@ def prune_columns_for_query(question: str, db: DatabaseManager, selected_tables:
             model=config.LLM_MODEL_FLASH,
             temperature=0.0,
             max_tokens=1024,
-            system_prompt=COLUMN_PRUNER_SYSTEM
+            system_prompt=COLUMN_PRUNER_SYSTEM,
+            telemetry_label="column_pruner",
         )
         
         pruned_result = _safe_json_parse(raw_resp)

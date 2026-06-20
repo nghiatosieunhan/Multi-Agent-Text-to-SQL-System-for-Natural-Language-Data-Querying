@@ -153,7 +153,12 @@ def rebuild_schema_index(db: Optional[DatabaseManager] = None, db_path: str = ""
         log.warning("schema_index_rebuild_skipped", error=str(e))
 
 
-def get_schema_context_for_query(query: str, db: Optional[DatabaseManager] = None, top_k: int = 5) -> str:
+def get_schema_context_for_query(
+    query: str,
+    db: Optional[DatabaseManager] = None,
+    top_k: int = 5,
+    pruning_mode: str = "auto",
+) -> str:
     """
     Lấy schema context. Phiên bản mới: Sử dụng Two-Stage Table Selection (Ý tưởng A).
     - Bước 1: Lấy danh sách toàn bộ bảng.
@@ -170,18 +175,29 @@ def get_schema_context_for_query(query: str, db: Optional[DatabaseManager] = Non
     schema = db.get_schema()
     semantic = _get_semantic_descriptions(db.db_path)
     
-    # --- BƯỚC ĐỘT PHÁ 1: TABLE SELECTOR AGENT (Ý tưởng A) ---
-    from src.agents.table_selector import select_tables_for_query
-    selected_table_names = select_tables_for_query(query, db, semantic)
-    
-    # --- BƯỚC ĐỘT PHÁ 2: COLUMN PRUNER AGENT (Ý tưởng B) ---
-    from src.agents.column_pruner import prune_columns_for_query
-    pruned_columns_map = prune_columns_for_query(query, db, selected_table_names)
-    # Chuẩn hóa pruned_columns_map về lowercase để tránh lỗi case-sensitive từ LLM
-    pruned_lower_map = {}
-    if pruned_columns_map:
-        for t, cols in pruned_columns_map.items():
-            pruned_lower_map[t.lower()] = set(c.lower() for c in cols)
+    if pruning_mode not in {"auto", "force", "bypass"}:
+        raise ValueError(f"Unsupported schema pruning mode: {pruning_mode}")
+
+    # Auto mode uses the production threshold; force/bypass exist for paired evaluation.
+    should_bypass = pruning_mode == "bypass" or (
+        pruning_mode == "auto" and len(schema.tables) < 30
+    )
+    if should_bypass:
+        selected_table_names = [t.table_name for t in schema.tables]
+        pruned_lower_map = {}
+    else:
+        # --- BƯỚC ĐỘT PHÁ 1: TABLE SELECTOR AGENT (Ý tưởng A) ---
+        from src.agents.table_selector import select_tables_for_query
+        selected_table_names = select_tables_for_query(query, db, semantic)
+        
+        # --- BƯỚC ĐỘT PHÁ 2: COLUMN PRUNER AGENT (Ý tưởng B) ---
+        from src.agents.column_pruner import prune_columns_for_query
+        pruned_columns_map = prune_columns_for_query(query, db, selected_table_names)
+        # Chuẩn hóa pruned_columns_map về lowercase để tránh lỗi case-sensitive từ LLM
+        pruned_lower_map = {}
+        if pruned_columns_map:
+            for t, cols in pruned_columns_map.items():
+                pruned_lower_map[t.lower()] = set(c.lower() for c in cols)
 
     parts = []
     for table in schema.tables:

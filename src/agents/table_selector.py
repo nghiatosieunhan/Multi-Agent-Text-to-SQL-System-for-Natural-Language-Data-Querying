@@ -90,7 +90,8 @@ def select_tables_for_query(question: str, db: DatabaseManager, semantic_descrip
             model=config.LLM_MODEL_FLASH,
             temperature=0.0,
             max_tokens=512,
-            system_prompt=TABLE_SELECTOR_SYSTEM
+            system_prompt=TABLE_SELECTOR_SYSTEM,
+            telemetry_label="table_selector",
         )
         
         result = _safe_json_parse(raw_resp)

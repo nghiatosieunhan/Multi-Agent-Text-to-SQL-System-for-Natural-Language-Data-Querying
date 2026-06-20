@@ -9,13 +9,13 @@ import structlog
 log = structlog.get_logger("few_shot")
 
 class FewShotRetriever:
-    def __init__(self, persist_directory="./faiss_unified_fewshot_db"):
+    def __init__(self, persist_directory=None):
         self.embeddings = VertexAIEmbeddings(
             model_name=config.EMBEDDING_MODEL,
             project=config.GOOGLE_CLOUD_PROJECT,
             location=config.GOOGLE_CLOUD_LOCATION
         )
-        self.persist_directory = persist_directory
+        self.persist_directory = persist_directory or str(config.FAISS_PERSIST_DIR)
         self.vector_db = None
 
     def _get_db(self):

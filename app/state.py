@@ -13,6 +13,15 @@ def init_or_switch_db(db_path: str, force_refresh: bool = False):
     if db_path == get_db_path() and not force_refresh:
         return
 
+    if force_refresh:
+        from src.memory import get_semantic_cache
+
+        cache = get_semantic_cache()
+        try:
+            cache.invalidate(namespace=db_path)
+        except TypeError:
+            cache.invalidate()
+
     st.session_state.current_db_path = db_path
 
     # Reinit DB manager
@@ -30,6 +39,9 @@ def init_or_switch_db(db_path: str, force_refresh: bool = False):
     except Exception as e:
         st.session_state.system_ready = False
         st.warning(f"Schema init failed: {e}")
+        # Revert back to previous DB if failed
+        st.session_state.current_db_path = config.DB_PATH
+        raise e
 
 def init_session():
     if "history" not in st.session_state:

@@ -7,7 +7,7 @@ import pandas as pd
 from src.db import DatabaseManager
 from src.db.data_pipeline import DataPipeline, DataCleaner, DataTransformer
 from src.memory.semantic_cache import SemanticCache
-from src.tools.visualizer import render_table_ascii, suggest_chart_type
+from tools.visualizer import render_table_ascii, suggest_chart_type
 
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────
@@ -79,7 +79,9 @@ class TestSemanticCache:
         cache.put("Tổng số sản phẩm?", result, "SELECT COUNT(*) FROM products")
         cached = cache.get("Tổng số sản phẩm?")
         assert cached is not None
-        assert cached["row_count"] == 1
+        cached_result, cached_sql = cached
+        assert cached_result["row_count"] == 1
+        assert cached_sql == "SELECT COUNT(*) FROM products"
 
     def test_cache_miss(self):
         cache = SemanticCache(max_size=10)

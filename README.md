@@ -64,7 +64,7 @@ cp .env.example .env
 ### 1. Giao diện Người dùng chính (Web UI)
 Giao diện Chatbot truy vấn và hiển thị Biểu đồ (Dashboard):
 ```bash
-streamlit run app/app.py
+streamlit run app/main.py
 ```
 *(Mở `http://localhost:8501` trên trình duyệt)*
 

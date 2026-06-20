@@ -1,12 +1,16 @@
 # LangGraph
 langgraph==0.2.60
 langchain-core==0.3.28
+langchain-community==0.3.13
+langchain-groq==0.2.2
 
 # Google Gemini (LLM + Embedding)
 google-genai>=1.0.0
+langchain-google-vertexai==2.0.12
 
 # Vector Store
 chromadb>=0.4.0
+faiss-cpu==1.9.0.post1
 
 # Database
 sqlalchemy==2.0.36
@@ -18,11 +22,13 @@ numpy==1.26.4
 # Visualization
 matplotlib==3.9.3
 seaborn==0.13.2
+plotly==5.24.1
 
 # Utilities
 python-dotenv==1.0.1
 pydantic==2.10.6
 structlog==24.4.0
+sqlglot>=25.0.0,<29.0.0
 
 # Optional: for data crawling / HTTP
 requests==2.32.3
@@ -32,3 +38,7 @@ lxml==5.3.0
 # Dev / testing
 pytest==8.3.4
 pytest-asyncio==0.25.2
+
+# Database Drivers
+psycopg2-binary==2.9.12
+pymysql==1.2.0

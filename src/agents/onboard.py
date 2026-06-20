@@ -3,7 +3,7 @@ import hashlib
 from pathlib import Path
 import structlog
 from src.config import config
-from src.db import DatabaseManager
+from src.db import get_db_manager
 from src.agents.llm_router import invoke
 
 log = structlog.get_logger("onboard")
@@ -38,7 +38,7 @@ def save_cache(db_path: str, semantic_dict: dict):
         json.dump(semantic_dict, f, ensure_ascii=False, indent=4)
 
 def get_current_db_schema(db_path: str):
-    db = DatabaseManager(str(db_path))
+    db = get_db_manager(str(db_path))
     schema = db.get_schema()
     semantic_dict = load_cached(db_path)
     
@@ -48,7 +48,7 @@ def get_current_db_schema(db_path: str):
     return schema, semantic_dict
 
 def generate_descriptions(db_path: str) -> dict:
-    db = DatabaseManager(str(db_path))
+    db = get_db_manager(str(db_path))
     schema = db.get_schema()
     semantic_dict = {}
     for t in schema.tables:

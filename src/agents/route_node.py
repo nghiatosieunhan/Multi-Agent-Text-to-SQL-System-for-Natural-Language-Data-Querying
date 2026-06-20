@@ -8,13 +8,17 @@ log = structlog.get_logger("router_node")
 
 def router_node(state: AgentState) -> dict:
     """Xác định Database dựa trên câu hỏi của người dùng và config."""
+    # Nếu đang trong luồng bypass (fast route), bỏ qua việc gọi LLM router
+    if state.is_fast_route:
+        return {"next_agent": "sql_generator"}
+        
     # Nếu DB đã được set rõ ràng từ UI hoặc script evaluate, không ghi đè
     if state.current_db_path:
         return {"next_agent": "orchestrator"}
         
     question = state.user_question
     
-    registry_path = config.BASE_DIR / "registry.json"
+    registry_path = config.DATA_DIR / "registry.json"
     if not registry_path.exists():
         return {"current_db_path": str(config.DB_PATH), "next_agent": "orchestrator"}
     
@@ -35,7 +39,11 @@ Hãy trả về CHỈ MỘT mã CSDL (db_id) phù hợp nhất với câu hỏi.
 Nếu không rõ, trả về "chinook". Không giải thích thêm.
 """
     try:
-        result = invoke(prompt, temperature=0.0).strip().lower()
+        result = invoke(
+            prompt,
+            temperature=0.0,
+            telemetry_label="router",
+        ).strip().lower()
         if result not in registry:
             result = "chinook"
         

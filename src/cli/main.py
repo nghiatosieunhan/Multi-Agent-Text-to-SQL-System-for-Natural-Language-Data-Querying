@@ -74,7 +74,7 @@ def init_system(db_path: str = "", force_rebuild: bool = False):
         print("[5/5] WARNING: No Gemini API key found!")
         print("     Please add GEMINI_API_KEY to your .env file")
     else:
-        print(f"[5/5] Gemini API ready ({config.LLM_MODEL})")
+        print(f"[5/5] Gemini API ready ({config.LLM_MODEL_PRO})")
 
     print()
     print(f"System ready with: {db_name}")
@@ -104,12 +104,12 @@ def interactive_mode(db_path: str = ""):
             break
         if cmd == "clear":
             cache = get_semantic_cache()
-            cache.invalidate()
+            cache.invalidate(namespace=db_path or None)
             print("Cache cleared.")
             continue
         if cmd == "stats":
             cache = get_semantic_cache()
-            s = cache.stats()
+            s = cache.stats(namespace=db_path or None)
             print(f"Cache: {s['hits']} hits, {s['misses']} misses, rate: {s['hit_rate']:.1%}")
             continue
 
@@ -201,7 +201,7 @@ def batch_mode(questions: list[str], db_path: str = ""):
     print("BATCH SUMMARY")
     print("=" * 60)
     cache = get_semantic_cache()
-    s = cache.stats()
+    s = cache.stats(namespace=db_path or None)
     total_time = sum(r[2] for r in results)
     cache_hits = sum(1 for r in results if r[1].cache_hit)
     errors = sum(1 for r in results if r[1].error)

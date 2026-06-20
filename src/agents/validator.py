@@ -16,17 +16,8 @@ DANGEROUS_KEYWORDS = [
     "ALTER", "CREATE", "EXEC", "EXECUTE", "GRANT", "REVOKE",
 ]
 
-# Những pattern chỉ ra LLM đang nhầm lẫn column (để gợi ý retry)
-HINT_PATTERNS = [
-    # Track.Title — nhầm Track.Name
-    (r'\btrack\s*\.\s*title\b', "Track.Name (not Title)"),
-    # Artist.GenreId — nhầm
-    (r'\bartist\s*\.\s*genreid\b', "Artist has no GenreId"),
-    # Invoice.AlbumId — nhầm
-    (r'\binvoice\s*\.\s*albumid\b', "Invoice has no AlbumId"),
-    # Employee.CustomerId — nhầm
-    (r'\bemployee\s*\.\s*customerid\b', "Employee has no CustomerId"),
-]
+# Tắt các pattern hardcode của Chinook để tránh false positives cho các DB khác
+HINT_PATTERNS = []
 
 
 def _fix_common_errors(sql: str) -> str:
@@ -77,15 +68,15 @@ def _validate_tables(sql: str, db) -> list[str]:
 
 def _get_actual_table_name(db, table_lower: str) -> str:
     """Resolve lowercase table name to actual case-preserved name in DB."""
-    import sqlite3
-    with db._get_conn() as conn:
-        cur = conn.cursor()
-        cur.execute(
-            "SELECT name FROM sqlite_master WHERE type='table' AND LOWER(name)=LOWER(?)",
-            (table_lower,)
-        )
-        row = cur.fetchone()
-        return row[0] if row else table_lower
+    from sqlalchemy import inspect
+    try:
+        inspector = inspect(db.engine)
+        for t in inspector.get_table_names():
+            if t.lower() == table_lower.lower():
+                return t
+    except Exception:
+        pass
+    return table_lower
 
 
 def _validate_column_refs(sql: str, db) -> list[str]:
@@ -254,6 +245,12 @@ def validator_node(state: AgentState) -> AgentState:
     if not sql:
         state.error = "No SQL to validate"
         state.next_agent = "error"
+        return state
+
+    if not state.evaluation_options.get("validator_enabled", True):
+        state.sql_validation = {"valid": True, "issues": [], "bypassed": True}
+        state.current_step = "validation_bypassed"
+        state.next_agent = "executor"
         return state
 
     db_path = state.current_db_path or ""

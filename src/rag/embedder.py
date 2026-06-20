@@ -1,8 +1,12 @@
 """
 Embedding Service — dùng Google Gemini gemini-embedding-001.
-Fallback: TF-IDF khi không có Gemini API key.
+Fallback: hashing vectors cố định khi Gemini không khả dụng.
 """
+import hashlib
+import math
+import re
 import time
+import unicodedata
 from typing import Optional
 
 import structlog
@@ -39,13 +43,30 @@ def embed_with_retry(
     texts: list[str],
     model: Optional[str] = None,
     max_retries: int = 3,
+    task_type: str = "RETRIEVAL_DOCUMENT",
 ) -> list[list[float]]:
     """
     Batch embedding với exponential backoff retry.
-    Dùng Gemini gemini-embedding-001, fallback sang TF-IDF.
+    Dùng Gemini gemini-embedding-001, fallback sang hashing vectors.
     """
+    embeddings, _ = embed_with_retry_metadata(
+        texts,
+        model=model,
+        max_retries=max_retries,
+        task_type=task_type,
+    )
+    return embeddings
+
+
+def embed_with_retry_metadata(
+    texts: list[str],
+    model: Optional[str] = None,
+    max_retries: int = 3,
+    task_type: str = "RETRIEVAL_DOCUMENT",
+) -> tuple[list[list[float]], dict]:
+    """Embed văn bản và trả kèm backend/model/số chiều để kiểm tra tương thích."""
     if not texts:
-        return []
+        return [], {"backend": "none", "model": "none", "dimension": 0}
 
     model = model or config.EMBEDDING_MODEL
     client = _get_gemini_client()
@@ -64,11 +85,16 @@ def embed_with_retry(
                 resp = client.models.embed_content(
                     model=model,
                     contents=contents,
-                    config={"task_type": "RETRIEVAL_DOCUMENT"},
+                    config={"task_type": task_type},
                 )
                 embeddings = [e.values for e in resp.embeddings]
                 log.info("gemini_embed_success", count=len(texts), attempt=attempt + 1)
-                return embeddings
+                dimension = len(embeddings[0]) if embeddings else 0
+                return embeddings, {
+                    "backend": "gemini",
+                    "model": model,
+                    "dimension": dimension,
+                }
 
             except Exception as e:
                 err = str(e)
@@ -80,50 +106,57 @@ def embed_with_retry(
                     log.error("gemini_embed_failed", error=err, attempt=attempt + 1)
                     break
 
-        log.warning("gemini_embed_fallback_to_tfidf", model=model)
+        log.warning("gemini_embed_fallback_to_hashing", model=model)
 
-    # Fallback: TF-IDF
-    return _fallback_embed(texts)
+    embeddings = _fallback_embed(texts)
+    dimension = len(embeddings[0]) if embeddings else 0
+    return embeddings, {
+        "backend": "hashing",
+        "model": "stable-token-hashing-v1",
+        "dimension": dimension,
+    }
 
 
-def embed_single(text: str) -> list[float]:
+def embed_single(text: str, task_type: str = "RETRIEVAL_DOCUMENT") -> list[float]:
     """Embed một câu đơn lẻ."""
-    embeddings = embed_with_retry([text])
+    embeddings = embed_with_retry([text], task_type=task_type)
     return embeddings[0] if embeddings else []
+
+
+def embed_single_with_metadata(
+    text: str,
+    task_type: str = "RETRIEVAL_DOCUMENT",
+) -> tuple[list[float], dict]:
+    """Embed một câu và trả metadata của backend thực tế đã sử dụng."""
+    embeddings, metadata = embed_with_retry_metadata([text], task_type=task_type)
+    return (embeddings[0] if embeddings else []), metadata
 
 
 def _fallback_embed(texts: list[str]) -> list[list[float]]:
     """
-    TF-IDF fallback khi không dùng được Gemini API.
+    Vector hashing cố định, có thể so sánh giữa các lần gọi độc lập.
+
+    Không dùng TF-IDF fit riêng từng batch vì vocabulary/column index thay đổi,
+    khiến cosine similarity giữa hai lần embed không còn ý nghĩa.
     """
-    try:
-        from sklearn.feature_extraction.text import TfidfVectorizer
-        import numpy as np
+    dimension = 384
+    vectors = []
 
-        vectorizer = TfidfVectorizer(max_features=384)
-        matrix = vectorizer.fit_transform(texts).toarray()
+    for text in texts:
+        normalized = unicodedata.normalize("NFKC", text).casefold()
+        tokens = re.findall(r"\w+", normalized, flags=re.UNICODE)
+        features = tokens + [f"{a}_{b}" for a, b in zip(tokens, tokens[1:])]
+        vector = [0.0] * dimension
 
-        # Pad/truncate to fixed dimension
-        target_dim = 384
-        if matrix.shape[1] < target_dim:
-            padded = np.zeros((matrix.shape[0], target_dim))
-            padded[:, :matrix.shape[1]] = matrix
-            matrix = padded
-        elif matrix.shape[1] > target_dim:
-            matrix = matrix[:, :target_dim]
+        for feature in features:
+            digest = hashlib.sha256(feature.encode("utf-8")).digest()
+            index = int.from_bytes(digest[:4], "big") % dimension
+            vector[index] += 1.0
 
-        log.info("tfidf_fallback_embed", count=len(texts))
-        return matrix.tolist()
+        norm = math.sqrt(sum(value * value for value in vector))
+        if norm:
+            vector = [value / norm for value in vector]
+        vectors.append(vector)
 
-    except ImportError:
-        # Final fallback: deterministic hash vectors
-        import hashlib
-        import numpy as np
-
-        vectors = []
-        for t in texts:
-            h = hashlib.sha256(t.encode()).digest()
-            vec = np.array([b / 255.0 for b in (list(h) * 16)[:384]])
-            vectors.append(vec.tolist())
-        log.warning("hash_fallback_embed", count=len(texts))
-        return vectors
+    log.info("hashing_fallback_embed", count=len(texts), dimension=dimension)
+    return vectors

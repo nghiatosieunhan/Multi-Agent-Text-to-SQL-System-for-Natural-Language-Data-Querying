@@ -63,5 +63,6 @@ Dựa trên các kết quả Benchmark thực tế (đặc biệt là bài Blind
 - **Hạn chế:** Tăng số lượng requests mạng (Network overhead).
 
 ### 9. Experimental Evaluation Methodology
-- **Áp dụng:** Xây dựng script `evaluate.py` chạy theo cơ chế *Execution Match* (Thực thi SQL và so sánh Data trả về). Đây là phương pháp chấm điểm uy tín nhất.
-- **Hạn chế:** Bị lỗi **False Negative** (Oan sai). Ví dụ: LLM sinh đúng hàm `AVG` nhưng đáp án mẫu là `ROUND(AVG, 2)`. Dữ liệu trả về lệch thập phân khiến máy chấm là SAI, làm điểm số bị thấp hơn năng lực thực tế.
+- **Áp dụng:** Xây dựng script `evaluate.py` chạy theo cơ chế *Execution Match* (Thực thi SQL và so sánh Data trả về). Đây là phương pháp chấm điểm uy tín và thực tế nhất.
+- **Hạn chế 1 (Sai số thập phân):** Bị lỗi **False Negative** (Oan sai). Ví dụ: LLM sinh đúng hàm `AVG` nhưng đáp án mẫu là `ROUND(AVG, 2)`. Dữ liệu trả về lệch thập phân khiến máy chấm là SAI, làm điểm số bị thấp hơn năng lực thực tế.
+- **Hạn chế 2 (Nghịch lý Projection Ambiguity):** Xuất hiện tình trạng câu hỏi dễ (Simple) lại có tỷ lệ đúng thấp hơn câu hỏi khó (Join/Aggregate). Nguyên nhân là do ở câu đơn giản (vd: "Danh sách khách hàng"), đáp án mẫu thường dùng `SELECT *`, trong khi LLM bị ép bởi bộ Rule phải tối ưu UX bằng cách chỉ `SELECT Ma, Ten`. Sự lệch pha về số lượng cột khiến cơ chế *Execution Match* đánh rớt (Logic Error), dù về mặt tư duy dữ liệu LLM đã làm hoàn toàn chính xác.

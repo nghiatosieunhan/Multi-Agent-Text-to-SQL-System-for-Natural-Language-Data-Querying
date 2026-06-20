@@ -4,7 +4,7 @@ from pathlib import Path
 import structlog
 from src.agents.onboard import get_current_db_schema
 import sys, os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'zrac'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'data_pipeline'))
 from generate_questions import generate_batch
 from src.rag.few_shot_retriever import FewShotRetriever
 

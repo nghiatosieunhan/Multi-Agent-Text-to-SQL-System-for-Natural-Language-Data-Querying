@@ -14,6 +14,7 @@ from src.agents.validator import validator_node
 from src.agents.executor import executor_node
 from src.agents.result_formatter import result_formatter_node
 from src.config import config
+from src.evaluation.telemetry import timed_node, telemetry_run
 
 log = structlog.get_logger("langgraph")
 
@@ -76,16 +77,22 @@ def build_graph() -> StateGraph:
     """
     graph = StateGraph(AgentState)
 
-    graph.add_node("router", router_node)
-    graph.add_node("orchestrator", orchestrator_node)
-    graph.add_node("query_planner", query_planner_node)
-    graph.add_node("sql_generator", sql_generator_node)
-    graph.add_node("validator", validator_node)
-    graph.add_node("executor", executor_node)
-    graph.add_node("result_formatter", result_formatter_node)
+    graph.add_node("router", timed_node("router", router_node))
+    graph.add_node("orchestrator", timed_node("orchestrator", orchestrator_node))
+    graph.add_node("query_planner", timed_node("query_planner", query_planner_node))
+    graph.add_node("sql_generator", timed_node("sql_generator", sql_generator_node))
+    graph.add_node("validator", timed_node("validator", validator_node))
+    graph.add_node("executor", timed_node("executor", executor_node))
+    graph.add_node("result_formatter", timed_node("result_formatter", result_formatter_node))
 
     # 1. Khởi động từ Router
-    graph.set_entry_point("router")
+    # (Router route will handle whether to go to orchestrator or sql_generator)
+    # Wait, the user suggested START -> input_adapter -> router.
+    graph.add_node("input_adapter", timed_node("input_adapter", input_adapter_node))
+    graph.add_node("output_adapter", timed_node("output_adapter", output_adapter_node))
+
+    graph.set_entry_point("input_adapter")
+    graph.add_edge("input_adapter", "router")
     
     # 2. Router route
     def router_route(state: AgentState) -> str:
@@ -121,6 +128,7 @@ def build_graph() -> StateGraph:
             "result_formatter": "result_formatter",
             "sql_generator": "sql_generator",
             "query_planner": "query_planner",
+            END: END,
         },
     )
 
@@ -171,29 +179,91 @@ def build_graph() -> StateGraph:
         },
     )
 
-    # 8. Result Formatter → END
-    graph.add_edge("result_formatter", END)
+    # 8. Result Formatter → output_adapter → END
+    graph.add_edge("result_formatter", "output_adapter")
+    graph.add_edge("output_adapter", END)
 
     return graph
 
 
 _workflow = None
 
+def input_adapter_node(state: AgentState):
+    from langchain_core.messages import HumanMessage
+    import re
+    
+    # 1. Get raw question
+    if state.messages:
+        raw_question = state.messages[-1].content
+        ret = {"user_question": raw_question}
+    else:
+        raw_question = state.user_question
+        ret = {"messages": [HumanMessage(content=raw_question)]}
+        
+    # 2. Extract Entities via Regex
+    entities = {}
+    if ip_match := re.search(r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b', raw_question):
+        entities["ip"] = ip_match.group(0)
+    if emp_match := re.search(r'NV-[0-9]+', raw_question, re.IGNORECASE):
+        entities["employee_id"] = emp_match.group(0).upper()
+        
+    # 3. Check Fast Route
+    fast_route_patterns = [r"^danh sách sản phẩm$", r"^doanh thu hôm nay$"]
+    is_fast = any(re.match(p, raw_question.strip().lower()) for p in fast_route_patterns)
+    
+    # 4. Dialect detection
+    dialect = "sqlite"
+    if state.current_db_path.startswith("postgresql"):
+        dialect = "postgresql"
+    elif state.current_db_path.startswith("mysql"):
+        dialect = "mysql"
+    ret["db_dialect"] = dialect
+
+    # 5. Update state with Regex results and override next_agent if fast route
+    ret["extracted_entities"] = entities
+    ret["is_fast_route"] = is_fast
+    if is_fast:
+        ret["next_agent"] = "sql_generator"
+        
+    return ret
+
+def output_adapter_node(state: AgentState):
+    from langchain_core.messages import AIMessage
+    
+    # Lấy câu trả lời cuối cùng từ formatted_answer
+    content = ""
+    if state.formatted_answer:
+        if "chat_response" in state.formatted_answer:
+            content = state.formatted_answer["chat_response"]
+        elif "detailed_answer" in state.formatted_answer:
+            content = state.formatted_answer["detailed_answer"]
+        elif "summary" in state.formatted_answer:
+            content = state.formatted_answer["summary"]
+            
+    return {"messages": [AIMessage(content=content)]}
+
+_memory = None
 
 def get_workflow():
-    global _workflow
+    global _workflow, _memory
     if _workflow is None:
-        _workflow = build_graph().compile()
+        from langgraph.checkpoint.memory import MemorySaver
+        _memory = MemorySaver()
+        graph = build_graph()
+        _workflow = graph.compile(checkpointer=_memory)
     return _workflow
 
 
-async def arun_query(
+async def _arun_query_impl(
     question: str,
     session_id: str = "default",
     db_path: str = "",
     override_schema_context: str = None,
     dataset_type: str = None,
     evidence: str = None,
+    analysis_mode: str = "deep",
+    evaluation_profile: str = "full",
+    evaluation_options: dict = None,
 ) -> AgentState:
     # Resolve và init DB (rebuild schema nếu đổi DB)
     # Khi db_path="" + có override_schema_context → Spider evaluation, không init DB
@@ -204,6 +274,14 @@ async def arun_query(
 
     log.info("arun_query_start", question=question[:100], session_id=session_id, db=resolved_db_path)
 
+    # Detect db_dialect from path
+    db_dialect = "sqlite"
+    if resolved_db_path:
+        if resolved_db_path.startswith("postgresql"):
+            db_dialect = "postgresql"
+        elif resolved_db_path.startswith("mysql"):
+            db_dialect = "mysql"
+
     initial_state = AgentState(
         user_question=question,
         session_id=session_id,
@@ -212,10 +290,15 @@ async def arun_query(
         override_schema_context=override_schema_context,
         dataset_type=dataset_type,
         evidence=evidence or "",
+        analysis_mode=analysis_mode,
+        db_dialect=db_dialect,
+        evaluation_profile=evaluation_profile,
+        evaluation_options=evaluation_options or {},
     )
 
     workflow = get_workflow()
-    raw_result = await workflow.ainvoke(initial_state)
+    runtime_config = {"configurable": {"thread_id": session_id}, "recursion_limit": 25}
+    raw_result = await workflow.ainvoke(initial_state, config=runtime_config)
     if isinstance(raw_result, dict):
         result = AgentState(**raw_result)
     else:
@@ -231,6 +314,48 @@ async def arun_query(
     return result
 
 
+async def arun_query(
+    question: str,
+    session_id: str = "default",
+    db_path: str = "",
+    override_schema_context: str = None,
+    dataset_type: str = None,
+    evidence: str = None,
+    analysis_mode: str = "deep",
+    evaluation_profile: str = "full",
+    evaluation_options: dict = None,
+) -> AgentState:
+    """Run one query and attach isolated evaluation telemetry."""
+    from copy import deepcopy
+    from src.evaluation.profiles import get_profile_options
+
+    options = get_profile_options(evaluation_profile, evaluation_options)
+    if options.get("baseline"):
+        from src.evaluation.baselines import arun_baseline_query
+
+        return await arun_baseline_query(
+            question=question,
+            session_id=session_id,
+            db_path=db_path,
+            baseline=options["baseline"],
+        )
+
+    with telemetry_run(session_id) as collector:
+        result = await _arun_query_impl(
+            question=question,
+            session_id=session_id,
+            db_path=db_path,
+            override_schema_context=override_schema_context,
+            dataset_type=dataset_type,
+            evidence=evidence,
+            analysis_mode=analysis_mode,
+            evaluation_profile=evaluation_profile,
+            evaluation_options=options,
+        )
+    result.telemetry = deepcopy(collector)
+    return result
+
+
 def run_query(
     question: str,
     session_id: str = "default",
@@ -238,6 +363,9 @@ def run_query(
     override_schema_context: str = None,
     dataset_type: str = None,
     evidence: str = None,
+    analysis_mode: str = "deep",
+    evaluation_profile: str = "full",
+    evaluation_options: dict = None,
 ) -> AgentState:
     """
     Run a single query against the specified SQLite database.
@@ -257,13 +385,44 @@ def run_query(
             import concurrent.futures
             with concurrent.futures.ThreadPoolExecutor() as pool:
                 future = pool.submit(
-                    asyncio.run, arun_query(question, session_id, db_path, override_schema_context, dataset_type)
+                    asyncio.run,
+                    arun_query(
+                        question,
+                        session_id,
+                        db_path,
+                        override_schema_context,
+                        dataset_type,
+                        evidence,
+                        analysis_mode,
+                        evaluation_profile,
+                        evaluation_options,
+                    ),
                 )
                 return future.result()
         else:
-            return asyncio.run(arun_query(question, session_id, db_path, override_schema_context, dataset_type))
+            return asyncio.run(arun_query(
+                question,
+                session_id,
+                db_path,
+                override_schema_context,
+                dataset_type,
+                evidence,
+                analysis_mode,
+                evaluation_profile,
+                evaluation_options,
+            ))
     except RuntimeError:
-        return asyncio.run(arun_query(question, session_id, db_path, override_schema_context))
+        return asyncio.run(arun_query(
+            question,
+            session_id,
+            db_path,
+            override_schema_context,
+            dataset_type,
+            evidence,
+            analysis_mode,
+            evaluation_profile,
+            evaluation_options,
+        ))
 
 def stream_query(
     question: str,
@@ -271,11 +430,20 @@ def stream_query(
     db_path: str = "",
     override_schema_context: str = None,
     dataset_type: str = None,
+    analysis_mode: str = "deep",
 ):
     if db_path or override_schema_context is None:
         resolved_db_path = _ensure_db(db_path)
     else:
         resolved_db_path = ""
+
+    # Detect db_dialect from path
+    db_dialect = "sqlite"
+    if resolved_db_path:
+        if resolved_db_path.startswith("postgresql"):
+            db_dialect = "postgresql"
+        elif resolved_db_path.startswith("mysql"):
+            db_dialect = "mysql"
 
     initial_state = AgentState(
         user_question=question,
@@ -284,8 +452,11 @@ def stream_query(
         current_db_path=resolved_db_path,
         override_schema_context=override_schema_context,
         dataset_type=dataset_type,
+        analysis_mode=analysis_mode,
+        db_dialect=db_dialect,
     )
 
     workflow = get_workflow()
-    for output in workflow.stream(initial_state):
+    config = {"configurable": {"thread_id": session_id}, "recursion_limit": 25}
+    for output in workflow.stream(initial_state, config=config):
         yield output

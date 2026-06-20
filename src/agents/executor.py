@@ -14,7 +14,7 @@ def _fix_common_errors(sql: str) -> str:
 
 def executor_node(state: AgentState) -> dict:
     if not state.current_db_path:
-        state.execution_error = 'No database file — cannot execute SQL (Spider evaluation with schema-only)'
+        state.execution_error = 'No database file — cannot execute SQL'
         state.current_step = 'execution_skipped'
         state.next_agent = 'result_formatter'
         return state
@@ -36,18 +36,25 @@ def executor_node(state: AgentState) -> dict:
         state.execution_time_ms = result.execution_time_ms
         state.current_step = 'execution_failed'
 
-        if state.generation_attempts < state.max_retries:
+        if (
+            state.evaluation_options.get("self_correction_enabled", True)
+            and state.generation_attempts < state.max_retries
+        ):
             log.warning('sql_execution_error', error=result.error, sql=sql_to_exec[:80] if sql_to_exec else None, retry=True, attempt=state.generation_attempts)
             state.next_agent = 'sql_generator'
             state.retry_count += 1
             return state
         else:
-            state.error = f"SQL execution failed after {state.max_retries} retries: {result.error}\n(SQL: {sql_to_exec})"
+            state.error = f"SQL execution failed: {result.error}\n(SQL: {sql_to_exec})"
             state.next_agent = 'error'
             return state
     else:
         # Zero-row self-correction logic (Content Matching)
-        if result.row_count == 0 and state.generation_attempts < state.max_retries:
+        if (
+            state.evaluation_options.get("self_correction_enabled", True)
+            and result.row_count == 0
+            and state.generation_attempts < state.max_retries
+        ):
             # Check if SQL contains string equality (= 'val' or IN ('val'))
             if re.search(r"(?:=|IN\s*\()\s*['\"][^'\"]+['\"]", sql_to_exec, re.IGNORECASE):
                 state.execution_error = "Execution successful, but returned 0 rows. Hint: The string in your WHERE clause might not perfectly match the database. Try using LIKE '%value%' (case-insensitive in SQLite) or check the spelling!"
@@ -70,12 +77,21 @@ def executor_node(state: AgentState) -> dict:
         state.current_step = 'execution_success'
         state.next_agent = 'formatter'
         
-        try:
-            cache = get_semantic_cache()
-            cache.put(state.user_question, state.query_result, state.generated_sql)
-            log.info("result_cached", sql=state.generated_sql[:60] if state.generated_sql else None)
-        except Exception as cache_err:
-            log.warning("cache_put_failed", error=str(cache_err))
+        if state.evaluation_options.get("cache_enabled", True):
+            try:
+                cache = get_semantic_cache()
+                try:
+                    cache.put(
+                        state.user_question,
+                        state.query_result,
+                        state.generated_sql,
+                        namespace=state.current_db_path,
+                    )
+                except TypeError:
+                    cache.put(state.user_question, state.query_result, state.generated_sql)
+                log.info("result_cached", sql=state.generated_sql[:60] if state.generated_sql else None)
+            except Exception as cache_err:
+                log.warning("cache_put_failed", error=str(cache_err))
         
         log.info('execution_success', row_count=result.row_count, time_ms=result.execution_time_ms)
         return state

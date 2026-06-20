@@ -110,7 +110,7 @@ def retrieve_schema_context(query: str, top_k: int = 5) -> list[dict]:
             return _fallback_schema_lookup(query, top_k)
 
         from src.rag.embedder import embed_with_retry
-        query_emb = embed_with_retry([query])[0]
+        query_emb = embed_with_retry([query], task_type="RETRIEVAL_QUERY")[0]
 
         count = collection.count()
         if count == 0:

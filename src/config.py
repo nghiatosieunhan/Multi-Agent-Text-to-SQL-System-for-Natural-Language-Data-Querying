@@ -22,6 +22,7 @@ class Config:
     _default_db = next(DATA_DIR.glob("*.sqlite"), "") if DATA_DIR.exists() else ""
     DB_PATH = os.getenv("DB_PATH", str(_default_db))
     FAISS_PERSIST_DIR = os.getenv("FAISS_PERSIST_DIR", str(BASE_DIR / "faiss_unified_fewshot_db"))
+    CHROMA_PERSIST_DIR = os.getenv("CHROMA_PERSIST_DIR", str(BASE_DIR / "chroma_db"))
     LOG_DIR = BASE_DIR / "logs"
     LOG_DIR.mkdir(exist_ok=True)
 
@@ -30,9 +31,9 @@ class Config:
     GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 
     # LLM Models — Multi-tier architecture
-    LLM_PROVIDER = os.getenv("LLM_PROVIDER", "groq").lower()
-    LLM_MODEL_PRO = os.getenv("LLM_MODEL_PRO", "llama-3.3-70b-versatile")
-    LLM_MODEL_FLASH = os.getenv("LLM_MODEL_FLASH", "llama-3.1-8b-instant")
+    LLM_PROVIDER = os.getenv("LLM_PROVIDER", "google").lower()
+    LLM_MODEL_PRO = os.getenv("LLM_MODEL_PRO", "gemini-2.5-flash")
+    LLM_MODEL_FLASH = os.getenv("LLM_MODEL_FLASH", "gemini-2.5-flash")
 
     # Embedding Model — Gemini embedding
     EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "gemini-embedding-001")
@@ -45,10 +46,11 @@ class Config:
 
     # ── Semantic Cache ───────────────────────────────────────────────────
     CACHE_SIMILARITY_THRESHOLD = 0.92  
+    CACHE_JACCARD_THRESHOLD = 0.65
     CACHE_MAX_SIZE = 500              
 
     # ── Agent Config ────────────────────────────────────────────────────
-    MAX_WORKER_RETRIES = 2
+    MAX_WORKER_RETRIES = 3
     WORKER_TEMPERATURE = 0.0         
     ORCHESTRATOR_TEMPERATURE = 0.3
 
