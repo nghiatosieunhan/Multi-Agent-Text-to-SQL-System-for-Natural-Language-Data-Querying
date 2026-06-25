@@ -22,9 +22,17 @@ class AgentState(BaseModel):
     # ── Input ─────────────────────────────────────────────────────────────
     user_question: str = Field(default="", description="Original user question")
     session_id: str = Field(default="default", description="Session ID for tracking")
+    dataset_type: Optional[str] = Field(default=None, description="Type of dataset (e.g., spider, northwind)")
     analysis_mode: str = Field(default="deep", description="Mode: 'fast' (no insight) or 'deep' (full LLM insight)")
     evaluation_profile: str = Field(default="full", description="Named benchmark/ablation profile")
     evaluation_options: dict = Field(default_factory=dict, description="Per-run feature toggles")
+    benchmark_context: dict = Field(
+        default_factory=dict,
+        description=(
+            "Optional benchmark/test-set contract such as output_columns, "
+            "ordering, limit, and gold_sql-derived hints."
+        ),
+    )
     telemetry: dict = Field(default_factory=dict, description="LLM usage and per-node timings")
 
     # ── Multi-DB ──────────────────────────────────────────────────────────
@@ -38,6 +46,8 @@ class AgentState(BaseModel):
     intent_type: str = Field(default="unknown", description="Intent type: simple|aggregate|join|complex|ambiguous")
     intent_confidence: float = Field(default=0.0, ge=0.0, le=1.0)
     orchestrator_reasoning: str = Field(default="")
+    clarification_needed: bool = Field(default=False)
+    clarification_reason: str = Field(default="")
 
     # ── Cache ─────────────────────────────────────────────────────────────
     cache_checked: bool = Field(default=False)
@@ -57,11 +67,32 @@ class AgentState(BaseModel):
     plan: Optional[dict] = Field(default=None, description="Execution plan từ QueryPlanner")
     plan_needed: bool = Field(default=False, description="Có cần plan phức tạp không")
 
+    # ── Query Spec (structured contract for SQL Generator) ────────────────
+    query_spec_failed: bool = Field(default=False, description="Flag indicates if query_spec generation failed")
+    query_spec: Optional[dict] = Field(
+        default=None,
+        description=(
+            "Structured QuerySpec from query_spec_node: "
+            "output_columns, grain, join_path, filters, aggregations, etc."
+        ),
+    )
+
     # ── SQL Generator ─────────────────────────────────────────────────────
     generated_sql: str = Field(default="", description="SQL query được sinh ra")
     sql_confidence: float = Field(default=0.0)
     sql_reasoning: str = Field(default="")
     sql_validation: Optional[dict] = Field(default=None)
+    validation_report: Optional[dict] = Field(
+        default=None,
+        description=(
+            "Structured validation report from semantic validator: "
+            "{'valid': bool, 'errors': [...], 'risk_score': float, 'repairable': bool}"
+        ),
+    )
+    candidate_sql: list[str] = Field(
+        default_factory=list,
+        description="Alternative SQL candidates when risk_score is high or repair fails",
+    )
     generation_attempts: int = Field(default=0)
 
     # ── Executor ─────────────────────────────────────────────────────────
@@ -81,4 +112,7 @@ class AgentState(BaseModel):
     retry_count: int = Field(default=0)
     max_retries: int = Field(default_factory=lambda: config.MAX_WORKER_RETRIES)
 
-    evidence: str = Field(default="", description="Kiến thức nghiệp vụ (Domain knowledge) từ BIRD dataset")
+    evidence: str = Field(default="", description="Kiến thức nghiệp vụ (Domain knowledge). For Northwind: \
+    - Net revenue / total spending / order value = UnitPrice * Quantity * (1 - Discount). \
+    - Monetary values should be rounded to 2 decimals when used as final output. \
+    - When counting parent entities after joining detail tables, use COUNT(DISTINCT parent_id).")

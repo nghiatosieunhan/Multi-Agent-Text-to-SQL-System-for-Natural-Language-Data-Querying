@@ -6,6 +6,7 @@ Execution layer vẫn catch runtime errors từ SQLite.
 """
 import re
 import structlog
+import sqlglot
 from src.agents.state import AgentState
 from src.db import get_db_manager
 
@@ -18,11 +19,33 @@ DANGEROUS_KEYWORDS = [
 
 # Tắt các pattern hardcode của Chinook để tránh false positives cho các DB khác
 HINT_PATTERNS = []
-
+REPAIRABLE_SEMANTIC_CODES = {
+    "PROJECTION_MISMATCH",
+    "PROJECTION_TOO_WIDE",
+    "MISSING_OUTPUT_COLUMN",
+    "UNEXPECTED_OUTPUT_COLUMN",
+    "SELECT_STAR_USED",
+    "POSSIBLE_MISSING_LIMIT",
+    "POSSIBLE_WRONG_LIMIT",
+    "POSSIBLE_UNEXPECTED_LIMIT",
+    "POSSIBLE_WRONG_DATE_COLUMN",
+    "POSSIBLE_MISSING_DISTINCT",
+    "POSSIBLE_MISSING_GROUP_BY",
+    "ROUND_REQUIRED_MISSING",
+    "METRIC_EXPRESSION_MISSING_TOKEN",
+}
 
 def _fix_common_errors(sql: str) -> str:
     """Tự động sửa lỗi syntax phổ biến."""
-    sql = re.sub(r'\bSELECT\s+TOP\s+(\d+)\b', 'SELECT', sql, flags=re.IGNORECASE)
+    top_match = re.search(r'\bSELECT\s+TOP\s+(\d+)\s+', sql, flags=re.IGNORECASE)
+
+    if top_match:
+        n = top_match.group(1)
+        sql = re.sub(r'\bSELECT\s+TOP\s+\d+\s+', 'SELECT ', sql, flags=re.IGNORECASE)
+
+        if not re.search(r'\bLIMIT\s+\d+\b', sql, flags=re.IGNORECASE):
+            sql = sql.rstrip().rstrip(";") + f" LIMIT {n};"
+
     sql = re.sub(r'\bLIMIT\s+(\d+)(st|nd|rd|th)\b', r'LIMIT \1', sql, flags=re.IGNORECASE)
     sql = re.sub(r"\\'", "''", sql)
     return sql
@@ -240,6 +263,294 @@ def validate_sql(sql: str, db_path: str = "") -> dict:
     return result
 
 
+def _make_warning(code: str, message: str, expected: str = "", actual: str = "") -> dict:
+    return {
+        "code": code,
+        "message": message,
+        "severity": "warning",
+        "expected": expected,
+        "actual": actual,
+    }
+
+def _make_error(code: str, message: str, expected: str = "", actual: str = "") -> dict:
+    return {
+        "code": code,
+        "message": message,
+        "severity": "error",
+        "expected": expected,
+        "actual": actual,
+    }
+
+def _make_validation_report(
+    result: dict,
+    errors: list[dict] | None = None,
+    warnings: list[dict] | None = None,
+) -> dict:
+    errors = errors or []
+    warnings = warnings or []
+
+    risk_level = result.get("risk_level", "medium")
+
+    if errors:
+        if risk_level == "high":
+            risk_score = 0.9
+        else:
+            risk_score = 0.6
+    elif warnings:
+        risk_score = 0.4
+    else:
+        risk_score = 0.0
+
+    return {
+        "valid": len(errors) == 0,
+        "errors": errors,
+        "warnings": warnings,
+        "risk_score": risk_score,
+        "repairable": risk_score < 0.9,
+    }
+
+def _validate_against_query_spec_soft(sql: str, query_spec: dict | None) -> list[dict]:
+    warnings = []
+
+    if not query_spec:
+        return warnings
+
+    sql_upper = sql.upper()
+
+    # DISTINCT check
+    dedup = query_spec.get("deduplication", "none")
+    has_distinct = bool(re.search(r"\bSELECT\s+DISTINCT\b", sql, re.IGNORECASE))
+
+    if dedup == "DISTINCT" and not has_distinct:
+        warnings.append(
+            _make_warning(
+                code="POSSIBLE_MISSING_DISTINCT",
+                message="QuerySpec requires DISTINCT but SQL does not use SELECT DISTINCT.",
+                expected="SELECT DISTINCT",
+                actual="No SELECT DISTINCT found",
+            )
+        )
+
+    if dedup == "none" and has_distinct:
+        warnings.append(
+            _make_warning(
+                code="POSSIBLE_UNEXPECTED_DISTINCT",
+                message="SQL uses DISTINCT but QuerySpec.deduplication is none.",
+                expected="No DISTINCT",
+                actual="SELECT DISTINCT found",
+            )
+        )
+
+    # LIMIT check
+    expected_limit = query_spec.get("limit")
+    limit_match = re.search(r"\bLIMIT\s+(\d+)\b", sql, re.IGNORECASE)
+
+    if expected_limit is not None:
+        if not limit_match:
+            warnings.append(
+                _make_warning(
+                    code="POSSIBLE_MISSING_LIMIT",
+                    message=f"QuerySpec requires LIMIT {expected_limit}, but SQL has no LIMIT.",
+                    expected=f"LIMIT {expected_limit}",
+                    actual="No LIMIT found",
+                )
+            )
+        elif int(limit_match.group(1)) != int(expected_limit):
+            warnings.append(
+                _make_warning(
+                    code="POSSIBLE_WRONG_LIMIT",
+                    message=f"QuerySpec requires LIMIT {expected_limit}, but SQL uses LIMIT {limit_match.group(1)}.",
+                    expected=f"LIMIT {expected_limit}",
+                    actual=f"LIMIT {limit_match.group(1)}",
+                )
+            )
+
+    if expected_limit is None and limit_match:
+        warnings.append(
+            _make_warning(
+                code="POSSIBLE_UNEXPECTED_LIMIT",
+                message="SQL has LIMIT but QuerySpec does not request a limit.",
+                expected="No LIMIT",
+                actual=limit_match.group(0),
+            )
+        )
+
+    # GROUP BY check
+    group_by = query_spec.get("group_by", [])
+    aggregations = query_spec.get("aggregations", [])
+
+    if aggregations and group_by and "GROUP BY" not in sql_upper:
+        warnings.append(
+            _make_warning(
+                code="POSSIBLE_MISSING_GROUP_BY",
+                message="QuerySpec has aggregation and group_by, but SQL does not contain GROUP BY. This may still be valid if subquery/window function is used.",
+                expected=f"GROUP BY {group_by}",
+                actual="No GROUP BY keyword found",
+            )
+        )
+
+    # Date semantics check
+    for d in query_spec.get("date_semantics", []):
+        expected_col = d.get("column", "")
+        if not expected_col:
+            continue
+
+        expected_col_name = expected_col.split(".")[-1]
+
+        if expected_col_name not in sql:
+            warnings.append(
+                _make_warning(
+                    code="POSSIBLE_WRONG_DATE_COLUMN",
+                    message=f"QuerySpec expects date column {expected_col}, but SQL may not use it.",
+                    expected=expected_col,
+                    actual="Expected date column not found by simple check",
+                )
+            )
+
+    # Metric rules check
+    for metric in query_spec.get("metric_rules", []):
+        alias = metric.get("alias", "")
+        expression = metric.get("expression", "")
+        rounding = metric.get("rounding", None)
+        required = metric.get("required", True)
+
+        if not required:
+            continue
+
+        # If QuerySpec requires rounding for a metric, SQL should contain ROUND(...)
+        if rounding is not None and not re.search(r"\bROUND\s*\(", sql, re.IGNORECASE):
+            warnings.append(
+                _make_warning(
+                    code="ROUND_REQUIRED_MISSING",
+                    message=f"Metric '{alias}' requires ROUND(..., {rounding}), but SQL does not use ROUND.",
+                    expected=f"ROUND(..., {rounding}) for {alias}",
+                    actual="No ROUND(...) found",
+                )
+            )
+
+        # Lightweight formula-token check.
+        # This is intentionally simple: only check important column/function tokens
+        # mentioned in the metric expression.
+        if expression:
+            important_tokens = []
+            for token in re.findall(r"[A-Za-z_][A-Za-z0-9_]*", expression):
+                token_lower = token.lower()
+                if token_lower in {
+                    "sum", "avg", "count", "min", "max", "round",
+                    "as", "distinct", "case", "when", "then", "else", "end"
+                }:
+                    continue
+                if token_lower not in {"order", "details"}:
+                    important_tokens.append(token)
+
+            sql_lower = sql.lower()
+            missing_tokens = []
+            for token in set(important_tokens):
+                if token.lower() not in sql_lower:
+                    missing_tokens.append(token)
+
+            if missing_tokens:
+                warnings.append(
+                    _make_warning(
+                        code="METRIC_EXPRESSION_MISSING_TOKEN",
+                        message=f"SQL may not follow metric rule for '{alias}'. Missing formula tokens: {missing_tokens}",
+                        expected=expression,
+                        actual=sql[:160],
+                    )
+                )
+    return warnings
+
+def _norm_output_col(c: str) -> str:
+    """
+    Normalize final output column names for QuerySpec projection comparison.
+    We compare exposed output names, not full internal expressions.
+    """
+    c = str(c or "").strip()
+    c = c.strip('"`[]')
+    c = re.sub(r".*\s+AS\s+", "", c, flags=re.IGNORECASE)
+    c = c.split(".")[-1]
+    return c.lower()
+
+def _validate_projection(sql: str, query_spec: dict) -> list[dict]:
+    warnings = []
+    if not query_spec:
+        return warnings
+    output_columns = query_spec.get("output_columns", [])
+    if not output_columns:
+        return warnings
+
+    try:
+        parsed = sqlglot.parse_one(sql, dialect="sqlite")
+        if not parsed or not parsed.args.get("expressions"):
+            return warnings
+            
+        select_expressions = parsed.args.get("expressions")
+        actual_cols = []
+        has_star = False
+        
+        for expr in select_expressions:
+            if isinstance(expr, sqlglot.exp.Star):
+                has_star = True
+                actual_cols.append("*")
+            elif isinstance(expr, sqlglot.exp.Alias):
+                actual_cols.append(expr.alias_or_name.lower())
+            elif isinstance(expr, sqlglot.exp.Column):
+                actual_cols.append(expr.name.lower())
+            else:
+                actual_cols.append(expr.sql(dialect="sqlite").lower())
+                
+        expected_cols = [_norm_output_col(c) for c in output_columns]
+        actual_cols_norm = [_norm_output_col(c) for c in actual_cols]
+        
+        if has_star:
+            warnings.append(
+                _make_warning(
+                    code="SELECT_STAR_USED",
+                    message="Query uses SELECT * instead of specifying explicit columns.",
+                    expected=str(expected_cols),
+                    actual="SELECT *"
+                )
+            )
+            return warnings
+            
+        if actual_cols_norm != expected_cols:
+            warnings.append(
+                _make_warning(
+                    code="PROJECTION_MISMATCH",
+                    message="Final SELECT columns do not exactly match QuerySpec.output_columns in name/order.",
+                    expected=str(expected_cols),
+                    actual=str(actual_cols_norm),
+                )
+            )
+
+        missing = [c for c in expected_cols if c not in actual_cols_norm]
+        extra = [c for c in actual_cols_norm if c not in expected_cols]
+
+        if missing:
+            warnings.append(
+                _make_warning(
+                    code="MISSING_OUTPUT_COLUMN",
+                    message="Final SELECT misses required QuerySpec output columns.",
+                    expected=str(expected_cols),
+                    actual=str(actual_cols_norm),
+                )
+            )
+
+        if extra:
+            warnings.append(
+                _make_warning(
+                    code="UNEXPECTED_OUTPUT_COLUMN",
+                    message="Final SELECT contains columns not requested by QuerySpec.",
+                    expected=str(expected_cols),
+                    actual=str(actual_cols_norm),
+                )
+            )
+    except Exception as e:
+        log.warning("sqlglot_parse_error", error=str(e), sql=sql[:50])
+
+    return warnings
+
+
 def validator_node(state: AgentState) -> AgentState:
     sql = state.generated_sql
     if not sql:
@@ -249,9 +560,21 @@ def validator_node(state: AgentState) -> AgentState:
 
     if not state.evaluation_options.get("validator_enabled", True):
         state.sql_validation = {"valid": True, "issues": [], "bypassed": True}
+        state.validation_report = {
+            "valid": True,
+            "errors": [],
+            "risk_score": 0.0,
+            "repairable": False,
+        }
         state.current_step = "validation_bypassed"
         state.next_agent = "executor"
         return state
+
+    fixed_sql = _fix_common_errors(sql)
+    if fixed_sql != sql:
+        log.info("validator_fix", original=sql[:80], fixed=fixed_sql[:80])
+        state.generated_sql = fixed_sql
+        sql = fixed_sql
 
     db_path = state.current_db_path or ""
     # Spider case: no DB file → skip dynamic table/column validation
@@ -267,23 +590,94 @@ def validator_node(state: AgentState) -> AgentState:
         result.setdefault("issues", []).append(f"Notice: The Query Planner mentioned {planned_tables}, but SQL used {tables_in_sql}. (Might be singular/plural difference)")
         # We DO NOT set result["valid"] = False here because of false positives!
 
-    if result["valid"]:
-        state.next_agent = "executor"
-        state.current_step = "validated"
-        log.info("validation_passed", sql=sql[:80])
+    # Soft validation against QuerySpec (Warnings only)
+    effective_query_spec = state.query_spec
+    benchmark_cols = (state.benchmark_context or {}).get("output_columns") or []
+    if benchmark_cols and not effective_query_spec:
+        effective_query_spec = {"output_columns": benchmark_cols}
+
+    if state.evaluation_options.get("semantic_validation_enabled", True):
+        semantic_warnings = _validate_against_query_spec_soft(sql, effective_query_spec)
+        
+        if state.evaluation_options.get("projection_validation_enabled", True):
+            projection_warnings = _validate_projection(sql, effective_query_spec)
+            semantic_warnings.extend(projection_warnings)
     else:
+        semantic_warnings = []
+
+    if result["valid"]:
+        if semantic_warnings:
+            log.warning("semantic_validation_warning", warnings=semantic_warnings, sql=sql[:80])
+
+            repairable_semantic = [
+                w for w in semantic_warnings
+                if isinstance(w, dict) and w.get("code") in REPAIRABLE_SEMANTIC_CODES
+            ]
+
+            non_repairable_warnings = [
+                w for w in semantic_warnings
+                if w not in repairable_semantic
+            ]
+
+            if repairable_semantic and state.retry_count < state.max_retries:
+                state.validation_report = _make_validation_report(
+                    result,
+                    errors=repairable_semantic,
+                    warnings=non_repairable_warnings,
+                )
+
+                state.retry_count += 1
+                state.next_agent = "sql_generator"
+                state.current_step = "semantic_validation_retry"
+
+                log.warning(
+                    "semantic_validation_retry",
+                    errors=repairable_semantic,
+                    retry=state.retry_count,
+                    sql=sql[:120],
+                )
+            else:
+                state.validation_report = _make_validation_report(
+                    result,
+                    errors=[],
+                    warnings=semantic_warnings,
+                )
+
+                state.next_agent = "executor"
+                state.current_step = "validated_with_warnings"
+        else:
+            state.validation_report = _make_validation_report(
+                result,
+                errors=[],
+                warnings=[],
+            )
+
+            log.info("validation_passed", sql=sql[:80])
+            state.next_agent = "executor"
+            state.current_step = "validated"
+    else:
+        schema_errors = [
+            _make_error(code="SCHEMA_OR_SAFETY_ERROR", message=issue)
+            for issue in result.get("issues", [])
+        ]
+        
+        state.validation_report = _make_validation_report(
+            result,
+            errors=schema_errors,
+            warnings=semantic_warnings,
+        )
+        
         issues_str = "; ".join(result.get("issues", []))
         print(f"\\n[Validation Failed]\\nIssues: {issues_str}\\nSQL: {sql[:150]}\\n")
         log.warning("validation_failed", sql=sql[:80], issues=issues_str, retry=state.retry_count)
 
-        if state.retry_count < state.max_retries:
+        if (
+            state.validation_report.get("repairable", True)
+            and state.retry_count < state.max_retries
+        ):
             state.retry_count += 1
             state.next_agent = "sql_generator"
             state.current_step = "validation_failed_retry"
-            state.schema_context = (
-                (state.schema_context or "") +
-                f"\n\nSQL ERROR: {sql}\nISSUE: {issues_str}\nFix the SQL above."
-            )
         else:
             state.error = f"Validation failed after {state.retry_count} retries: {issues_str}"
             state.next_agent = "error"

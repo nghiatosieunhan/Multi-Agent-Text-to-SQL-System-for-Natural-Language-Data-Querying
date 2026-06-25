@@ -7,6 +7,9 @@ PROFILE_OPTIONS = {
         "few_shot_enabled": True,
         "planner_enabled": True,
         "validator_enabled": True,
+        "semantic_validation_enabled": True,
+        "projection_validation_enabled": True,
+        "semantic_warning_repair_enabled": True,
     },
     "full_no_cache": {
         "cache_enabled": False,
@@ -14,6 +17,9 @@ PROFILE_OPTIONS = {
         "planner_enabled": True,
         "validator_enabled": True,
         "schema_pruning_mode": "auto",
+        "semantic_validation_enabled": True,
+        "projection_validation_enabled": True,
+        "semantic_warning_repair_enabled": True,
     },
     "no_rag": {
         "cache_enabled": False,

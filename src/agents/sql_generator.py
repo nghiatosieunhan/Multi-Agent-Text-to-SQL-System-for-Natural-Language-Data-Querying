@@ -1,28 +1,30 @@
 """
 SQL Generator Agent — generates SQL queries from natural language questions.
-FIXED: removed hardcoded aliases, added clear column hints.
+Improvements:
+  - Uses QuerySpec (if available) as a strict contract for projection/grain/joins.
+  - Uses structured validation_report for targeted repair instead of blind retry.
+  - Exponential backoff on API rate limits.
 """
 import json
 import re
+import time
 import structlog
 from src.agents.state import AgentState
 from src.agents.llm_router import invoke
 from src.config import config
+
 log = structlog.get_logger("sql_generator")
 
 
 def _extract_sql(text: str) -> str:
-    """Trích xuất SQL từ response JSON hoặc Markdown."""
+    """Extract SQL from JSON or Markdown response."""
     sql = ""
-    # Clean markdown blocks first
     cleaned_text = re.sub(r'^```(?:json|sql)?\s*', '', text.strip(), flags=re.MULTILINE)
     cleaned_text = re.sub(r'\s*```$', '', cleaned_text, flags=re.MULTILINE)
     cleaned_text = cleaned_text.strip()
-    
-    # Replace literal newlines with space to prevent json.loads from failing
+
     json_ready_text = cleaned_text.replace('\n', ' ')
-    
-    # Try parsing as JSON first
+
     try:
         obj = json.loads(json_ready_text)
         if "sql" in obj and obj["sql"]:
@@ -30,7 +32,6 @@ def _extract_sql(text: str) -> str:
             if temp_sql.upper().startswith("SELECT") or temp_sql.upper().startswith("WITH"):
                 sql = temp_sql
     except (json.JSONDecodeError, TypeError):
-        # Fallback to fuzzy JSON parsing
         match = re.search(r'\{.*\}', json_ready_text, re.DOTALL)
         if match:
             try:
@@ -54,10 +55,12 @@ def _extract_sql(text: str) -> str:
                 sql = matches[0].strip()
                 break
 
-    if not sql and (cleaned_text.strip().upper().startswith("SELECT") or cleaned_text.strip().upper().startswith("WITH")):
+    if not sql and (
+        cleaned_text.strip().upper().startswith("SELECT")
+        or cleaned_text.strip().upper().startswith("WITH")
+    ):
         sql = cleaned_text.strip()
-        
-    # Handle cases where LLM returns SQL string containing backslash escapes like \"Order Details\"
+
     if sql:
         sql = sql.replace('\\"', '"')
     return sql
@@ -78,7 +81,81 @@ def _validate_sql_safety(sql: str) -> tuple[bool, list]:
     return _validate_dangerous(sql)
 
 
-# ── System prompt (dynamic — schema injected via user prompt) ───────────────
+def _norm_output_name(name: str) -> str:
+    """
+    Normalize output column names for QuerySpec contract checking.
+    This is intentionally simple: compare final exposed names, not full SQL expressions.
+    """
+    name = str(name or "").strip()
+    name = name.strip('"`[]')
+    name = re.sub(r".*\s+AS\s+", "", name, flags=re.IGNORECASE)
+    name = name.split(".")[-1]
+    return name.lower()
+
+
+def _quick_check_query_spec_contract(sql: str, query_spec: dict | None) -> list[str]:
+    """
+    Lightweight post-generation check.
+    It verifies that the final OUTER SELECT matches QuerySpec.output_columns
+    before accepting SQL as generated.
+
+    This does not replace validator.py. It only prevents obviously wrong SQL
+    from passing the generator self-correction step just because EXPLAIN succeeds.
+    """
+    issues = []
+
+    if not query_spec:
+        return issues
+
+    expected_cols = query_spec.get("output_columns") or []
+    if not expected_cols:
+        return issues
+
+    try:
+        import sqlglot
+
+        parsed = sqlglot.parse_one(sql, dialect="sqlite")
+        if not parsed:
+            return ["Could not parse SQL for QuerySpec contract check."]
+
+        select_expressions = parsed.args.get("expressions") or []
+
+        actual_cols = []
+        has_star = False
+
+        for expr in select_expressions:
+            if isinstance(expr, sqlglot.exp.Star):
+                has_star = True
+                actual_cols.append("*")
+            elif isinstance(expr, sqlglot.exp.Alias):
+                actual_cols.append(expr.alias_or_name)
+            elif isinstance(expr, sqlglot.exp.Column):
+                actual_cols.append(expr.name)
+            else:
+                # For expressions without alias, keep expression text.
+                # Example: FirstName || ' ' || LastName
+                actual_cols.append(expr.sql(dialect="sqlite"))
+
+        expected_norm = [_norm_output_name(c) for c in expected_cols]
+        actual_norm = [_norm_output_name(c) for c in actual_cols]
+
+        if has_star:
+            issues.append(
+                f"SELECT * is forbidden. expected={expected_cols}, actual={actual_cols}"
+            )
+
+        if actual_norm != expected_norm:
+            issues.append(
+                "Final SELECT does not match QuerySpec.output_columns. "
+                f"expected={expected_cols}, actual={actual_cols}"
+            )
+
+    except Exception as e:
+        issues.append(f"QuerySpec contract check failed: {e}")
+
+    return issues
+
+# ── System prompt ─────────────────────────────────────────────────────────────
 SYSTEM_PROMPT_TEMPLATE = """# 1. Task Context
 You are an expert {db_dialect} query generator. Your task is to generate precise SQL queries from natural language.
 
@@ -105,10 +182,32 @@ CRITICAL RULES FOR SQL GENERATION:
 13. PREFER CTE (WITH): For multi-level grouping or filtering aggregates, use a CTE for correctness.
 14. STRICT LITERAL PRESERVATION (ANTI-VALUE BLEEDING): The FEW-SHOT EXAMPLES are for structural reference ONLY. You MUST extract the actual filter values EXPLICITLY from the CURRENT QUESTION.
 15. RANGE IMPLICIT ORDERING: For questions filtering by thresholds (greater than, longer than), implicitly add an ORDER BY clause sorting by that metric descending.
-16. EXACT PROJECTION: SELECT only the columns or aggregates explicitly requested by the user, in the requested order. Do not add IDs, names, evidence columns, or metadata unless explicitly requested.
+16. EXACT PROJECTION: SELECT only the columns or aggregates explicitly requested. NEVER use SELECT *. NEVER select all columns from an entity table. Do NOT include BLOB/image/long text columns such as Photo, Notes, PhotoPath unless explicitly requested.
 17. QUANTITATIVE VS QUALITATIVE: If asked for "số lượng", "bao nhiêu", "count", YOU MUST USE COUNT() or SUM(). NEVER return a list.
 18. MANDATORY DISTINCT: When querying parent entities based on child entities, ALWAYS use SELECT DISTINCT.
 19. LIMIT SEMANTICS: Use LIMIT only when the user explicitly requests a row count/top-N result, or when LIMIT is required to express a superlative such as top 1. Never add a safety/display LIMIT to the SQL; result pagination belongs to the UI or execution layer.
+20. QUERY SPEC IS LAW: If a QUERY SPECIFICATION is provided, you MUST STRICTLY FOLLOW it. The FINAL OUTER SELECT MUST MATCH exactly the columns listed in `Output columns`.
+21. PROJECTION CONTRACT: Do NOT add extra descriptive columns, IDs, or metadata unless they are listed in `Output columns`. If QuerySpec is available, QuerySpec.output_columns overrides any generic SQL generation habit.
+22. QUERY SPEC OVERRIDES EVERYTHING:
+    If QUERY SPECIFICATION is provided, it overrides the current question wording, few-shot examples, planner output, and your own assumptions.
+
+23. FINAL SELECT CONTRACT:
+    The FINAL OUTER SELECT must return exactly the columns listed in QuerySpec.output_columns, in the same order.
+    - Do not add extra columns.
+    - Do not omit required columns.
+    - Do not merge two output columns into one expression unless QuerySpec.output_columns explicitly contains a single merged column.
+    - Do not split one requested output column into multiple columns.
+    - Helper columns may appear inside CTEs/subqueries, but not in the final outer SELECT.
+
+24. FEW-SHOT IS STRUCTURE ONLY:
+    Few-shot examples are only for SQL pattern reference.
+    Never copy their projection, aliases, constants, filters, LIMIT, ORDER BY, or column formatting unless they match the current QuerySpec.
+
+25. ALIAS CONTRACT:
+    If QuerySpec.output_columns contains aliases such as Revenue, TotalSpent, NumOrders, the final SELECT must expose those names using AS.
+26. BENCHMARK CONTRACT:
+    If a BENCHMARK CONTRACT section provides Final columns, the final SELECT must expose exactly those columns/aliases in that order.
+    This contract is stronger than generic "minimal projection" guidance.
 
 # 5. Examples
 (Examples will be provided in the user prompt if retrieved from memory)
@@ -123,10 +222,6 @@ OUTPUT FORMAT (JSON):
 
 
 def _build_schema_text_for_prompt(schema_context: str) -> str:
-    """
-    Build schema text for system prompt.
-    If schema_context is already text (from schema indexer) -> use directly.
-    """
     if schema_context and schema_context.strip():
         return schema_context.strip()
     return (
@@ -135,20 +230,146 @@ def _build_schema_text_for_prompt(schema_context: str) -> str:
     )
 
 
+def _build_spec_context(query_spec: dict | None) -> str:
+    """Render QuerySpec as a compact prompt section."""
+    if not query_spec:
+        return ""
+    qs = query_spec
+    lines = [
+        "QUERY SPECIFICATION (follow exactly — this is a binding contract):",
+        f"  Intent         : {qs.get('intent', '')}",
+        f"  Output columns : {', '.join(qs.get('output_columns', []))}",
+        f"  Proj. policy   : {qs.get('projection_policy', 'exact')}",
+        f"  Grain          : {qs.get('output_grain', '')}",
+        f"  Source tables  : {', '.join(qs.get('source_tables', []))}",
+        f"  Deduplication  : {qs.get('deduplication', 'none')}",
+    ]
+    if qs.get('filters'):
+        lines.append(f"  Filters        : {qs['filters']}")
+    if qs.get('aggregations'):
+        lines.append(f"  Aggregations   : {qs['aggregations']}")
+    if qs.get("metric_rules"):
+        lines.append("  Metric rules   :")
+        for r in qs["metric_rules"]:
+            lines.append(
+                f"    - name={r.get('name')} alias={r.get('alias')} "
+                f"expression={r.get('expression')} rounding={r.get('rounding')} "
+                f"required={r.get('required', True)}"
+            )
+    if qs.get('group_by'):
+        lines.append(f"  Group by       : {', '.join(qs['group_by'])}")
+    if qs.get('ordering'):
+        lines.append(f"  Ordering       : {qs['ordering']}")
+    if qs.get('limit') is not None:
+        lines.append(f"  Limit          : {qs['limit']}")
+    if qs.get('join_path'):
+        lines.append(f"  Join path      : {qs['join_path']}")
+    if qs.get('assumptions'):
+        lines.append(f"  Assumptions    : {qs['assumptions']}")
+    return "\n".join(lines) + "\n"
+
+
+def _build_benchmark_context(ctx: dict | None) -> str:
+    """Render benchmark metadata as a compact SQL-generation contract."""
+    if not ctx:
+        return ""
+
+    lines = ["BENCHMARK CONTRACT (follow when present):"]
+    if ctx.get("question_en"):
+        lines.append(f"  English question : {ctx['question_en']}")
+    if ctx.get("intent"):
+        lines.append(f"  Intent           : {ctx['intent']}")
+    if ctx.get("pattern"):
+        lines.append(f"  Pattern          : {ctx['pattern']}")
+    if ctx.get("tables"):
+        lines.append(f"  Tables           : {', '.join(ctx['tables'])}")
+    if ctx.get("output_columns"):
+        lines.append(
+            "  Final columns    : "
+            + ", ".join(ctx["output_columns"])
+            + " (exact order, no extras, no omissions)"
+        )
+
+    return "\n".join(lines) + "\n" if len(lines) > 1 else ""
+
+
+def _build_repair_context(state: AgentState) -> str:
+    """Build repair instructions using structured validation_report when available."""
+    if state.validation_report:
+        report = state.validation_report
+
+        if not report.get("valid", True):
+            errors_txt = "; ".join(
+                (
+                    f"[{e.get('code', 'ERR')}] {e.get('message', '')} expected={e.get('expected', '')} actual={e.get('actual', '')}"
+                    if isinstance(e, dict) else str(e)
+                )
+                for e in report.get("errors", [])
+            )
+
+            return (
+                f"\nPREVIOUS SQL FAILED VALIDATION (risk_score={report.get('risk_score', '?')}):\n"
+                f"SQL: {state.generated_sql}\n"
+                f"ERRORS: {errors_txt}\n"
+                f"Repairable: {report.get('repairable', True)}\n"
+                "Fix ONLY the listed errors. Do not change output columns or grain.\n"
+            )
+
+        warnings = report.get("warnings", [])
+        if warnings:
+            warnings_txt = "; ".join(
+                (
+                    f"[{w.get('code', 'WARN')}] {w.get('message', '')} expected={w.get('expected', '')} actual={w.get('actual', '')}"
+                    if isinstance(w, dict) else str(w)
+                )
+                for w in warnings
+            )
+
+            return (
+                f"\nSEMANTIC VALIDATION WARNINGS FROM PREVIOUS ATTEMPT:\n"
+                f"SQL: {state.generated_sql}\n"
+                f"WARNINGS: {warnings_txt}\n"
+                "These warnings are not necessarily errors. Only adjust the SQL if the warning clearly applies.\n"
+                "If this is a PROJECTION warning (e.g. PROJECTION_TOO_WIDE, MISSING_OUTPUT_COLUMN), fix the outer SELECT clause exactly as requested in expected.\n"
+            )
+
+    if state.execution_error:
+        return (
+            f"\nPREVIOUS SQL FAILED:\nSQL: {state.generated_sql}\n"
+            f"ERROR: {state.execution_error}\nPlease FIX the SQL based on this error.\n"
+        )
+
+    return ""
+
+
 def sql_generator_node(state: AgentState) -> AgentState:
-    """Node: SQLGenerator with retry and fallback."""
+    """Node: SQLGenerator with QuerySpec-aware generation and targeted repair."""
     state.generation_attempts += 1
-    few_shot_text = ""
+
     # 1. Retrieve Few-shot examples
+    few_shot_text = ""
     if not state.evidence and state.evaluation_options.get("few_shot_enabled", True):
         try:
-            from pathlib import Path
             from src.rag.few_shot_retriever import FewShotRetriever
-            dataset_type = Path(state.current_db_path).stem if state.current_db_path else None
+            dataset_type = state.dataset_type if state.dataset_type else None
+            
+            # Default logic based on dataset_type
+            split = state.evaluation_options.get("few_shot_split", "train")
+            db_id = None
+            if dataset_type and dataset_type.lower() in ("northwind", "chinook", "chinook_vn"):
+                split = "fewshot"
+                # The bundled FAISS store has Chinook few-shots under dataset="chinook".
+                if dataset_type.lower() == "chinook_vn":
+                    dataset_type = "chinook"
             
             retriever = FewShotRetriever()
-            # Lọc few-shot example theo dataset_type (db_name) để tránh lấy nhầm ví dụ của DB khác
-            examples = retriever.retrieve(state.user_question, k=3, dataset_type=dataset_type)
+            examples = retriever.retrieve(
+                state.user_question, 
+                k=state.evaluation_options.get("few_shot_k", 2), 
+                dataset_type=dataset_type, 
+                split=split,
+                db_id=db_id
+            )
             if examples:
                 few_shot_text = "BELOW ARE SIMILAR FEW-SHOT EXAMPLES:\n"
                 for i, ex in enumerate(examples):
@@ -160,20 +381,24 @@ def sql_generator_node(state: AgentState) -> AgentState:
     schema_text = _build_schema_text_for_prompt(state.schema_context)
     system_prompt = SYSTEM_PROMPT_TEMPLATE.format(schema=schema_text, db_dialect=state.db_dialect)
 
-    # 3. Combine Plan and Few-shot examples into User Prompt
+    # 3. Assemble user prompt sections
     plan_ctx = ""
     if state.plan:
-        steps = "\n".join(f"Step {s['step_id']}: {s['description']}" for s in state.plan.get("steps", []))
+        steps = "\n".join(
+            f"Step {s['step_id']}: {s['description']}" for s in state.plan.get("steps", [])
+        )
         plan_ctx = f"EXECUTION PLAN:\n{steps}\n"
 
-    # Process BIRD evidence
+    effective_query_spec = state.query_spec
+    benchmark_cols = (state.benchmark_context or {}).get("output_columns") or []
+    if benchmark_cols and not effective_query_spec:
+        effective_query_spec = {"output_columns": benchmark_cols}
+
+    spec_ctx = _build_spec_context(state.query_spec)
+    benchmark_ctx = _build_benchmark_context(state.benchmark_context)
     evidence_ctx = f"BUSINESS RULES / EVIDENCE:\n{state.evidence}\n" if state.evidence else ""
+    error_ctx = _build_repair_context(state)
 
-    error_ctx = ""
-    if state.execution_error:
-        error_ctx = f"\nPREVIOUS SQL FAILED:\nSQL: {state.generated_sql}\nERROR: {state.execution_error}\nPlease FIX the SQL based on this error.\n"
-
-    # Format History
     history_str = "(No previous history provided)"
     if state.messages and len(state.messages) > 1:
         recent_msgs = state.messages[-5:-1]
@@ -187,77 +412,120 @@ def sql_generator_node(state: AgentState) -> AgentState:
 {history_str}
 
 # 7. Immediate Task
-{few_shot_text}
-{evidence_ctx}
-{plan_ctx}
-{error_ctx}
+{few_shot_text}{evidence_ctx}{benchmark_ctx}{spec_ctx}{plan_ctx}{error_ctx}
 CURRENT QUESTION: {state.user_question}
 
-Rely on the SCHEMA, BUSINESS RULES (if any), and the structure of the few-shot examples to write the most accurate SQL. Return ONLY JSON.
+Rely on the SCHEMA, QUERY SPECIFICATION (if any), BUSINESS RULES, and few-shot examples to write the most accurate SQL. Return ONLY JSON.
 
 # 10. Prefilled response (if any)
 (None)"""
 
     raw = ""
     sql = ""
-    import sqlite3
-    import time
-    
+    accepted_sql = ""
+    accepted_raw = ""
+
     for attempt in range(2):
         if attempt > 0:
-            log.info("sql_gen_waiting", seconds=2, reason="Rate limit protection")
-            time.sleep(2)
+            wait = 2 ** attempt  # exponential backoff
+            log.info("sql_gen_waiting", seconds=wait, reason="Retry backoff")
+            time.sleep(wait)
         try:
             raw = invoke(
                 prompt=user_prompt,
                 model=config.LLM_MODEL_PRO,
-                temperature=0.1,  # Tăng chút xíu để nó đa dạng hóa cách sửa lỗi
+                temperature=0.1,
                 max_tokens=1536,
                 system_prompt=system_prompt,
                 telemetry_label="sql_generator",
             )
-            
+
             sql = _extract_sql(raw)
             is_safe, issues = _validate_dangerous(sql)
-            
+
             if not is_safe or not sql:
                 error_msg = f"Security check failed or no SQL extracted: {issues}"
                 log.warning("sql_extract_failed", raw=raw[:200], sql=sql, issues=issues)
                 user_prompt += f"\n\nATTEMPT {attempt+1} FAILED:\nSQL generated: {sql}\nError: {error_msg}\nPlease FIX this."
                 continue
-                
-            # Self-correction: Validate SQL directly against the database
-            # Chỉ chạy EXPLAIN cho SQLite (local, 0ms latency)
-            # Cloud DB (Postgres/MySQL) sẽ được Validator kiểm tra bảng/cột sau — tránh ping mạng thừa
+
+            # Self-correction via EXPLAIN (SQLite only — zero network cost)
             if (
                 state.evaluation_options.get("self_correction_enabled", True)
                 and state.current_db_path
                 and state.db_dialect == "sqlite"
             ):
                 from src.db import get_db_manager
-                from sqlalchemy import text
+                from sqlalchemy import text as sa_text
                 try:
                     db = get_db_manager(state.current_db_path)
                     with db.engine.connect() as conn:
-                        conn.execute(text(f"EXPLAIN QUERY PLAN {sql}"))
-                    log.info("sql_validation_success", sql=sql)
-                    break # Syntax is fully valid and tables/columns exist!
+                        conn.execute(sa_text(f"EXPLAIN QUERY PLAN {sql}"))
+
+                    spec_issues = _quick_check_query_spec_contract(sql, effective_query_spec)
+                    if spec_issues:
+                        log.warning(
+                            "sql_queryspec_contract_failed",
+                            attempt=attempt + 1,
+                            issues=spec_issues,
+                            sql=sql[:160],
+                        )
+                        user_prompt += (
+                            f"\n\nATTEMPT {attempt+1} VIOLATED QUERY SPEC CONTRACT:\n"
+                            f"SQL generated: {sql}\n"
+                            f"Issues: {'; '.join(spec_issues)}\n"
+                            "Regenerate SQL. The final OUTER SELECT must exactly match "
+                            "QuerySpec.output_columns in both column names and order. "
+                            "Do not add, omit, merge, split, or reorder output columns."
+                        )
+                        continue
+                    accepted_sql = sql
+                    accepted_raw = raw
+                    log.info("sql_validation_success", sql=sql[:80])
+                    break
                 except Exception as e:
                     error_msg = str(e).strip()
-                    print(f"\\n[Self-Correction Triggered] Attempt: {attempt+1}\\nError: {error_msg}\\nSQL: {sql}\\n")
-                    log.warning("sql_self_correction_triggered", attempt=attempt+1, error=error_msg, sql=sql)
-                    user_prompt += f"\n\nATTEMPT {attempt+1} FAILED with Database error:\nSQL generated: {sql}\nError: {error_msg}\nDO NOT use columns or tables that do not exist in the schema. Please fix the SQL logic."
+                    log.warning("sql_self_correction_triggered", attempt=attempt + 1, error=error_msg)
+                    user_prompt += (
+                        f"\n\nATTEMPT {attempt+1} FAILED with Database error:\n"
+                        f"SQL generated: {sql}\nError: {error_msg}\n"
+                        "DO NOT use columns or tables that do not exist in the schema."
+                    )
                     continue
             else:
-                break # Cloud DB hoặc không có DB → tin tưởng LLM, để Validator kiểm tra sau
-                
+                spec_issues = _quick_check_query_spec_contract(sql, effective_query_spec)
+                if spec_issues:
+                    log.warning(
+                        "sql_queryspec_contract_failed_no_db",
+                        attempt=attempt + 1,
+                        issues=spec_issues,
+                        sql=sql[:160],
+                    )
+                    user_prompt += (
+                        f"\n\nATTEMPT {attempt+1} VIOLATED QUERY SPEC CONTRACT:\n"
+                        f"SQL generated: {sql}\n"
+                        f"Issues: {'; '.join(spec_issues)}\n"
+                        "Regenerate SQL. The final OUTER SELECT must exactly match "
+                        "QuerySpec.output_columns in both column names and order."
+                    )
+                    continue
+
+            accepted_sql = sql
+            accepted_raw = raw
+            break  # Cloud DB or no DB → trust validator
+
         except Exception as e:
             log.warning("sql_gen_retry", attempt=attempt + 1, error=str(e))
             if attempt == 1:
                 raw = ""
 
-    # Re-extract one last time in case the loop ended
-    sql = _extract_sql(raw)
+    # Final extraction
+    if accepted_sql:
+        sql = accepted_sql
+        raw = accepted_raw
+    else:
+        sql = ""
+
     is_safe, _ = _validate_dangerous(sql)
 
     if not is_safe or not sql:

@@ -36,7 +36,7 @@ Hệ thống có các CSDL sau:
 Câu hỏi: "{question}"
 
 Hãy trả về CHỈ MỘT mã CSDL (db_id) phù hợp nhất với câu hỏi. 
-Nếu không rõ, trả về "chinook". Không giải thích thêm.
+Nếu câu hỏi không rõ ràng hoặc không khớp với CSDL nào, trả về "unknown". Không giải thích thêm.
 """
     try:
         result = invoke(
@@ -45,10 +45,15 @@ Nếu không rõ, trả về "chinook". Không giải thích thêm.
             telemetry_label="router",
         ).strip().lower()
         if result not in registry:
-            result = "chinook"
+            # For UI Demo: instead of guessing chinook, ask for clarification
+            state.clarification_needed = True
+            state.clarification_reason = "Không xác định được cơ sở dữ liệu (Database) phù hợp với câu hỏi. Vui lòng cho biết bạn muốn hỏi về Northwind hay Chinook?"
+            return {"next_agent": "result_formatter"}
         
         db_path = str(config.DATA_DIR / f"{result}.sqlite")
         return {"current_db_path": db_path, "next_agent": "orchestrator"}
     except Exception as e:
         log.error("router_error", error=str(e))
-        return {"current_db_path": str(config.DB_PATH), "next_agent": "orchestrator"}
+        state.clarification_needed = True
+        state.clarification_reason = "Đã xảy ra lỗi khi xác định cơ sở dữ liệu. Vui lòng thử lại hoặc chọn rõ Database."
+        return {"next_agent": "result_formatter"}

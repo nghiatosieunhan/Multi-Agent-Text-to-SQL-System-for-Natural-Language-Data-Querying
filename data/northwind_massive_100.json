@@ -1,1057 +1,1790 @@
-{
-  "metadata": {
-    "dataset": "Northwind Massive Vietnamese Benchmark",
-    "total_questions": 95,
-    "generated_by": "Gemini",
-    "source": "generate_questions.py; audited against the target database",
-    "db_target": "data/northwind/northwind.sqlite",
-    "categories": {
-      "aggregate": 30,
-      "simple": 19,
-      "join": 9,
-      "self-join": 4,
-      "complex": 33
-    },
-    "validation": {
-      "db_target": "data/northwind/northwind.sqlite",
-      "database_order_date_range": [
-        "2012-07-10",
-        "2023-10-28"
-      ],
-      "audited_on": "2026-06-19"
-    }
+python3 << 'EOF'
+import json
+
+entries = [
+    # === SIMPLE SELECT / FILTER (1-15) ===
+    {
+    "id": 1,
+    "question": "Liệt kê tên công ty, người liên hệ, thành phố và số điện thoại của tất cả khách hàng đến từ Pháp.",
+    "question_en": "List the company name, contact name, city, and phone of all customers from France.",
+    "gold_sql": "SELECT CompanyName, ContactName, City, Phone FROM Customers WHERE Country = 'France'",
+    "intent": "simple",
+    "pattern": "simple_select_filter",
+    "tables": [
+      "Customers"
+    ],
+    "output_columns": [
+      "CompanyName",
+      "ContactName",
+      "City",
+      "Phone"
+    ]
   },
-  "questions": [
-    {
-      "question": "Vui lòng cung cấp báo cáo tổng doanh thu theo từng danh mục sản phẩm.",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "SUM",
-        "Categories",
-        "Products",
-        "\"Order Details\""
-      ],
-      "gold_sql": "SELECT T3.CategoryName, SUM(T1.UnitPrice * T1.Quantity) AS TotalRevenue FROM `Order Details` AS T1 INNER JOIN Products AS T2 ON T1.ProductID = T2.ProductID INNER JOIN Categories AS T3 ON T2.CategoryID = T3.CategoryID GROUP BY T3.CategoryName;",
-      "id": 1
-    },
-    {
-      "question": "Liệt kê 5 sản phẩm được đặt hàng nhiều nhất theo số lượng.",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "SUM",
-        "Products",
-        "\"Order Details\""
-      ],
-      "gold_sql": "SELECT p.ProductName, SUM(od.Quantity) AS TotalQuantityOrdered FROM \"Order Details\" AS od JOIN Products AS p ON od.ProductID = p.ProductID GROUP BY p.ProductName ORDER BY TotalQuantityOrdered DESC LIMIT 5;",
-      "id": 2
-    },
-    {
-      "question": "Vui lòng cung cấp danh sách tất cả khách hàng đã đặt hơn 10 đơn hàng.",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "COUNT",
-        "Customers",
-        "Orders"
-      ],
-      "gold_sql": "SELECT CustomerID FROM Orders GROUP BY CustomerID HAVING COUNT(OrderID) > 10;",
-      "id": 3
-    },
-    {
-      "question": "Vui lòng hiển thị tổng giá trị bán hàng của từng nhân viên, bao gồm cả họ tên đầy đủ.",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "SUM",
-        "Employees",
-        "Orders",
-        "\"Order Details\""
-      ],
-      "gold_sql": "SELECT e.FirstName || ' ' || e.LastName AS FullName, SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)) AS TotalSales FROM Employees AS e JOIN Orders AS o ON e.EmployeeID = o.EmployeeID JOIN \"Order Details\" AS od ON o.OrderID = od.OrderID GROUP BY e.EmployeeID, FullName;",
-      "id": 4
-    },
-    {
-      "question": "Vui lòng cho biết mức chiết khấu trung bình được áp dụng cho các đơn hàng thuộc danh mục 'Confections' (Bánh kẹo).",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "AVG",
-        "Categories",
-        "Products",
-        "\"Order Details\""
-      ],
-      "gold_sql": "SELECT AVG(od.Discount) AS AverageDiscount FROM `Order Details` AS od JOIN Products AS p ON od.ProductID = p.ProductID JOIN Categories AS c ON p.CategoryID = c.CategoryID WHERE c.CategoryName = 'Confections';",
-      "id": 5
-    },
-    {
-      "question": "Liệt kê các khách hàng đã đặt ít nhất một đơn hàng.",
-      "intent": "simple",
-      "sql_keywords": [
-        "Customers",
-        "Orders"
-      ],
-      "gold_sql": "SELECT c.CompanyName FROM Customers AS c WHERE EXISTS (SELECT 1 FROM Orders AS o WHERE o.CustomerID = c.CustomerID);",
-      "id": 6
-    },
-    {
-      "question": "Vui lòng liệt kê tất cả nhân viên và khu vực được phân công.",
-      "intent": "join",
-      "sql_keywords": [
-        "Employees",
-        "Territories",
-        "EmployeeTerritories"
-      ],
-      "gold_sql": "SELECT T1.FirstName, T1.LastName, T4.RegionDescription FROM Employees AS T1 INNER JOIN EmployeeTerritories AS T2 ON T1.EmployeeID = T2.EmployeeID INNER JOIN Territories AS T3 ON T2.TerritoryID = T3.TerritoryID INNER JOIN Regions AS T4 ON T3.RegionID = T4.RegionID;",
-      "id": 7
-    },
-    {
-      "question": "Vui lòng tính toán tổng chi phí vận chuyển cho các đơn hàng được giao đến Hoa Kỳ.",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "SUM",
-        "Orders"
-      ],
-      "gold_sql": "SELECT SUM(Freight) AS TotalFreightCost FROM Orders WHERE ShipCountry = 'USA';",
-      "id": 8
-    },
-    {
-      "question": "Nhà cung cấp nào đang cung cấp các sản phẩm hiện đang hết hàng (Số lượng tồn kho = 0)?",
-      "intent": "join",
-      "sql_keywords": [
-        "Suppliers",
-        "Products"
-      ],
-      "gold_sql": "SELECT DISTINCT s.CompanyName FROM Suppliers AS s JOIN Products AS p ON s.SupplierID = p.SupplierID WHERE p.UnitsInStock = 0;",
-      "id": 9
-    },
-    {
-      "question": "Vui lòng hiển thị chi tiết đơn hàng cho mã đơn hàng 10248, bao gồm tên sản phẩm.",
-      "intent": "join",
-      "sql_keywords": [
-        "Orders",
-        "\"Order Details\"",
-        "Products"
-      ],
-      "gold_sql": "SELECT T1.OrderID, T1.ProductID, T2.ProductName, T1.UnitPrice, T1.Quantity, T1.Discount FROM `Order Details` AS T1 INNER JOIN Products AS T2 ON T1.ProductID = T2.ProductID WHERE T1.OrderID = 10248;",
-      "id": 10
-    },
-    {
-      "question": "Vui lòng tính giá trị đơn hàng trung bình của từng khách hàng.",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "AVG",
-        "SUM",
-        "Customers",
-        "Orders",
-        "\"Order Details\""
-      ],
-      "gold_sql": "WITH OrderTotals AS (SELECT o.CustomerID, o.OrderID, SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)) AS OrderValue FROM Orders AS o JOIN `Order Details` AS od ON o.OrderID = od.OrderID GROUP BY o.CustomerID, o.OrderID) SELECT CustomerID, ROUND(AVG(OrderValue), 2) AS AverageOrderValue FROM OrderTotals GROUP BY CustomerID;",
-      "id": 11
-    },
-    {
-      "question": "Vui lòng liệt kê tất cả các đơn hàng được đặt trong năm 2021.",
-      "intent": "simple",
-      "sql_keywords": [
-        "Orders"
-      ],
-      "gold_sql": "SELECT OrderID, OrderDate FROM Orders WHERE STRFTIME('%Y', OrderDate) = '2021';",
-      "id": 12
-    },
-    {
-      "question": "Vui lòng đếm số lượng khách hàng riêng biệt tại mỗi quốc gia.",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "COUNT",
-        "DISTINCT",
-        "Customers"
-      ],
-      "gold_sql": "SELECT Country, COUNT(DISTINCT CustomerID) FROM Customers GROUP BY Country;",
-      "id": 13
-    },
-    {
-      "question": "Vui lòng hiển thị 3 sản phẩm hàng đầu theo tổng doanh thu đạt được trong năm 2022.",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "SUM",
-        "Products",
-        "\"Order Details\"",
-        "Orders"
-      ],
-      "gold_sql": "SELECT p.ProductName, SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)) AS TotalRevenue FROM `Order Details` AS od JOIN Products AS p ON od.ProductID = p.ProductID JOIN Orders AS o ON od.OrderID = o.OrderID WHERE STRFTIME('%Y', o.OrderDate) = '2022' GROUP BY p.ProductID, p.ProductName ORDER BY TotalRevenue DESC LIMIT 3;",
-      "id": 14
-    },
-    {
-      "question": "Công ty vận chuyển nào đã xử lý các đơn hàng có mã vận chuyển 3?",
-      "intent": "join",
-      "sql_keywords": [
-        "Shippers",
-        "Orders"
-      ],
-      "gold_sql": "SELECT DISTINCT s.CompanyName FROM Shippers AS s JOIN Orders AS o ON s.ShipperID = o.ShipVia WHERE o.ShipVia = 3;",
-      "id": 15
-    },
-    {
-      "question": "Vui lòng liệt kê các nhân viên báo cáo cho 'Andrew Fuller'.",
-      "intent": "self-join",
-      "sql_keywords": [
-        "Employees"
-      ],
-      "gold_sql": "SELECT e.FirstName, e.LastName FROM Employees AS manager JOIN Employees AS e ON e.ReportsTo = manager.EmployeeID WHERE manager.FirstName = 'Andrew' AND manager.LastName = 'Fuller';",
-      "id": 16
-    },
-    {
-      "question": "Vui lòng tính tổng số lượng sản phẩm đã đặt cho từng khách hàng.",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "SUM",
-        "Customers",
-        "Orders",
-        "\"Order Details\""
-      ],
-      "gold_sql": "SELECT c.CustomerID, SUM(od.Quantity) AS TotalQuantity FROM Customers AS c JOIN Orders AS o ON c.CustomerID = o.CustomerID JOIN `Order Details` AS od ON o.OrderID = od.OrderID GROUP BY c.CustomerID;",
-      "id": 17
-    },
-    {
-      "question": "Tìm kiếm các đơn hàng được giao muộn hơn ngày yêu cầu.",
-      "intent": "simple",
-      "sql_keywords": [
-        "Orders"
-      ],
-      "gold_sql": "SELECT * FROM Orders WHERE ShippedDate > RequiredDate;",
-      "id": 18
-    },
-    {
-      "question": "Vui lòng hiển thị số lượng đơn hàng được đặt mỗi tháng trong năm 2020.",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "COUNT",
-        "Orders"
-      ],
-      "gold_sql": "SELECT STRFTIME('%m', OrderDate) AS Month, COUNT(OrderID) AS NumberOfOrders FROM Orders WHERE STRFTIME('%Y', OrderDate) = '2020' GROUP BY Month ORDER BY Month;",
-      "id": 19
-    },
-    {
-      "question": "Vui lòng liệt kê 5 khách hàng hàng đầu theo tổng chi tiêu.",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "SUM",
-        "Customers",
-        "Orders",
-        "\"Order Details\""
-      ],
-      "gold_sql": "SELECT T1.CompanyName, SUM(T2.UnitPrice * T2.Quantity * (1 - T2.Discount)) AS total_spent FROM Customers AS T1 INNER JOIN Orders AS T3 ON T1.CustomerID = T3.CustomerID INNER JOIN \"Order Details\" AS T2 ON T3.OrderID = T2.OrderID GROUP BY T1.CustomerID ORDER BY total_spent DESC LIMIT 5;",
-      "id": 20
-    },
-    {
-      "question": "Liệt kê tất cả các sản phẩm có đơn giá trên 50 đô la.",
-      "intent": "simple",
-      "sql_keywords": [
-        "Products"
-      ],
-      "gold_sql": "SELECT ProductName, UnitPrice FROM Products WHERE UnitPrice > 50;",
-      "id": 21
-    },
-    {
-      "question": "Tìm số lượng trung bình trên mỗi đơn hàng cho từng sản phẩm.",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "AVG",
-        "\"Order Details\""
-      ],
-      "gold_sql": "SELECT ProductID, AVG(Quantity) AS AverageQuantity FROM \"Order Details\" GROUP BY ProductID;",
-      "id": 22
-    },
-    {
-      "question": "Hiển thị tên công ty và số điện thoại của tất cả các nhà cung cấp tại 'USA'.",
-      "intent": "simple",
-      "sql_keywords": [
-        "Suppliers"
-      ],
-      "gold_sql": "SELECT CompanyName, Phone FROM Suppliers WHERE Country = 'USA';",
-      "id": 23
-    },
-    {
-      "question": "Có bao nhiêu nhân viên được tuyển dụng trong năm 2013?",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "COUNT",
-        "Employees"
-      ],
-      "gold_sql": "SELECT COUNT(EmployeeID) AS EmployeeCount FROM Employees WHERE STRFTIME('%Y', HireDate) = '2013';",
-      "id": 24
-    },
-    {
-      "question": "Liệt kê doanh thu bán hàng theo từng khu vực mà nhân viên phụ trách.",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "SUM",
-        "Orders",
-        "Territories",
-        "Regions",
-        "\"Order Details\""
-      ],
-      "gold_sql": "WITH EmployeeRegions AS (SELECT DISTINCT et.EmployeeID, t.RegionID FROM EmployeeTerritories AS et JOIN Territories AS t ON et.TerritoryID = t.TerritoryID) SELECT r.RegionDescription, SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)) AS TotalRevenue FROM EmployeeRegions AS er JOIN Regions AS r ON er.RegionID = r.RegionID JOIN Orders AS o ON er.EmployeeID = o.EmployeeID JOIN `Order Details` AS od ON o.OrderID = od.OrderID GROUP BY r.RegionID, r.RegionDescription ORDER BY TotalRevenue DESC;",
-      "id": 25
-    },
-    {
-      "question": "Tên của những khách hàng có chức danh liên hệ là 'Owner' là gì?",
-      "intent": "simple",
-      "sql_keywords": [
-        "Customers"
-      ],
-      "gold_sql": "SELECT Customers.ContactName FROM Customers WHERE Customers.ContactTitle = 'Owner';",
-      "id": 26
-    },
-    {
-      "question": "Tìm tổng giá trị các đơn vị còn trong kho cho từng nhà cung cấp.",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "SUM",
-        "Suppliers",
-        "Products"
-      ],
-      "gold_sql": "SELECT s.CompanyName, SUM(p.UnitsInStock * p.UnitPrice) AS TotalStockValue FROM Suppliers AS s JOIN Products AS p ON s.SupplierID = p.SupplierID GROUP BY s.CompanyName ORDER BY TotalStockValue DESC;",
-      "id": 27
-    },
-    {
-      "question": "Liệt kê tất cả các đơn hàng được đặt bởi khách hàng 'Around the Horn'.",
-      "intent": "join",
-      "sql_keywords": [
-        "Orders",
-        "Customers"
-      ],
-      "gold_sql": "SELECT T1.OrderID FROM Orders AS T1 INNER JOIN Customers AS T2 ON T1.CustomerID = T2.CustomerID WHERE T2.CompanyName = 'Around the Horn';",
-      "id": 28
-    },
-    {
-      "question": "Hiển thị doanh thu của từng nhân viên trong quý 4 năm 2021.",
-      "intent": "complex",
-      "sql_keywords": [
-        "SUM",
-        "Employees",
-        "Orders",
-        "\"Order Details\""
-      ],
-      "gold_sql": "SELECT e.FirstName, e.LastName, SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)) AS QuarterlyRevenue FROM Employees AS e JOIN Orders AS o ON e.EmployeeID = o.EmployeeID JOIN `Order Details` AS od ON o.OrderID = od.OrderID WHERE STRFTIME('%Y', o.OrderDate) = '2021' AND STRFTIME('%m', o.OrderDate) BETWEEN '10' AND '12' GROUP BY e.EmployeeID, e.FirstName, e.LastName ORDER BY QuarterlyRevenue DESC;",
-      "id": 29
-    },
-    {
-      "question": "Sự khác biệt về tổng doanh số giữa nhân viên thành công nhất và ít thành công nhất là bao nhiêu?",
-      "intent": "complex",
-      "sql_keywords": [
-        "MAX",
-        "MIN",
-        "SUM",
-        "Employees",
-        "Orders",
-        "\"Order Details\""
-      ],
-      "gold_sql": "WITH EmployeeSales AS (SELECT e.EmployeeID, SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)) AS TotalSales FROM Employees AS e JOIN Orders AS o ON e.EmployeeID = o.EmployeeID JOIN \"Order Details\" AS od ON o.OrderID = od.OrderID GROUP BY e.EmployeeID) SELECT MAX(TotalSales) - MIN(TotalSales) AS SalesDifference FROM EmployeeSales;",
-      "id": 30
-    },
-    {
-      "question": "Liệt kê tất cả các đơn hàng đã được đặt bởi khách hàng có tên công ty là 'Alfreds Futterkiste'.",
-      "intent": "simple",
-      "sql_keywords": [
-        "Orders",
-        "Customers"
-      ],
-      "gold_sql": "SELECT o.OrderID FROM Orders AS o JOIN Customers AS c ON o.CustomerID = c.CustomerID WHERE c.CompanyName = 'Alfreds Futterkiste';",
-      "id": 31
-    },
-    {
-      "question": "Tính tổng doanh thu từ các đơn hàng được vận chuyển bởi 'Federal Shipping' trong năm 2022.",
-      "intent": "complex",
-      "sql_keywords": [
-        "Orders",
-        "Shippers",
-        "\"Order Details\""
-      ],
-      "gold_sql": "SELECT SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)) AS TotalRevenue FROM `Order Details` AS od JOIN Orders AS o ON od.OrderID = o.OrderID JOIN Shippers AS s ON o.ShipVia = s.ShipperID WHERE s.CompanyName = 'Federal Shipping' AND STRFTIME('%Y', o.ShippedDate) = '2022';",
-      "id": 32
-    },
-    {
-      "question": "Tìm những nhân viên có ngày sinh trước năm 1960.",
-      "intent": "simple",
-      "sql_keywords": [
-        "Employees"
-      ],
-      "gold_sql": "SELECT EmployeeID, BirthDate FROM Employees WHERE strftime('%Y', BirthDate) < '1960';",
-      "id": 33
-    },
-    {
-      "question": "Liệt kê các sản phẩm thuộc danh mục 'Beverages' có số lượng trong kho dưới 20 đơn vị.",
-      "intent": "join",
-      "sql_keywords": [
-        "Products",
-        "Categories"
-      ],
-      "gold_sql": "SELECT T1.ProductName FROM Products AS T1 INNER JOIN Categories AS T2 ON T1.CategoryID = T2.CategoryID WHERE T2.CategoryName = 'Beverages' AND T1.UnitsInStock < 20;",
-      "id": 34
-    },
-    {
-      "question": "Tính số lượng đơn hàng mà mỗi nhân viên đã xử lý, chỉ hiển thị những nhân viên đã xử lý hơn 100 đơn hàng.",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "Orders",
-        "Employees"
-      ],
-      "gold_sql": "SELECT EmployeeID, COUNT(OrderID) AS OrderCount FROM Orders GROUP BY EmployeeID HAVING COUNT(OrderID) > 100;",
-      "id": 35
-    },
-    {
-      "question": "Liệt kê các nhân viên được phân công phụ trách hơn 5 lãnh thổ.",
-      "intent": "complex",
-      "sql_keywords": [
-        "COUNT",
-        "Employees",
-        "EmployeeTerritories"
-      ],
-      "gold_sql": "SELECT e.EmployeeID, e.FirstName, e.LastName, COUNT(et.TerritoryID) AS TerritoryCount FROM Employees AS e JOIN EmployeeTerritories AS et ON e.EmployeeID = et.EmployeeID GROUP BY e.EmployeeID, e.FirstName, e.LastName HAVING COUNT(et.TerritoryID) > 5;",
-      "id": 36
-    },
-    {
-      "question": "Tìm khách hàng đã đặt những sản phẩm được cung cấp bởi nhà cung cấp 'Exotic Liquids'.",
-      "intent": "complex",
-      "sql_keywords": [
-        "Customers",
-        "Orders",
-        "\"Order Details\"",
-        "Products",
-        "Suppliers"
-      ],
-      "gold_sql": "SELECT DISTINCT c.CompanyName FROM Customers AS c JOIN Orders AS o ON c.CustomerID = o.CustomerID JOIN \"Order Details\" AS od ON o.OrderID = od.OrderID JOIN Products AS p ON od.ProductID = p.ProductID JOIN Suppliers AS s ON p.SupplierID = s.SupplierID WHERE s.CompanyName = 'Exotic Liquids';",
-      "id": 37
-    },
-    {
-      "question": "Hiển thị doanh thu theo quốc gia của khách hàng, chỉ gồm các đơn hàng được vận chuyển trong năm 2021.",
-      "intent": "complex",
-      "sql_keywords": [
-        "Customers",
-        "Orders",
-        "\"Order Details\""
-      ],
-      "gold_sql": "SELECT c.Country, SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)) AS TotalRevenue FROM Customers AS c JOIN Orders AS o ON c.CustomerID = o.CustomerID JOIN `Order Details` AS od ON o.OrderID = od.OrderID WHERE STRFTIME('%Y', o.ShippedDate) = '2021' GROUP BY c.Country;",
-      "id": 38
-    },
-    {
-      "question": "Tìm các đơn hàng có chiết khấu trên 15% cho ít nhất một mặt hàng.",
-      "intent": "simple",
-      "sql_keywords": [
-        "\"Order Details\""
-      ],
-      "gold_sql": "SELECT DISTINCT OrderID FROM \"Order Details\" WHERE Discount > 0.15;",
-      "id": 39
-    },
-    {
-      "question": "Liệt kê tất cả các lãnh thổ ('Territories') thuộc về khu vực ('Regions') có ID là 1.",
-      "intent": "join",
-      "sql_keywords": [
-        "Territories",
-        "Regions"
-      ],
-      "gold_sql": "SELECT T1.TerritoryID FROM Territories AS T1 INNER JOIN Regions AS T2 ON T1.RegionID = T2.RegionID WHERE T2.RegionID = 1;",
-      "id": 40
-    },
-    {
-      "question": "Xác định tổng số lượng sản phẩm đã đặt hàng ('UnitsOnOrder') cho mỗi nhà cung cấp.",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "Products",
-        "Suppliers"
-      ],
-      "gold_sql": "SELECT s.CompanyName, SUM(p.UnitsOnOrder) AS TotalUnitsOnOrder FROM Products AS p JOIN Suppliers AS s ON p.SupplierID = s.SupplierID GROUP BY s.CompanyName;",
-      "id": 41
-    },
-    {
-      "question": "Liệt kê 5 khách hàng đặt nhiều sản phẩm thuộc danh mục 'Seafood' nhất trong năm 2022.",
-      "intent": "complex",
-      "sql_keywords": [
-        "Customers",
-        "Orders",
-        "\"Order Details\"",
-        "Products",
-        "Categories"
-      ],
-      "gold_sql": "SELECT c.CompanyName, SUM(od.Quantity) AS TotalQuantity FROM Customers AS c JOIN Orders AS o ON c.CustomerID = o.CustomerID JOIN `Order Details` AS od ON o.OrderID = od.OrderID JOIN Products AS p ON od.ProductID = p.ProductID JOIN Categories AS cat ON p.CategoryID = cat.CategoryID WHERE cat.CategoryName = 'Seafood' AND STRFTIME('%Y', o.OrderDate) = '2022' GROUP BY c.CustomerID, c.CompanyName ORDER BY TotalQuantity DESC LIMIT 5;",
-      "id": 42
-    },
-    {
-      "question": "Tính tổng doanh thu cho mỗi tháng trong năm 2022, bao gồm cả các đơn hàng chưa được vận chuyển.",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "Orders",
-        "\"Order Details\""
-      ],
-      "gold_sql": "SELECT STRFTIME('%m', o.OrderDate) AS Month, SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)) AS MonthlyRevenue FROM Orders AS o JOIN `Order Details` AS od ON o.OrderID = od.OrderID WHERE STRFTIME('%Y', o.OrderDate) = '2022' GROUP BY Month ORDER BY Month;",
-      "id": 43
-    },
-    {
-      "question": "Hiển thị những nhân viên có chức vụ chứa từ 'Manager'.",
-      "intent": "simple",
-      "sql_keywords": [
-        "Employees"
-      ],
-      "gold_sql": "SELECT EmployeeID, FirstName, LastName FROM Employees WHERE Title LIKE '%Manager%';",
-      "id": 44
-    },
-    {
-      "question": "Tính tổng giá trị trước chiết khấu của từng đơn hàng.",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "\"Order Details\""
-      ],
-      "gold_sql": "SELECT OrderID, SUM(UnitPrice * Quantity) AS TotalBeforeDiscount FROM `Order Details` GROUP BY OrderID;",
-      "id": 45
-    },
-    {
-      "question": "Liệt kê các nhà cung cấp có địa chỉ tại 'Tokyo'.",
-      "intent": "simple",
-      "sql_keywords": [
-        "Suppliers"
-      ],
-      "gold_sql": "SELECT CompanyName FROM Suppliers WHERE City = 'Tokyo';",
-      "id": 46
-    },
-    {
-      "question": "Tính giá trị trung bình của các mặt hàng trong đơn hàng được vận chuyển bởi 'United Package' trong quý 4 năm 2021.",
-      "intent": "complex",
-      "sql_keywords": [
-        "Orders",
-        "Shippers",
-        "\"Order Details\""
-      ],
-      "gold_sql": "SELECT AVG(od.UnitPrice * od.Quantity * (1 - od.Discount)) AS AverageLineValue FROM `Order Details` AS od JOIN Orders AS o ON od.OrderID = o.OrderID JOIN Shippers AS s ON o.ShipVia = s.ShipperID WHERE s.CompanyName = 'United Package' AND STRFTIME('%Y', o.ShippedDate) = '2021' AND STRFTIME('%m', o.ShippedDate) BETWEEN '10' AND '12';",
-      "id": 47
-    },
-    {
-      "question": "Tìm những khách hàng đã đặt hàng tổng cộng hơn 500 sản phẩm trên tất cả các đơn hàng của họ.",
-      "intent": "complex",
-      "sql_keywords": [
-        "Customers",
-        "Orders",
-        "\"Order Details\""
-      ],
-      "gold_sql": "SELECT T1.CustomerID FROM Customers AS T1 INNER JOIN Orders AS T2 ON T1.CustomerID = T2.CustomerID INNER JOIN \"Order Details\" AS T3 ON T2.OrderID = T3.OrderID GROUP BY T1.CustomerID HAVING SUM(T3.Quantity) > 500;",
-      "id": 48
-    },
-    {
-      "question": "Liệt kê các sản phẩm không được đặt trong ngày 28 tháng 10 năm 2023.",
-      "intent": "complex",
-      "sql_keywords": [
-        "Products",
-        "\"Order Details\""
-      ],
-      "gold_sql": "SELECT p.ProductName FROM Products AS p WHERE NOT EXISTS (SELECT 1 FROM `Order Details` AS od JOIN Orders AS o ON od.OrderID = o.OrderID WHERE od.ProductID = p.ProductID AND DATE(o.OrderDate) = '2023-10-28');",
-      "id": 49
-    },
-    {
-      "question": "Xác định nhân viên nào báo cáo cho 'Steven Buchanan' (sử dụng self-join).",
-      "intent": "self-join",
-      "sql_keywords": [
-        "Employees"
-      ],
-      "gold_sql": "SELECT e1.FirstName, e1.LastName FROM Employees AS e1 JOIN Employees AS e2 ON e1.ReportsTo = e2.EmployeeID WHERE e2.FirstName = 'Steven' AND e2.LastName = 'Buchanan';",
-      "id": 50
-    },
-    {
-      "question": "Tính tổng doanh thu theo từng chức danh liên hệ của khách hàng.",
-      "intent": "complex",
-      "sql_keywords": [
-        "SUM",
-        "Customers",
-        "Orders",
-        "\"Order Details\""
-      ],
-      "gold_sql": "SELECT c.ContactTitle, SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)) AS TotalRevenue FROM Customers AS c JOIN Orders AS o ON c.CustomerID = o.CustomerID JOIN `Order Details` AS od ON o.OrderID = od.OrderID GROUP BY c.ContactTitle;",
-      "id": 51
-    },
-    {
-      "question": "Liệt kê các đơn hàng được vận chuyển muộn hơn ngày yêu cầu trên 7 ngày.",
-      "intent": "simple",
-      "sql_keywords": [
-        "Orders"
-      ],
-      "gold_sql": "SELECT OrderID, RequiredDate, ShippedDate FROM Orders WHERE JULIANDAY(ShippedDate) - JULIANDAY(RequiredDate) > 7;",
-      "id": 52
-    },
-    {
-      "question": "Tìm các sản phẩm có tên bắt đầu bằng 'Ch' và có số lượng tồn kho trên 50.",
-      "intent": "simple",
-      "sql_keywords": [
-        "Products"
-      ],
-      "gold_sql": "SELECT ProductName FROM Products WHERE ProductName LIKE 'Ch%' AND UnitsInStock > 50;",
-      "id": 53
-    },
-    {
-      "question": "Hiển thị tên công ty khách hàng và số lượng đơn hàng họ đã đặt trong năm 2020.",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "Customers",
-        "Orders"
-      ],
-      "gold_sql": "SELECT c.CompanyName, COUNT(o.OrderID) AS NumberOfOrders FROM Customers AS c JOIN Orders AS o ON c.CustomerID = o.CustomerID WHERE STRFTIME('%Y', o.OrderDate) = '2020' GROUP BY c.CustomerID, c.CompanyName;",
-      "id": 54
-    },
-    {
-      "question": "Tính chi phí vận chuyển trung bình của các đơn hàng được vận chuyển đến 'USA'.",
-      "intent": "simple",
-      "sql_keywords": [
-        "AVG",
-        "Orders"
-      ],
-      "gold_sql": "SELECT AVG(Freight) AS AverageFreightCost FROM Orders WHERE ShipCountry = 'USA';",
-      "id": 55
-    },
-    {
-      "question": "Tìm những nhân viên đã bán sản phẩm thuộc danh mục 'Dairy Products'.",
-      "intent": "complex",
-      "sql_keywords": [
-        "Employees",
-        "Orders",
-        "\"Order Details\"",
-        "Products",
-        "Categories"
-      ],
-      "gold_sql": "SELECT DISTINCT T1.EmployeeID FROM Orders AS T1 INNER JOIN \"Order Details\" AS T2 ON T1.OrderID = T2.OrderID INNER JOIN Products AS T3 ON T2.ProductID = T3.ProductID INNER JOIN Categories AS T4 ON T3.CategoryID = T4.CategoryID WHERE T4.CategoryName = 'Dairy Products';",
-      "id": 56
-    },
-    {
-      "question": "Tính doanh thu trung bình của một dòng đặt hàng cho từng sản phẩm.",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "\"Order Details\""
-      ],
-      "gold_sql": "SELECT od.ProductID, AVG(od.UnitPrice * od.Quantity * (1 - od.Discount)) AS AverageLineRevenue FROM `Order Details` AS od GROUP BY od.ProductID;",
-      "id": 57
-    },
-    {
-      "question": "Liệt kê các đơn hàng được vận chuyển trước ngày yêu cầu.",
-      "intent": "simple",
-      "sql_keywords": [
-        "Orders"
-      ],
-      "gold_sql": "SELECT OrderID FROM Orders WHERE ShippedDate < RequiredDate;",
-      "id": 58
-    },
-    {
-      "question": "Tìm các khách hàng có chức danh liên hệ chứa từ 'Owner'.",
-      "intent": "simple",
-      "sql_keywords": [
-        "Customers"
-      ],
-      "gold_sql": "SELECT CustomerID, CompanyName, ContactTitle FROM Customers WHERE ContactTitle LIKE '%Owner%';",
-      "id": 59
-    },
-    {
-      "question": "Hiển thị tên nhà cung cấp và tổng giá trị tồn kho của các sản phẩm họ cung cấp.",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "Suppliers",
-        "Products"
-      ],
-      "gold_sql": "SELECT s.CompanyName, SUM(p.UnitsInStock * p.UnitPrice) AS TotalStockValue FROM Suppliers AS s JOIN Products AS p ON s.SupplierID = p.SupplierID GROUP BY s.SupplierID, s.CompanyName;",
-      "id": 60
-    },
-    {
-      "question": "Tổng doanh thu của từng danh mục sản phẩm trong quý 4 năm 2021 là bao nhiêu?",
-      "intent": "complex",
-      "sql_keywords": [
-        "SUM",
-        "Order Details",
-        "Products",
-        "Categories",
-        "Orders",
-        "DATE"
-      ],
-      "gold_sql": "SELECT c.CategoryName, SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)) AS TotalRevenue FROM `Order Details` AS od JOIN Products AS p ON od.ProductID = p.ProductID JOIN Categories AS c ON p.CategoryID = c.CategoryID JOIN Orders AS o ON od.OrderID = o.OrderID WHERE o.OrderDate >= '2021-10-01' AND o.OrderDate < '2022-01-01' GROUP BY c.CategoryID, c.CategoryName;",
-      "id": 61
-    },
-    {
-      "question": "Liệt kê 5 nhân viên có tổng số lượng sản phẩm bán ra cao nhất.",
-      "intent": "complex",
-      "sql_keywords": [
-        "SUM",
-        "Employees",
-        "Orders",
-        "\"Order Details\""
-      ],
-      "gold_sql": "SELECT T1.FirstName, T1.LastName FROM Employees AS T1 INNER JOIN Orders AS T2 ON T1.EmployeeID = T2.EmployeeID INNER JOIN \"Order Details\" AS T3 ON T2.OrderID = T3.OrderID GROUP BY T1.EmployeeID ORDER BY SUM(T3.Quantity) DESC LIMIT 5;",
-      "id": 62
-    },
-    {
-      "question": "Tìm số lượng đơn vị tồn kho trung bình của các sản phẩm do nhà cung cấp tại 'Tokyo' cung cấp.",
-      "intent": "complex",
-      "sql_keywords": [
-        "AVG",
-        "Suppliers",
-        "Products",
-        "City"
-      ],
-      "gold_sql": "SELECT AVG(p.UnitsInStock) AS AverageUnitsInStock FROM Products AS p JOIN Suppliers AS s ON p.SupplierID = s.SupplierID WHERE s.City = 'Tokyo';",
-      "id": 63
-    },
-    {
-      "question": "Tính tổng giá trị bán hàng cho các đơn hàng được đặt vào ngày Giáng sinh (25 tháng 12) của bất kỳ năm nào.",
-      "intent": "complex",
-      "sql_keywords": [
-        "SUM",
-        "Orders",
-        "\"Order Details\"",
-        "DATE"
-      ],
-      "gold_sql": "SELECT SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)) AS TotalSalesValue FROM \"Order Details\" AS od JOIN Orders AS o ON od.OrderID = o.OrderID WHERE strftime('%m-%d', o.OrderDate) = '12-25';",
-      "id": 64
-    },
-    {
-      "question": "Hiển thị tên công ty khách hàng và tổng chi phí vận chuyển liên quan đến các đơn hàng của họ.",
-      "intent": "complex",
-      "sql_keywords": [
-        "SUM",
-        "Customers",
-        "Orders"
-      ],
-      "gold_sql": "SELECT c.CompanyName, SUM(o.Freight) AS TotalFreightCost FROM Customers AS c JOIN Orders AS o ON c.CustomerID = o.CustomerID GROUP BY c.CompanyName;",
-      "id": 65
-    },
-    {
-      "question": "Liệt kê các khách hàng đã mua sản phẩm thuộc cả danh mục 'Confections' và 'Dairy Products'.",
-      "intent": "complex",
-      "sql_keywords": [
-        "Customers",
-        "Orders",
-        "\"Order Details\"",
-        "Products",
-        "Categories"
-      ],
-      "gold_sql": "SELECT c.CompanyName FROM Customers AS c JOIN Orders AS o ON c.CustomerID = o.CustomerID JOIN `Order Details` AS od ON o.OrderID = od.OrderID JOIN Products AS p ON od.ProductID = p.ProductID JOIN Categories AS cat ON p.CategoryID = cat.CategoryID WHERE cat.CategoryName = 'Confections' INTERSECT SELECT c.CompanyName FROM Customers AS c JOIN Orders AS o ON c.CustomerID = o.CustomerID JOIN `Order Details` AS od ON o.OrderID = od.OrderID JOIN Products AS p ON od.ProductID = p.ProductID JOIN Categories AS cat ON p.CategoryID = cat.CategoryID WHERE cat.CategoryName = 'Dairy Products';",
-      "id": 66
-    },
-    {
-      "question": "Tìm mức chiết khấu trung bình áp dụng cho các sản phẩm thuộc danh mục 'Produce' (Nông sản).",
-      "intent": "complex",
-      "sql_keywords": [
-        "AVG",
-        "\"Order Details\"",
-        "Products",
-        "Categories"
-      ],
-      "gold_sql": "SELECT AVG(od.Discount) AS AverageDiscount FROM `Order Details` AS od JOIN Products AS p ON od.ProductID = p.ProductID JOIN Categories AS c ON p.CategoryID = c.CategoryID WHERE c.CategoryName = 'Produce';",
-      "id": 67
-    },
-    {
-      "question": "Liệt kê những nhân viên được tuyển dụng trước ngày 1 tháng 1 năm 2016.",
-      "intent": "complex",
-      "sql_keywords": [
-        "Employees",
-        "DATE"
-      ],
-      "gold_sql": "SELECT FirstName, LastName FROM Employees WHERE HireDate < '2016-01-01';",
-      "id": 68
-    },
-    {
-      "question": "Tổng số lượng đơn vị đang đặt hàng cho mỗi nhà cung cấp là bao nhiêu?",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "SUM",
-        "Suppliers",
-        "Products"
-      ],
-      "gold_sql": "SELECT T1.SupplierID, SUM(T1.UnitsOnOrder) FROM Products AS T1 GROUP BY T1.SupplierID;",
-      "id": 69
-    },
-    {
-      "question": "Hiển thị tổng doanh thu bán hàng được tạo ra bởi mỗi đơn vị vận chuyển.",
-      "intent": "complex",
-      "sql_keywords": [
-        "SUM",
-        "Shippers",
-        "Orders",
-        "\"Order Details\""
-      ],
-      "gold_sql": "SELECT T3.CompanyName, ROUND(SUM(T1.UnitPrice * T1.Quantity * (1 - T1.Discount)), 2) AS total_revenue FROM \"Order Details\" AS T1 INNER JOIN Orders AS T2 ON T1.OrderID = T2.OrderID INNER JOIN Shippers AS T3 ON T2.ShipVia = T3.ShipperID GROUP BY T3.CompanyName;",
-      "id": 70
-    },
-    {
-      "question": "Tìm số lượng đơn hàng được đặt bởi khách hàng ở 'France' và được vận chuyển đến 'USA'.",
-      "intent": "complex",
-      "sql_keywords": [
-        "COUNT",
-        "Customers",
-        "Orders"
-      ],
-      "gold_sql": "SELECT COUNT(o.OrderID) AS OrderCount FROM Orders AS o JOIN Customers AS c ON o.CustomerID = c.CustomerID WHERE c.Country = 'France' AND o.ShipCountry = 'USA';",
-      "id": 71
-    },
-    {
-      "question": "Liệt kê tất cả các sản phẩm chưa bao giờ được đặt hàng lại (Số lượng đang đặt hàng = 0 và Mức đặt hàng lại > 0).",
-      "intent": "simple",
-      "sql_keywords": [
-        "Products"
-      ],
-      "gold_sql": "SELECT T1.ProductID FROM Products AS T1 WHERE T1.UnitsOnOrder = 0 AND T1.ReorderLevel > 0;",
-      "id": 72
-    },
-    {
-      "question": "Tổng giá trị của tất cả các sản phẩm hiện đang còn trong kho là bao nhiêu?",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "SUM",
-        "Products"
-      ],
-      "gold_sql": "SELECT SUM(UnitPrice * UnitsInStock) AS TotalStockValue FROM Products;",
-      "id": 73
-    },
-    {
-      "question": "Hiển thị tên đầy đủ của nhân viên và số lượng khu vực được phân công cho họ.",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "COUNT",
-        "Employees",
-        "EmployeeTerritories"
-      ],
-      "gold_sql": "SELECT e.LastName || ' ' || e.FirstName AS FullName, COUNT(et.TerritoryID) AS NumberOfTerritories FROM Employees AS e JOIN EmployeeTerritories AS et ON e.EmployeeID = et.EmployeeID GROUP BY e.EmployeeID, e.LastName, e.FirstName;",
-      "id": 74
-    },
-    {
-      "question": "Tìm các khách hàng có tên công ty bắt đầu bằng 'A' và đã đặt ít nhất một đơn hàng.",
-      "intent": "complex",
-      "sql_keywords": [
-        "Customers",
-        "Orders"
-      ],
-      "gold_sql": "SELECT DISTINCT T1.CustomerID, T1.CompanyName FROM Customers AS T1 INNER JOIN Orders AS T2 ON T1.CustomerID = T2.CustomerID WHERE T1.CompanyName LIKE 'A%';",
-      "id": 75
-    },
-    {
-      "question": "Liệt kê tổng số lượng sản phẩm đã đặt theo quốc gia khách hàng trong năm 2022.",
-      "intent": "complex",
-      "sql_keywords": [
-        "SUM",
-        "Customers",
-        "Orders",
-        "\"Order Details\""
-      ],
-      "gold_sql": "SELECT c.Country, SUM(od.Quantity) AS TotalQuantity FROM Customers AS c JOIN Orders AS o ON c.CustomerID = o.CustomerID JOIN `Order Details` AS od ON o.OrderID = od.OrderID WHERE STRFTIME('%Y', o.OrderDate) = '2022' GROUP BY c.Country;",
-      "id": 76
-    },
-    {
-      "question": "Chi phí vận chuyển trung bình của các đơn hàng do nhân viên phụ trách khu vực 'Eastern' xử lý là bao nhiêu?",
-      "intent": "complex",
-      "sql_keywords": [
-        "AVG",
-        "Orders",
-        "EmployeeTerritories",
-        "Territories",
-        "Regions"
-      ],
-      "gold_sql": "SELECT AVG(Freight) AS AverageFreight FROM (SELECT DISTINCT o.OrderID, o.Freight FROM Orders AS o JOIN EmployeeTerritories AS et ON o.EmployeeID = et.EmployeeID JOIN Territories AS t ON et.TerritoryID = t.TerritoryID JOIN Regions AS r ON t.RegionID = r.RegionID WHERE r.RegionDescription = 'Eastern');",
-      "id": 77
-    },
-    {
-      "question": "Hiển thị tên các nhà cung cấp có ít nhất một sản phẩm đã ngừng sản xuất.",
-      "intent": "simple",
-      "sql_keywords": [
-        "Suppliers",
-        "Products"
-      ],
-      "gold_sql": "SELECT DISTINCT s.CompanyName FROM Products AS p JOIN Suppliers AS s ON p.SupplierID = s.SupplierID WHERE p.Discontinued = 1;",
-      "id": 78
-    },
-    {
-      "question": "Tìm số lượng đơn hàng được xử lý bởi mỗi nhân viên trong 6 tháng cuối năm 2021.",
-      "intent": "complex",
-      "sql_keywords": [
-        "COUNT",
-        "Employees",
-        "Orders",
-        "DATE"
-      ],
-      "gold_sql": "SELECT e.FirstName, e.LastName, COUNT(o.OrderID) AS NumberOfOrders FROM Employees AS e JOIN Orders AS o ON e.EmployeeID = o.EmployeeID WHERE o.OrderDate >= '2021-07-01' AND o.OrderDate < '2022-01-01' GROUP BY e.EmployeeID, e.FirstName, e.LastName;",
-      "id": 79
-    },
-    {
-      "question": "Liệt kê 3 sản phẩm đắt nhất (theo Đơn giá).",
-      "intent": "simple",
-      "sql_keywords": [
-        "Products"
-      ],
-      "gold_sql": "SELECT ProductName, UnitPrice FROM Products ORDER BY UnitPrice DESC LIMIT 3;",
-      "id": 80
-    },
-    {
-      "question": "Tính tổng doanh thu của từng nhân viên, chỉ gồm các đơn hàng đã giao trong năm 2022.",
-      "intent": "complex",
-      "sql_keywords": [
-        "SUM",
-        "Employees",
-        "Orders",
-        "\"Order Details\"",
-        "DATE"
-      ],
-      "gold_sql": "SELECT e.FirstName, e.LastName, SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)) AS TotalRevenue FROM Employees AS e JOIN Orders AS o ON e.EmployeeID = o.EmployeeID JOIN `Order Details` AS od ON o.OrderID = od.OrderID WHERE STRFTIME('%Y', o.ShippedDate) = '2022' GROUP BY e.EmployeeID, e.FirstName, e.LastName;",
-      "id": 81
-    },
-    {
-      "question": "Tìm các khách hàng không đặt sản phẩm 'Chai' trong ngày 28 tháng 10 năm 2023.",
-      "intent": "complex",
-      "sql_keywords": [
-        "Customers",
-        "Orders",
-        "\"Order Details\"",
-        "Products"
-      ],
-      "gold_sql": "SELECT c.CompanyName FROM Customers AS c WHERE NOT EXISTS (SELECT 1 FROM Orders AS o JOIN `Order Details` AS od ON o.OrderID = od.OrderID JOIN Products AS p ON od.ProductID = p.ProductID WHERE o.CustomerID = c.CustomerID AND p.ProductName = 'Chai' AND DATE(o.OrderDate) = '2023-10-28');",
-      "id": 82
-    },
-    {
-      "question": "Hiển thị tổng số lượng đơn vị còn trong kho cho mỗi danh mục sản phẩm.",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "SUM",
-        "Categories",
-        "Products"
-      ],
-      "gold_sql": "SELECT c.CategoryName, SUM(p.UnitsInStock) AS TotalUnitsInStock FROM Categories AS c JOIN Products AS p ON c.CategoryID = p.CategoryID GROUP BY c.CategoryName;",
-      "id": 83
-    },
-    {
-      "question": "Liệt kê tất cả các lãnh thổ thuộc khu vực có mô tả 'Eastern'.",
-      "intent": "join",
-      "sql_keywords": [
-        "Territories",
-        "Regions"
-      ],
-      "gold_sql": "SELECT t.TerritoryDescription FROM Territories AS t JOIN Regions AS r ON t.RegionID = r.RegionID WHERE r.RegionDescription = 'Eastern';",
-      "id": 84
-    },
-    {
-      "question": "Giá trị đơn hàng trung bình, bao gồm cước vận chuyển, của từng khách hàng là bao nhiêu?",
-      "intent": "complex",
-      "sql_keywords": [
-        "AVG",
-        "SUM",
-        "Customers",
-        "Orders",
-        "\"Order Details\""
-      ],
-      "gold_sql": "WITH OrderTotals AS (SELECT o.CustomerID, o.OrderID, SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)) + o.Freight AS TotalValue FROM Orders AS o JOIN `Order Details` AS od ON o.OrderID = od.OrderID GROUP BY o.CustomerID, o.OrderID, o.Freight) SELECT CustomerID, ROUND(AVG(TotalValue), 2) AS AverageOrderValue FROM OrderTotals GROUP BY CustomerID;",
-      "id": 85
-    },
-    {
-      "question": "Tìm số lượng sản phẩm riêng biệt mà mỗi khách hàng đã đặt.",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "COUNT",
-        "DISTINCT",
-        "Customers",
-        "Orders",
-        "\"Order Details\""
-      ],
-      "gold_sql": "SELECT T1.CustomerID, COUNT(DISTINCT T2.ProductID) AS distinct_product_count FROM Orders AS T1 INNER JOIN \"Order Details\" AS T2 ON T1.OrderID = T2.OrderID GROUP BY T1.CustomerID;",
-      "id": 86
-    },
-    {
-      "question": "Hiển thị tổng doanh thu mỗi tháng của năm 2022, chỉ tính các đơn hàng đã được vận chuyển.",
-      "intent": "complex",
-      "sql_keywords": [
-        "SUM",
-        "Orders",
-        "\"Order Details\"",
-        "DATE"
-      ],
-      "gold_sql": "SELECT STRFTIME('%Y-%m', o.OrderDate) AS OrderMonth, SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)) AS TotalRevenue FROM Orders AS o JOIN `Order Details` AS od ON o.OrderID = od.OrderID WHERE STRFTIME('%Y', o.OrderDate) = '2022' AND o.ShippedDate IS NOT NULL GROUP BY OrderMonth ORDER BY OrderMonth;",
-      "id": 87
-    },
-    {
-      "question": "Liệt kê các nhân viên có cùng người quản lý trực tiếp với 'Nancy Davolio'.",
-      "intent": "self-join",
-      "sql_keywords": [
-        "Employees"
-      ],
-      "gold_sql": "SELECT e.FirstName, e.LastName FROM Employees AS e JOIN Employees AS nancy ON e.ReportsTo = nancy.ReportsTo WHERE nancy.FirstName = 'Nancy' AND nancy.LastName = 'Davolio' AND e.EmployeeID <> nancy.EmployeeID;",
-      "id": 88
-    },
-    {
-      "question": "Tổng số lượng của mỗi sản phẩm được đặt trong tháng 5 năm 2021 là bao nhiêu?",
-      "intent": "complex",
-      "sql_keywords": [
-        "SUM",
-        "Products",
-        "Orders",
-        "\"Order Details\"",
-        "DATE"
-      ],
-      "gold_sql": "SELECT p.ProductName, SUM(od.Quantity) AS TotalQuantityOrdered FROM Products AS p JOIN `Order Details` AS od ON p.ProductID = od.ProductID JOIN Orders AS o ON od.OrderID = o.OrderID WHERE STRFTIME('%Y-%m', o.OrderDate) = '2021-05' GROUP BY p.ProductID, p.ProductName;",
-      "id": 89
-    },
-    {
-      "question": "Tìm các cặp nhà cung cấp ở cùng một quốc gia.",
-      "intent": "self-join",
-      "sql_keywords": [
-        "Suppliers"
-      ],
-      "gold_sql": "SELECT s1.CompanyName, s2.CompanyName, TRIM(s1.Country) AS Country FROM Suppliers AS s1 JOIN Suppliers AS s2 ON s1.SupplierID < s2.SupplierID AND TRIM(s1.Country) = TRIM(s2.Country);",
-      "id": 90
-    },
-    {
-      "question": "Hiển thị tên công ty của các khách hàng đã đặt các sản phẩm có đơn giá lớn hơn 100 đô la.",
-      "intent": "complex",
-      "sql_keywords": [
-        "Customers",
-        "Orders",
-        "\"Order Details\"",
-        "Products"
-      ],
-      "gold_sql": "SELECT DISTINCT c.CompanyName FROM Customers AS c JOIN Orders AS o ON c.CustomerID = o.CustomerID JOIN \"Order Details\" AS od ON o.OrderID = od.OrderID JOIN Products AS p ON od.ProductID = p.ProductID WHERE p.UnitPrice > 100;",
-      "id": 91
-    },
-    {
-      "question": "Hiển thị số lượng sản phẩm thuộc mỗi danh mục.",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "COUNT",
-        "Categories",
-        "Products"
-      ],
-      "gold_sql": "SELECT c.CategoryName, COUNT(p.ProductID) AS ProductCount FROM Categories AS c JOIN Products AS p ON c.CategoryID = p.CategoryID GROUP BY c.CategoryID, c.CategoryName;",
-      "id": 92
-    },
-    {
-      "question": "Liệt kê các khách hàng đã đặt hơn 200 đơn hàng.",
-      "intent": "aggregate",
-      "sql_keywords": [
-        "COUNT",
-        "CustomerID",
-        "Orders",
-        "Customers"
-      ],
-      "gold_sql": "SELECT CustomerID FROM Orders GROUP BY CustomerID HAVING COUNT(OrderID) > 200;",
-      "id": 93
-    },
-    {
-      "question": "Tìm các cặp nhà cung cấp và khách hàng ở cùng thành phố, cùng quốc gia.",
-      "intent": "join",
-      "sql_keywords": [
-        "Suppliers",
-        "Customers"
-      ],
-      "gold_sql": "SELECT DISTINCT s.CompanyName AS SupplierName, c.CompanyName AS CustomerName, s.City, TRIM(s.Country) AS Country FROM Suppliers AS s JOIN Customers AS c ON s.City = c.City AND TRIM(s.Country) = TRIM(c.Country);",
-      "id": 94
-    },
-    {
-      "question": "Liệt kê 5 sản phẩm có tổng doanh thu cao nhất trong quý 4 năm 2022.",
-      "intent": "complex",
-      "sql_keywords": [
-        "SUM",
-        "UnitPrice",
-        "Quantity",
-        "Discount",
-        "Order Details",
-        "Products",
-        "Orders",
-        "OrderDate"
-      ],
-      "gold_sql": "SELECT p.ProductName, SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)) AS TotalRevenue FROM Products AS p JOIN `Order Details` AS od ON p.ProductID = od.ProductID JOIN Orders AS o ON od.OrderID = o.OrderID WHERE o.OrderDate >= '2022-10-01' AND o.OrderDate < '2023-01-01' GROUP BY p.ProductID, p.ProductName ORDER BY TotalRevenue DESC LIMIT 5;",
-      "id": 95
-    }
-  ]
+  {
+    "id": 2,
+    "question": "Liệt kê tên sản phẩm, đơn vị đóng gói và giá đơn vị của tất cả sản phẩm thuộc danh mục 'Seafood'.",
+    "question_en": "List the product name, quantity per unit, and unit price of all products in the 'Seafood' category.",
+    "gold_sql": "SELECT ProductName, QuantityPerUnit, UnitPrice FROM Products WHERE CategoryID = (SELECT CategoryID FROM Categories WHERE CategoryName = 'Seafood')",
+    "intent": "simple",
+    "pattern": "simple_select_subquery_filter",
+    "tables": [
+      "Products",
+      "Categories"
+    ],
+    "output_columns": [
+      "ProductName",
+      "QuantityPerUnit",
+      "UnitPrice"
+    ]
+  },
+  {
+    "id": 3,
+    "question": "Tìm các khách hàng có chức danh người liên hệ chứa từ 'Manager'. Hiển thị tên công ty, người liên hệ và chức danh.",
+    "question_en": "Find customers whose contact title contains 'Manager'. Show company name, contact name, and contact title.",
+    "gold_sql": "SELECT CompanyName, ContactName, ContactTitle FROM Customers WHERE ContactTitle LIKE '%Manager%'",
+    "intent": "simple",
+    "pattern": "simple_select_like_filter",
+    "tables": [
+      "Customers"
+    ],
+    "output_columns": [
+      "CompanyName",
+      "ContactName",
+      "ContactTitle"
+    ]
+  },
+  {
+    "id": 4,
+    "question": "Hiển thị tên sản phẩm, số lượng tồn kho và số lượng đang đặt hàng của các sản phẩm đang có đơn đặt hàng chờ xử lý, sắp xếp theo số lượng đặt hàng giảm dần.",
+    "question_en": "Show product name, units in stock, and units on order for products with pending orders, sorted by units on order descending.",
+    "gold_sql": "SELECT ProductName, UnitsInStock, UnitsOnOrder FROM Products WHERE UnitsOnOrder > 0 ORDER BY UnitsOnOrder DESC",
+    "intent": "simple",
+    "pattern": "simple_select_filter_order_by",
+    "tables": [
+      "Products"
+    ],
+    "output_columns": [
+      "ProductName",
+      "UnitsInStock",
+      "UnitsOnOrder"
+    ]
+  },
+  {
+    "id": 5,
+    "question": "Liệt kê các đơn hàng chưa được giao (chưa có ngày giao hàng). Hiển thị mã đơn hàng, mã khách hàng, ngày yêu cầu và ngày giao.",
+    "question_en": "List orders that have not been shipped yet (no ship date). Show order ID, customer ID, required date, and shipped date.",
+    "gold_sql": "SELECT OrderID, CustomerID, RequiredDate, ShippedDate FROM Orders WHERE ShippedDate IS NULL",
+    "intent": "simple",
+    "pattern": "simple_select_null_filter",
+    "tables": [
+      "Orders"
+    ],
+    "output_columns": [
+      "OrderID",
+      "CustomerID",
+      "RequiredDate",
+      "ShippedDate"
+    ]
+  },
+  {
+    "id": 6,
+    "question": "Liệt kê tên công ty, thành phố và quốc gia của các nhà cung cấp đến từ Mỹ, sắp xếp theo tên công ty.",
+    "question_en": "List company name, city, and country of suppliers from the USA, sorted by company name.",
+    "gold_sql": "SELECT CompanyName, City, Country FROM Suppliers WHERE Country = 'USA' ORDER BY CompanyName",
+    "intent": "simple",
+    "pattern": "simple_select_filter_order_by",
+    "tables": [
+      "Suppliers"
+    ],
+    "output_columns": [
+      "CompanyName",
+      "City",
+      "Country"
+    ]
+  },
+  {
+    "id": 7,
+    "question": "Tìm các sản phẩm đã ngừng kinh doanh. Hiển thị tên sản phẩm và giá, sắp xếp theo giá giảm dần.",
+    "question_en": "Find discontinued products. Show product name and unit price, sorted by price descending.",
+    "gold_sql": "SELECT ProductName, UnitPrice FROM Products WHERE Discontinued = '1' ORDER BY UnitPrice DESC",
+    "intent": "simple",
+    "pattern": "simple_select_filter_order_by",
+    "tables": [
+      "Products"
+    ],
+    "output_columns": [
+      "ProductName",
+      "UnitPrice"
+    ]
+  },
+  {
+    "id": 8,
+    "question": "Hiển thị tên công ty và số điện thoại của tất cả các đơn vị vận chuyển.",
+    "question_en": "Show the company name and phone number of all shippers.",
+    "gold_sql": "SELECT CompanyName, Phone FROM Shippers",
+    "intent": "simple",
+    "pattern": "simple_select_all",
+    "tables": [
+      "Shippers"
+    ],
+    "output_columns": [
+      "CompanyName",
+      "Phone"
+    ]
+  },
+  {
+    "id": 9,
+    "question": "Liệt kê họ tên, chức danh và ngày tuyển dụng của các nhân viên có chức danh 'Sales Representative', sắp xếp theo ngày tuyển dụng.",
+    "question_en": "List first name, last name, title, and hire date of employees who are Sales Representatives, sorted by hire date.",
+    "gold_sql": "SELECT FirstName, LastName, Title, HireDate FROM Employees WHERE Title = 'Sales Representative' ORDER BY HireDate",
+    "intent": "simple",
+    "pattern": "simple_select_filter_order_by",
+    "tables": [
+      "Employees"
+    ],
+    "output_columns": [
+      "FirstName",
+      "LastName",
+      "Title",
+      "HireDate"
+    ]
+  },
+  {
+    "id": 10,
+    "question": "Hiển thị 10 đơn hàng gần nhất được giao đến Brazil. Hiển thị mã đơn hàng, tên người nhận, thành phố và quốc gia giao hàng.",
+    "question_en": "Show the 10 most recent orders shipped to Brazil. Show order ID, ship name, ship city, and ship country.",
+    "gold_sql": "SELECT OrderID, ShipName, ShipCity, ShipCountry FROM Orders WHERE ShipCountry = 'Brazil' ORDER BY OrderDate DESC LIMIT 10",
+    "intent": "simple",
+    "pattern": "simple_select_filter_top_k",
+    "tables": [
+      "Orders"
+    ],
+    "output_columns": [
+      "OrderID",
+      "ShipName",
+      "ShipCity",
+      "ShipCountry"
+    ]
+  },
+  {
+    "id": 11,
+    "question": "Liệt kê tên và mô tả của tất cả các danh mục sản phẩm, sắp xếp theo tên danh mục.",
+    "question_en": "List the name and description of all product categories, sorted by category name.",
+    "gold_sql": "SELECT CategoryName, Description FROM Categories ORDER BY CategoryName",
+    "intent": "simple",
+    "pattern": "simple_select_order_by",
+    "tables": [
+      "Categories"
+    ],
+    "output_columns": [
+      "CategoryName",
+      "Description"
+    ]
+  },
+  {
+    "id": 12,
+    "question": "Tìm các sản phẩm đang hết hàng (số lượng tồn kho bằng 0). Hiển thị tên sản phẩm, giá và số lượng tồn kho.",
+    "question_en": "Find products that are out of stock (units in stock equal to 0). Show product name, unit price, and units in stock.",
+    "gold_sql": "SELECT ProductName, UnitPrice, UnitsInStock FROM Products WHERE UnitsInStock = 0",
+    "intent": "simple",
+    "pattern": "simple_select_filter",
+    "tables": [
+      "Products"
+    ],
+    "output_columns": [
+      "ProductName",
+      "UnitPrice",
+      "UnitsInStock"
+    ]
+  },
+  {
+    "id": 13,
+    "question": "Liệt kê tên công ty, người liên hệ và quốc gia của các khách hàng đến từ Anh hoặc Ireland, sắp xếp theo quốc gia.",
+    "question_en": "List company name, contact name, and country of customers from the UK or Ireland, sorted by country.",
+    "gold_sql": "SELECT CompanyName, ContactName, Country FROM Customers WHERE Country IN ('UK', 'Ireland') ORDER BY Country",
+    "intent": "simple",
+    "pattern": "simple_select_in_filter",
+    "tables": [
+      "Customers"
+    ],
+    "output_columns": [
+      "CompanyName",
+      "ContactName",
+      "Country"
+    ]
+  },
+  {
+    "id": 14,
+    "question": "Hiển thị các đơn hàng có phí vận chuyển từ 50 đến 100. Hiển thị mã đơn hàng, ngày đặt, ngày yêu cầu và phí vận chuyển, sắp xếp theo phí tăng dần.",
+    "question_en": "Show orders with freight between 50 and 100. Display order ID, order date, required date, and freight, sorted by freight ascending.",
+    "gold_sql": "SELECT OrderID, OrderDate, RequiredDate, Freight FROM Orders WHERE Freight BETWEEN 50 AND 100 ORDER BY Freight",
+    "intent": "simple",
+    "pattern": "simple_select_between_filter",
+    "tables": [
+      "Orders"
+    ],
+    "output_columns": [
+      "OrderID",
+      "OrderDate",
+      "RequiredDate",
+      "Freight"
+    ]
+  },
+  {
+    "id": 15,
+    "question": "Liệt kê họ tên, ngày sinh và quốc gia của các nhân viên đến từ Mỹ.",
+    "question_en": "List first name, last name, birth date, and country of employees from the USA.",
+    "gold_sql": "SELECT FirstName, LastName, BirthDate, Country FROM Employees WHERE Country = 'USA'",
+    "intent": "simple",
+    "pattern": "simple_select_filter",
+    "tables": [
+      "Employees"
+    ],
+    "output_columns": [
+      "FirstName",
+      "LastName",
+      "BirthDate",
+      "Country"
+    ]
+  },
+
+    # === CUSTOMER – ORDER JOIN (16-27) ===
+    {
+    "id": 16,
+    "question": "Tìm số đơn hàng của từng khách hàng Đức. Hiển thị tên công ty, thành phố, quốc gia và số đơn hàng, sắp xếp giảm dần.",
+    "question_en": "Find the number of orders for each German customer. Show company name, city, country, and order count, sorted descending.",
+    "gold_sql": "SELECT c.CompanyName, c.City, c.Country, COUNT(o.OrderID) AS TotalOrders FROM Customers c JOIN Orders o ON c.CustomerID = o.CustomerID WHERE c.Country = 'Germany' GROUP BY c.CustomerID, c.CompanyName, c.City, c.Country ORDER BY TotalOrders DESC",
+    "intent": "aggregate",
+    "pattern": "join_filter_group_by",
+    "tables": [
+      "Customers",
+      "Orders"
+    ],
+    "output_columns": [
+      "CompanyName",
+      "City",
+      "Country",
+      "TotalOrders"
+    ]
+  },
+  {
+    "id": 17,
+    "question": "Tìm các đơn hàng được giao đến thành phố khác với địa chỉ của khách hàng. Hiển thị tên công ty, mã đơn hàng, ngày đặt và thành phố giao hàng.",
+    "question_en": "Find orders shipped to a different city from the customer's address. Show company name, order ID, order date, and ship city.",
+    "gold_sql": "SELECT c.CompanyName, o.OrderID, o.OrderDate, o.ShipCity FROM Customers c JOIN Orders o ON c.CustomerID = o.CustomerID WHERE o.ShipCity != c.City ORDER BY c.CompanyName",
+    "intent": "join",
+    "pattern": "join_filter_cross_column",
+    "tables": [
+      "Customers",
+      "Orders"
+    ],
+    "output_columns": [
+      "CompanyName",
+      "OrderID",
+      "OrderDate",
+      "ShipCity"
+    ]
+  },
+  {
+    "id": 18,
+    "question": "Tìm các khách hàng có phí vận chuyển trung bình trên mỗi đơn hàng lớn hơn 80. Hiển thị tên công ty và phí vận chuyển trung bình, sắp xếp giảm dần.",
+    "question_en": "Find customers with an average freight per order greater than 80. Show company name and average freight, sorted descending.",
+    "gold_sql": "SELECT c.CompanyName, AVG(o.Freight) AS AvgFreight FROM Customers c JOIN Orders o ON c.CustomerID = o.CustomerID GROUP BY c.CustomerID, c.CompanyName HAVING AVG(o.Freight) > 80 ORDER BY AvgFreight DESC",
+    "intent": "aggregate",
+    "pattern": "join_group_by_having",
+    "tables": [
+      "Customers",
+      "Orders"
+    ],
+    "output_columns": [
+      "CompanyName",
+      "AvgFreight"
+    ]
+  },
+  {
+    "id": 19,
+    "question": "Hiển thị ngày đặt hàng đầu tiên và cuối cùng của từng khách hàng. Sắp xếp theo ngày đặt hàng đầu tiên.",
+    "question_en": "Show the first and last order date for each customer. Sort by first order date.",
+    "gold_sql": "SELECT c.CompanyName, MIN(o.OrderDate) AS FirstOrder, MAX(o.OrderDate) AS LastOrder FROM Customers c JOIN Orders o ON c.CustomerID = o.CustomerID GROUP BY c.CustomerID, c.CompanyName ORDER BY FirstOrder",
+    "intent": "aggregate",
+    "pattern": "join_group_by_min_max_date",
+    "tables": [
+      "Customers",
+      "Orders"
+    ],
+    "output_columns": [
+      "CompanyName",
+      "FirstOrder",
+      "LastOrder"
+    ]
+  },
+  {
+    "id": 20,
+    "question": "Thống kê số khách hàng và tổng số đơn hàng theo từng quốc gia. Lấy top 10 quốc gia có nhiều đơn hàng nhất.",
+    "question_en": "Count distinct customers and total orders per country. Get the top 10 countries by order count.",
+    "gold_sql": "SELECT c.Country, COUNT(DISTINCT c.CustomerID) AS NumCustomers, COUNT(o.OrderID) AS TotalOrders FROM Customers c JOIN Orders o ON c.CustomerID = o.CustomerID GROUP BY c.Country ORDER BY TotalOrders DESC LIMIT 10",
+    "intent": "aggregate",
+    "pattern": "join_group_by_multi_agg_top_k",
+    "tables": [
+      "Customers",
+      "Orders"
+    ],
+    "output_columns": [
+      "Country",
+      "NumCustomers",
+      "TotalOrders"
+    ]
+  },
+  {
+    "id": 21,
+    "question": "Liệt kê các đơn hàng được giao bởi 'Federal Shipping'. Hiển thị tên công ty khách hàng, mã đơn hàng, ngày đặt hàng và tên đơn vị vận chuyển.",
+    "question_en": "List orders delivered by 'Federal Shipping'. Show customer company name, order ID, order date, and shipper name.",
+    "gold_sql": "SELECT c.CompanyName, o.OrderID, o.OrderDate, sh.CompanyName AS Shipper FROM Customers c JOIN Orders o ON c.CustomerID = o.CustomerID JOIN Shippers sh ON o.ShipVia = sh.ShipperID WHERE sh.CompanyName = 'Federal Shipping'",
+    "intent": "join",
+    "pattern": "multi_join_filter",
+    "tables": [
+      "Customers",
+      "Orders",
+      "Shippers"
+    ],
+    "output_columns": [
+      "CompanyName",
+      "OrderID",
+      "OrderDate",
+      "Shipper"
+    ]
+  },
+  {
+    "id": 22,
+    "question": "Tìm các khách hàng đã đặt từ 10 đơn hàng trở lên. Hiển thị tên công ty, số đơn hàng và tổng phí vận chuyển, sắp xếp theo số đơn hàng giảm dần.",
+    "question_en": "Find customers who have placed at least 10 orders. Show company name, order count, and total freight, sorted by order count descending.",
+    "gold_sql": "SELECT c.CompanyName, COUNT(o.OrderID) AS NumOrders, SUM(o.Freight) AS TotalFreight FROM Customers c JOIN Orders o ON c.CustomerID = o.CustomerID GROUP BY c.CustomerID, c.CompanyName HAVING COUNT(o.OrderID) >= 10 ORDER BY NumOrders DESC",
+    "intent": "aggregate",
+    "pattern": "join_group_by_having",
+    "tables": [
+      "Customers",
+      "Orders"
+    ],
+    "output_columns": [
+      "CompanyName",
+      "NumOrders",
+      "TotalFreight"
+    ]
+  },
+  {
+    "id": 23,
+    "question": "Liệt kê các đơn hàng được đặt trong năm 2018 cùng tên công ty khách hàng, sắp xếp theo ngày đặt hàng.",
+    "question_en": "List orders placed in 2018 with the customer company name, sorted by order date.",
+    "gold_sql": "SELECT c.CompanyName, c.Country, o.OrderDate FROM Customers c JOIN Orders o ON c.CustomerID = o.CustomerID WHERE strftime('%Y', o.OrderDate) = '2018' ORDER BY o.OrderDate",
+    "intent": "join",
+    "pattern": "join_date_filter",
+    "tables": [
+      "Customers",
+      "Orders"
+    ],
+    "output_columns": [
+      "CompanyName",
+      "Country",
+      "OrderDate"
+    ]
+  },
+  {
+    "id": 24,
+    "question": "Thống kê số đơn hàng và phí vận chuyển trung bình theo từng đơn vị vận chuyển.",
+    "question_en": "Count orders and calculate average freight for each shipper.",
+    "gold_sql": "SELECT sh.CompanyName, COUNT(o.OrderID) AS NumOrders, ROUND(AVG(o.Freight), 2) AS AvgFreight FROM Shippers sh JOIN Orders o ON sh.ShipperID = o.ShipVia GROUP BY sh.ShipperID, sh.CompanyName ORDER BY NumOrders DESC",
+    "intent": "aggregate",
+    "pattern": "join_group_by",
+    "tables": [
+      "Shippers",
+      "Orders"
+    ],
+    "output_columns": [
+      "CompanyName",
+      "NumOrders",
+      "AvgFreight"
+    ]
+  },
+  {
+    "id": 25,
+    "question": "Tìm 10 cặp khách hàng – quốc gia giao hàng có nhiều đơn hàng nhất (hơn 5 đơn). Hiển thị tên công ty, quốc gia giao và số đơn hàng.",
+    "question_en": "Find the top 10 customer–ship-country pairs with more than 5 orders. Show company name, ship country, and order count.",
+    "gold_sql": "SELECT c.CompanyName, o.ShipCountry, COUNT(o.OrderID) AS NumOrders FROM Customers c JOIN Orders o ON c.CustomerID = o.CustomerID GROUP BY c.CustomerID, c.CompanyName, o.ShipCountry HAVING COUNT(o.OrderID) > 5 ORDER BY NumOrders DESC LIMIT 10",
+    "intent": "aggregate",
+    "pattern": "join_group_by_having_top_k",
+    "tables": [
+      "Customers",
+      "Orders"
+    ],
+    "output_columns": [
+      "CompanyName",
+      "ShipCountry",
+      "NumOrders"
+    ]
+  },
+  {
+    "id": 26,
+    "question": "Thống kê số đơn hàng của từng khách hàng theo từng năm. Sắp xếp theo tên công ty và năm.",
+    "question_en": "Count orders per customer per year. Sort by company name and year.",
+    "gold_sql": "SELECT c.CompanyName, strftime('%Y', o.OrderDate) AS Year, COUNT(o.OrderID) AS NumOrders FROM Customers c JOIN Orders o ON c.CustomerID = o.CustomerID GROUP BY c.CustomerID, c.CompanyName, Year ORDER BY c.CompanyName, Year",
+    "intent": "aggregate",
+    "pattern": "join_group_by_date",
+    "tables": [
+      "Customers",
+      "Orders"
+    ],
+    "output_columns": [
+      "CompanyName",
+      "Year",
+      "NumOrders"
+    ]
+  },
+  {
+    "id": 27,
+    "question": "Tìm đơn hàng có phí vận chuyển cao nhất. Hiển thị mã đơn hàng, ngày đặt, tên công ty khách hàng và phí vận chuyển.",
+    "question_en": "Find the order with the highest freight. Show order ID, order date, customer company name, and freight.",
+    "gold_sql": "SELECT c.CompanyName, o.OrderID, o.OrderDate, o.Freight FROM Customers c JOIN Orders o ON c.CustomerID = o.CustomerID WHERE o.Freight = (SELECT MAX(Freight) FROM Orders)",
+    "intent": "subquery",
+    "pattern": "join_subquery_max",
+    "tables": [
+      "Customers",
+      "Orders"
+    ],
+    "output_columns": [
+      "CompanyName",
+      "OrderID",
+      "OrderDate",
+      "Freight"
+    ]
+  },
+
+    # === ORDER DETAILS – PRODUCT JOIN (28-40) ===
+    {
+    "id": 28,
+    "question": "Tìm 10 sản phẩm có tổng số lượng bán ra cao nhất kèm tên danh mục. Hiển thị tên sản phẩm, danh mục và tổng số lượng.",
+    "question_en": "Find the top 10 products by total quantity sold with their category name. Show product name, category, and total quantity.",
+    "gold_sql": "SELECT p.ProductName, cat.CategoryName, SUM(od.Quantity) AS TotalSold FROM \"Order Details\" od JOIN Products p ON od.ProductID = p.ProductID JOIN Categories cat ON p.CategoryID = cat.CategoryID GROUP BY od.ProductID, p.ProductName, cat.CategoryName ORDER BY TotalSold DESC LIMIT 10",
+    "intent": "aggregate",
+    "pattern": "multi_join_group_by_top_k",
+    "tables": [
+      "Order Details",
+      "Products",
+      "Categories"
+    ],
+    "output_columns": [
+      "ProductName",
+      "CategoryName",
+      "TotalSold"
+    ]
+  },
+  {
+    "id": 29,
+    "question": "Tìm các sản phẩm có mức chiết khấu trung bình vượt quá 5%. Hiển thị tên sản phẩm và chiết khấu trung bình, sắp xếp giảm dần.",
+    "question_en": "Find products with an average discount greater than 5%. Show product name and average discount, sorted descending.",
+    "gold_sql": "SELECT p.ProductName, ROUND(AVG(od.Discount), 4) AS AvgDiscount FROM \"Order Details\" od JOIN Products p ON od.ProductID = p.ProductID GROUP BY od.ProductID, p.ProductName HAVING AVG(od.Discount) > 0.05 ORDER BY AvgDiscount DESC",
+    "intent": "aggregate",
+    "pattern": "join_group_by_having",
+    "tables": [
+      "Order Details",
+      "Products"
+    ],
+    "output_columns": [
+      "ProductName",
+      "AvgDiscount"
+    ]
+  },
+  {
+    "id": 30,
+    "question": "Tìm 5 đơn hàng có nhiều loại sản phẩm nhất. Hiển thị mã đơn hàng, ngày đặt và số loại sản phẩm.",
+    "question_en": "Find the top 5 orders with the most distinct product types. Show order ID, order date, and number of products.",
+    "gold_sql": "SELECT o.OrderID, o.OrderDate, COUNT(od.ProductID) AS NumProducts FROM Orders o JOIN \"Order Details\" od ON o.OrderID = od.OrderID GROUP BY o.OrderID, o.OrderDate ORDER BY NumProducts DESC LIMIT 5",
+    "intent": "aggregate",
+    "pattern": "join_group_by_top_k",
+    "tables": [
+      "Orders",
+      "Order Details"
+    ],
+    "output_columns": [
+      "OrderID",
+      "OrderDate",
+      "NumProducts"
+    ]
+  },
+  {
+    "id": 31,
+    "question": "Tìm các dòng chi tiết đơn hàng có số lượng từ 100 trở lên. Hiển thị tên sản phẩm, mã đơn hàng, đơn giá, số lượng và chiết khấu, sắp xếp theo số lượng giảm dần.",
+    "question_en": "Find order detail lines with quantity of 100 or more. Show product name, order ID, unit price, quantity, and discount, sorted by quantity descending.",
+    "gold_sql": "SELECT p.ProductName, od.OrderID, od.UnitPrice, od.Quantity, od.Discount FROM \"Order Details\" od JOIN Products p ON od.ProductID = p.ProductID WHERE od.Quantity >= 100 ORDER BY od.Quantity DESC",
+    "intent": "join",
+    "pattern": "join_filter_order_by",
+    "tables": [
+      "Order Details",
+      "Products"
+    ],
+    "output_columns": [
+      "ProductName",
+      "OrderID",
+      "UnitPrice",
+      "Quantity",
+      "Discount"
+    ]
+  },
+  {
+    "id": 32,
+    "question": "Tìm 10 cặp nhà cung cấp – sản phẩm có tổng số lượng bán ra cao nhất. Hiển thị tên nhà cung cấp, tên sản phẩm và tổng số lượng.",
+    "question_en": "Find the top 10 supplier–product pairs by total quantity sold. Show supplier name, product name, and total quantity.",
+    "gold_sql": "SELECT s.CompanyName AS Supplier, p.ProductName, SUM(od.Quantity) AS TotalSold FROM \"Order Details\" od JOIN Products p ON od.ProductID = p.ProductID JOIN Suppliers s ON p.SupplierID = s.SupplierID GROUP BY s.SupplierID, s.CompanyName, od.ProductID, p.ProductName ORDER BY TotalSold DESC LIMIT 10",
+    "intent": "aggregate",
+    "pattern": "multi_join_group_by_top_k",
+    "tables": [
+      "Order Details",
+      "Products",
+      "Suppliers"
+    ],
+    "output_columns": [
+      "Supplier",
+      "ProductName",
+      "TotalSold"
+    ]
+  },
+  {
+    "id": 33,
+    "question": "Tính tổng số lượng bán và doanh thu theo từng danh mục sản phẩm. Sắp xếp theo doanh thu giảm dần.",
+    "question_en": "Calculate total quantity sold and revenue by product category. Sort by revenue descending.",
+    "gold_sql": "SELECT cat.CategoryName, SUM(od.Quantity) AS TotalQty, ROUND(SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)), 2) AS Revenue FROM \"Order Details\" od JOIN Products p ON od.ProductID = p.ProductID JOIN Categories cat ON p.CategoryID = cat.CategoryID GROUP BY cat.CategoryID, cat.CategoryName ORDER BY Revenue DESC",
+    "intent": "aggregate",
+    "pattern": "multi_join_group_by_multi_agg",
+    "tables": [
+      "Order Details",
+      "Products",
+      "Categories"
+    ],
+    "output_columns": [
+      "CategoryName",
+      "TotalQty",
+      "Revenue"
+    ]
+  },
+  {
+    "id": 34,
+    "question": "Tìm 10 sản phẩm xuất hiện trong nhiều đơn hàng nhất. Hiển thị tên sản phẩm, số đơn hàng và tổng số lượng bán.",
+    "question_en": "Find the top 10 products appearing in the most orders. Show product name, order count, and total quantity sold.",
+    "gold_sql": "SELECT p.ProductName, COUNT(DISTINCT od.OrderID) AS NumOrders, SUM(od.Quantity) AS TotalQty FROM \"Order Details\" od JOIN Products p ON od.ProductID = p.ProductID GROUP BY od.ProductID, p.ProductName ORDER BY NumOrders DESC LIMIT 10",
+    "intent": "aggregate",
+    "pattern": "join_group_by_distinct_count_top_k",
+    "tables": [
+      "Order Details",
+      "Products"
+    ],
+    "output_columns": [
+      "ProductName",
+      "NumOrders",
+      "TotalQty"
+    ]
+  },
+  {
+    "id": 35,
+    "question": "Tìm các sản phẩm có giá bán thực tế thay đổi theo đơn hàng (giá min khác giá max trong Order Details). Hiển thị tên sản phẩm, giá thấp nhất và cao nhất.",
+    "question_en": "Find products whose actual selling price varies across orders (min price differs from max price in Order Details). Show product name, min price, and max price.",
+    "gold_sql": "SELECT p.ProductName, MIN(od.UnitPrice) AS MinPrice, MAX(od.UnitPrice) AS MaxPrice FROM \"Order Details\" od JOIN Products p ON od.ProductID = p.ProductID GROUP BY od.ProductID, p.ProductName HAVING MIN(od.UnitPrice) != MAX(od.UnitPrice) ORDER BY p.ProductName",
+    "intent": "aggregate",
+    "pattern": "join_group_by_having_min_max",
+    "tables": [
+      "Order Details",
+      "Products"
+    ],
+    "output_columns": [
+      "ProductName",
+      "MinPrice",
+      "MaxPrice"
+    ]
+  },
+  {
+    "id": 36,
+    "question": "Top 5 sản phẩm bán chạy nhất tại thị trường Mỹ tính theo tổng số lượng. Hiển thị tên sản phẩm và tổng số lượng.",
+    "question_en": "Top 5 best-selling products in the US market by total quantity. Show product name and total quantity.",
+    "gold_sql": "SELECT p.ProductName, SUM(od.Quantity) AS TotalQty FROM \"Order Details\" od JOIN Orders o ON od.OrderID = o.OrderID JOIN Products p ON od.ProductID = p.ProductID WHERE o.ShipCountry = 'USA' GROUP BY od.ProductID, p.ProductName ORDER BY TotalQty DESC LIMIT 5",
+    "intent": "aggregate",
+    "pattern": "multi_join_filter_group_by_top_k",
+    "tables": [
+      "Order Details",
+      "Orders",
+      "Products"
+    ],
+    "output_columns": [
+      "ProductName",
+      "TotalQty"
+    ]
+  },
+  {
+    "id": 37,
+    "question": "Tính tổng giá trị chiết khấu đã được áp dụng cho từng sản phẩm. Hiển thị top 10 sản phẩm được chiết khấu nhiều nhất.",
+    "question_en": "Calculate the total discount value applied for each product. Show the top 10 products with the highest total discount.",
+    "gold_sql": "SELECT p.ProductName, ROUND(SUM(od.UnitPrice * od.Quantity * od.Discount), 2) AS TotalDiscount FROM \"Order Details\" od JOIN Products p ON od.ProductID = p.ProductID GROUP BY od.ProductID, p.ProductName ORDER BY TotalDiscount DESC LIMIT 10",
+    "intent": "aggregate",
+    "pattern": "join_group_by_top_k",
+    "tables": [
+      "Order Details",
+      "Products"
+    ],
+    "output_columns": [
+      "ProductName",
+      "TotalDiscount"
+    ]
+  },
+  {
+    "id": 38,
+    "question": "Tính doanh thu theo từng danh mục sản phẩm và từng năm. Sắp xếp theo năm và doanh thu giảm dần.",
+    "question_en": "Calculate revenue by product category and year. Sort by year and revenue descending.",
+    "gold_sql": "SELECT strftime('%Y', o.OrderDate) AS Year, cat.CategoryName, ROUND(SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)), 2) AS Revenue FROM Orders o JOIN \"Order Details\" od ON o.OrderID = od.OrderID JOIN Products p ON od.ProductID = p.ProductID JOIN Categories cat ON p.CategoryID = cat.CategoryID GROUP BY Year, cat.CategoryID, cat.CategoryName ORDER BY Year, Revenue DESC",
+    "intent": "aggregate",
+    "pattern": "multi_join_group_by_date",
+    "tables": [
+      "Orders",
+      "Order Details",
+      "Products",
+      "Categories"
+    ],
+    "output_columns": [
+      "Year",
+      "CategoryName",
+      "Revenue"
+    ]
+  },
+  {
+    "id": 39,
+    "question": "Tìm 10 tổ hợp (sản phẩm, mức chiết khấu) xuất hiện nhiều lần nhất trong các đơn hàng có chiết khấu. Hiển thị tên sản phẩm, mức chiết khấu và số lần xuất hiện.",
+    "question_en": "Find the top 10 (product, discount) combinations appearing most frequently in discounted orders. Show product name, discount, and occurrence count.",
+    "gold_sql": "SELECT p.ProductName, od.Discount, COUNT(*) AS NumTimes FROM \"Order Details\" od JOIN Products p ON od.ProductID = p.ProductID WHERE od.Discount > 0 GROUP BY od.ProductID, p.ProductName, od.Discount ORDER BY NumTimes DESC LIMIT 10",
+    "intent": "aggregate",
+    "pattern": "join_filter_group_by_top_k",
+    "tables": [
+      "Order Details",
+      "Products"
+    ],
+    "output_columns": [
+      "ProductName",
+      "Discount",
+      "NumTimes"
+    ]
+  },
+  {
+    "id": 40,
+    "question": "Tìm 10 cặp khách hàng – sản phẩm có tổng số lượng mua cao nhất. Hiển thị tên công ty, tên sản phẩm và tổng số lượng.",
+    "question_en": "Find the top 10 customer–product pairs by total quantity purchased. Show company name, product name, and total quantity.",
+    "gold_sql": "SELECT c.CompanyName, p.ProductName, SUM(od.Quantity) AS TotalQty FROM \"Order Details\" od JOIN Orders o ON od.OrderID = o.OrderID JOIN Customers c ON o.CustomerID = c.CustomerID JOIN Products p ON od.ProductID = p.ProductID GROUP BY c.CustomerID, c.CompanyName, od.ProductID, p.ProductName ORDER BY TotalQty DESC LIMIT 10",
+    "intent": "aggregate",
+    "pattern": "multi_join_group_by_top_k",
+    "tables": [
+      "Order Details",
+      "Orders",
+      "Customers",
+      "Products"
+    ],
+    "output_columns": [
+      "CompanyName",
+      "ProductName",
+      "TotalQty"
+    ]
+  },
+
+    # === REVENUE AGGREGATE (41-55) ===
+    {
+    "id": 41,
+    "question": "Tìm 10 quốc gia có giá trị đơn hàng trung bình cao nhất. Hiển thị quốc gia và doanh thu trung bình mỗi đơn hàng.",
+    "question_en": "Find the top 10 countries by average order revenue. Show country and average order revenue.",
+    "gold_sql": "SELECT o.ShipCountry, ROUND(AVG(od.UnitPrice * od.Quantity * (1 - od.Discount)), 2) AS AvgOrderRevenue FROM Orders o JOIN \"Order Details\" od ON o.OrderID = od.OrderID GROUP BY o.ShipCountry ORDER BY AvgOrderRevenue DESC LIMIT 10",
+    "intent": "aggregate",
+    "pattern": "join_group_by_avg_top_k",
+    "tables": [
+      "Orders",
+      "Order Details"
+    ],
+    "output_columns": [
+      "ShipCountry",
+      "AvgOrderRevenue"
+    ]
+  },
+  {
+    "id": 42,
+    "question": "Tính doanh thu theo từng tháng trong toàn bộ hệ thống. Sắp xếp theo tháng tăng dần.",
+    "question_en": "Calculate revenue by month across the entire system. Sort by month ascending.",
+    "gold_sql": "SELECT strftime('%Y-%m', o.OrderDate) AS Month, ROUND(SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)), 2) AS Revenue FROM Orders o JOIN \"Order Details\" od ON o.OrderID = od.OrderID GROUP BY Month ORDER BY Month",
+    "intent": "aggregate",
+    "pattern": "join_group_by_month",
+    "tables": [
+      "Orders",
+      "Order Details"
+    ],
+    "output_columns": [
+      "Month",
+      "Revenue"
+    ]
+  },
+  {
+    "id": 43,
+    "question": "Tính doanh thu của từng nhân viên theo từng năm. Sắp xếp theo năm và doanh thu giảm dần.",
+    "question_en": "Calculate each employee's revenue by year. Sort by year and revenue descending.",
+    "gold_sql": "SELECT e.FirstName || ' ' || e.LastName AS Employee, strftime('%Y', o.OrderDate) AS Year, ROUND(SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)), 2) AS Revenue FROM Employees e JOIN Orders o ON e.EmployeeID = o.EmployeeID JOIN \"Order Details\" od ON o.OrderID = od.OrderID GROUP BY e.EmployeeID, Year ORDER BY Year, Revenue DESC",
+    "intent": "aggregate",
+    "pattern": "multi_join_group_by_date",
+    "tables": [
+      "Employees",
+      "Orders",
+      "Order Details"
+    ],
+    "output_columns": [
+      "Employee",
+      "Year",
+      "Revenue"
+    ]
+  },
+  {
+    "id": 44,
+    "question": "Tính tổng doanh thu và số đơn hàng của từng đơn vị vận chuyển. Sắp xếp theo doanh thu giảm dần.",
+    "question_en": "Calculate total revenue and order count for each shipper. Sort by revenue descending.",
+    "gold_sql": "SELECT sh.CompanyName AS Shipper, ROUND(SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)), 2) AS Revenue, COUNT(DISTINCT o.OrderID) AS NumOrders FROM Shippers sh JOIN Orders o ON sh.ShipperID = o.ShipVia JOIN \"Order Details\" od ON o.OrderID = od.OrderID GROUP BY sh.ShipperID, sh.CompanyName ORDER BY Revenue DESC",
+    "intent": "aggregate",
+    "pattern": "multi_join_group_by",
+    "tables": [
+      "Shippers",
+      "Orders",
+      "Order Details"
+    ],
+    "output_columns": [
+      "Shipper",
+      "Revenue",
+      "NumOrders"
+    ]
+  },
+  {
+    "id": 45,
+    "question": "Tính tổng doanh thu theo quốc gia của khách hàng. Hiển thị top 10 quốc gia có doanh thu cao nhất.",
+    "question_en": "Calculate total revenue by customer country. Show the top 10 countries by revenue.",
+    "gold_sql": "SELECT c.Country, ROUND(SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)), 2) AS Revenue FROM Customers c JOIN Orders o ON c.CustomerID = o.CustomerID JOIN \"Order Details\" od ON o.OrderID = od.OrderID GROUP BY c.Country ORDER BY Revenue DESC LIMIT 10",
+    "intent": "aggregate",
+    "pattern": "multi_join_group_by_top_k",
+    "tables": [
+      "Customers",
+      "Orders",
+      "Order Details"
+    ],
+    "output_columns": [
+      "Country",
+      "Revenue"
+    ]
+  },
+  {
+    "id": 46,
+    "question": "Tổng giá trị chiết khấu đã được áp dụng trên toàn bộ hệ thống là bao nhiêu?",
+    "question_en": "What is the total discount value applied across the entire system?",
+    "gold_sql": "SELECT ROUND(SUM(od.UnitPrice * od.Quantity * od.Discount), 2) AS TotalDiscountGiven FROM \"Order Details\" od",
+    "intent": "aggregate",
+    "pattern": "aggregate_sum",
+    "tables": [
+      "Order Details"
+    ],
+    "output_columns": [
+      "TotalDiscountGiven"
+    ]
+  },
+  {
+    "id": 47,
+    "question": "So sánh tổng chiết khấu và doanh thu thuần theo từng năm. Sắp xếp theo năm tăng dần.",
+    "question_en": "Compare total discount and net revenue by year. Sort by year ascending.",
+    "gold_sql": "SELECT strftime('%Y', o.OrderDate) AS Year, ROUND(SUM(od.UnitPrice * od.Quantity * od.Discount), 2) AS TotalDiscount, ROUND(SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)), 2) AS NetRevenue FROM Orders o JOIN \"Order Details\" od ON o.OrderID = od.OrderID GROUP BY Year ORDER BY Year",
+    "intent": "aggregate",
+    "pattern": "join_group_by_multi_agg_date",
+    "tables": [
+      "Orders",
+      "Order Details"
+    ],
+    "output_columns": [
+      "Year",
+      "TotalDiscount",
+      "NetRevenue"
+    ]
+  },
+  {
+    "id": 48,
+    "question": "Tính doanh thu trung bình mỗi dòng chi tiết đơn hàng theo từng danh mục sản phẩm. Sắp xếp theo doanh thu trung bình giảm dần.",
+    "question_en": "Calculate average line revenue per order detail by product category. Sort by average revenue descending.",
+    "gold_sql": "SELECT cat.CategoryName, ROUND(AVG(od.UnitPrice * od.Quantity * (1 - od.Discount)), 2) AS AvgLineRevenue FROM \"Order Details\" od JOIN Products p ON od.ProductID = p.ProductID JOIN Categories cat ON p.CategoryID = cat.CategoryID GROUP BY cat.CategoryID, cat.CategoryName ORDER BY AvgLineRevenue DESC",
+    "intent": "aggregate",
+    "pattern": "multi_join_group_by_avg",
+    "tables": [
+      "Order Details",
+      "Products",
+      "Categories"
+    ],
+    "output_columns": [
+      "CategoryName",
+      "AvgLineRevenue"
+    ]
+  },
+  {
+    "id": 49,
+    "question": "Tìm top 10 khách hàng theo tổng chi tiêu, kèm số đơn hàng và giá trị trung bình mỗi đơn. Hiển thị tên công ty, số đơn hàng, tổng chi tiêu và giá trị trung bình.",
+    "question_en": "Find the top 10 customers by total spending, with order count and average order value. Show company name, order count, total spent, and average order value.",
+    "gold_sql": "SELECT c.CompanyName, COUNT(DISTINCT o.OrderID) AS NumOrders, ROUND(SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)), 2) AS TotalSpent, ROUND(AVG(od.UnitPrice * od.Quantity * (1 - od.Discount)), 2) AS AvgOrderValue FROM Customers c JOIN Orders o ON c.CustomerID = o.CustomerID JOIN \"Order Details\" od ON o.OrderID = od.OrderID GROUP BY c.CustomerID, c.CompanyName ORDER BY TotalSpent DESC LIMIT 10",
+    "intent": "aggregate",
+    "pattern": "multi_join_group_by_multi_agg_top_k",
+    "tables": [
+      "Customers",
+      "Orders",
+      "Order Details"
+    ],
+    "output_columns": [
+      "CompanyName",
+      "NumOrders",
+      "TotalSpent",
+      "AvgOrderValue"
+    ]
+  },
+  {
+    "id": 50,
+    "question": "Tìm 10 đơn hàng có giá trị cao nhất kèm tên công ty khách hàng. Hiển thị mã đơn hàng, ngày đặt, tên công ty và giá trị đơn hàng.",
+    "question_en": "Find the top 10 highest-value orders with customer company name. Show order ID, order date, company name, and order value.",
+    "gold_sql": "SELECT o.OrderID, o.OrderDate, c.CompanyName, ROUND(SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)), 2) AS OrderValue FROM Orders o JOIN Customers c ON o.CustomerID = c.CustomerID JOIN \"Order Details\" od ON o.OrderID = od.OrderID GROUP BY o.OrderID, o.OrderDate, c.CompanyName ORDER BY OrderValue DESC LIMIT 10",
+    "intent": "aggregate",
+    "pattern": "multi_join_group_by_top_k",
+    "tables": [
+      "Orders",
+      "Customers",
+      "Order Details"
+    ],
+    "output_columns": [
+      "OrderID",
+      "OrderDate",
+      "CompanyName",
+      "OrderValue"
+    ]
+  },
+  {
+    "id": 51,
+    "question": "Tính tổng doanh thu theo từng nhà cung cấp kèm quốc gia. Sắp xếp theo doanh thu giảm dần.",
+    "question_en": "Calculate total revenue by supplier with their country. Sort by revenue descending.",
+    "gold_sql": "SELECT s.CompanyName AS Supplier, s.Country, ROUND(SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)), 2) AS Revenue FROM Suppliers s JOIN Products p ON s.SupplierID = p.SupplierID JOIN \"Order Details\" od ON p.ProductID = od.ProductID GROUP BY s.SupplierID, s.CompanyName, s.Country ORDER BY Revenue DESC",
+    "intent": "aggregate",
+    "pattern": "multi_join_group_by",
+    "tables": [
+      "Suppliers",
+      "Products",
+      "Order Details"
+    ],
+    "output_columns": [
+      "Supplier",
+      "Country",
+      "Revenue"
+    ]
+  },
+  {
+    "id": 52,
+    "question": "Tổng doanh thu trong năm 2021 là bao nhiêu?",
+    "question_en": "What is the total revenue in 2021?",
+    "gold_sql": "SELECT ROUND(SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)), 2) AS Revenue FROM Orders o JOIN \"Order Details\" od ON o.OrderID = od.OrderID WHERE strftime('%Y', o.OrderDate) = '2021'",
+    "intent": "aggregate",
+    "pattern": "join_aggregate_date_filter",
+    "tables": [
+      "Orders",
+      "Order Details"
+    ],
+    "output_columns": [
+      "Revenue"
+    ]
+  },
+  {
+    "id": 53,
+    "question": "So sánh doanh thu theo danh mục sản phẩm giữa năm 2020 và 2021. Hiển thị tên danh mục, năm và doanh thu.",
+    "question_en": "Compare revenue by product category between 2020 and 2021. Show category name, year, and revenue.",
+    "gold_sql": "SELECT cat.CategoryName, strftime('%Y', o.OrderDate) AS Year, ROUND(SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)), 2) AS Revenue FROM Orders o JOIN \"Order Details\" od ON o.OrderID = od.OrderID JOIN Products p ON od.ProductID = p.ProductID JOIN Categories cat ON p.CategoryID = cat.CategoryID WHERE strftime('%Y', o.OrderDate) IN ('2020','2021') GROUP BY cat.CategoryID, cat.CategoryName, Year ORDER BY cat.CategoryName, Year",
+    "intent": "aggregate",
+    "pattern": "multi_join_filter_group_by_date",
+    "tables": [
+      "Orders",
+      "Order Details",
+      "Products",
+      "Categories"
+    ],
+    "output_columns": [
+      "CategoryName",
+      "Year",
+      "Revenue"
+    ]
+  },
+  {
+    "id": 54,
+    "question": "Tính tổng doanh thu và số khách hàng khác nhau của từng nhân viên. Sắp xếp theo doanh thu giảm dần.",
+    "question_en": "Calculate total revenue and number of unique customers per employee. Sort by revenue descending.",
+    "gold_sql": "SELECT e.FirstName || ' ' || e.LastName AS Employee, ROUND(SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)), 2) AS Revenue, COUNT(DISTINCT o.CustomerID) AS UniqueCustomers FROM Employees e JOIN Orders o ON e.EmployeeID = o.EmployeeID JOIN \"Order Details\" od ON o.OrderID = od.OrderID GROUP BY e.EmployeeID ORDER BY Revenue DESC",
+    "intent": "aggregate",
+    "pattern": "multi_join_group_by_distinct_count",
+    "tables": [
+      "Employees",
+      "Orders",
+      "Order Details"
+    ],
+    "output_columns": [
+      "Employee",
+      "Revenue",
+      "UniqueCustomers"
+    ]
+  },
+  {
+    "id": 55,
+    "question": "Tìm 10 sản phẩm có doanh thu cao nhất kèm số lượng khách hàng mua. Hiển thị tên sản phẩm, doanh thu và số khách hàng.",
+    "question_en": "Find the top 10 products by revenue with the number of distinct customers who purchased them. Show product name, revenue, and customer count.",
+    "gold_sql": "SELECT p.ProductName, ROUND(SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)), 2) AS Revenue, COUNT(DISTINCT o.CustomerID) AS NumCustomers FROM \"Order Details\" od JOIN Orders o ON od.OrderID = o.OrderID JOIN Products p ON od.ProductID = p.ProductID GROUP BY od.ProductID, p.ProductName ORDER BY Revenue DESC LIMIT 10",
+    "intent": "aggregate",
+    "pattern": "multi_join_group_by_distinct_count_top_k",
+    "tables": [
+      "Order Details",
+      "Orders",
+      "Products"
+    ],
+    "output_columns": [
+      "ProductName",
+      "Revenue",
+      "NumCustomers"
+    ]
+  },
+
+    # === GROUP BY + TOP-K (56-67) ===
+    {
+    "id": 56,
+    "question": "10 thành phố nhận nhiều đơn hàng nhất là những thành phố nào? Hiển thị tên thành phố và số đơn hàng.",
+    "question_en": "What are the top 10 cities receiving the most orders? Show city name and order count.",
+    "gold_sql": "SELECT ShipCity, COUNT(OrderID) AS NumOrders FROM Orders GROUP BY ShipCity ORDER BY NumOrders DESC LIMIT 10",
+    "intent": "aggregate",
+    "pattern": "group_by_top_k",
+    "tables": [
+      "Orders"
+    ],
+    "output_columns": [
+      "ShipCity",
+      "NumOrders"
+    ]
+  },
+  {
+    "id": 57,
+    "question": "Thống kê số lượng sản phẩm, giá thấp nhất và giá cao nhất theo từng danh mục. Sắp xếp theo số sản phẩm giảm dần.",
+    "question_en": "Count products and find the min and max price per category. Sort by product count descending.",
+    "gold_sql": "SELECT cat.CategoryName, COUNT(p.ProductID) AS NumProducts, ROUND(MIN(p.UnitPrice), 2) AS MinPrice, ROUND(MAX(p.UnitPrice), 2) AS MaxPrice FROM Categories cat JOIN Products p ON cat.CategoryID = p.CategoryID GROUP BY cat.CategoryID, cat.CategoryName ORDER BY NumProducts DESC",
+    "intent": "aggregate",
+    "pattern": "join_group_by_multi_agg",
+    "tables": [
+      "Categories",
+      "Products"
+    ],
+    "output_columns": [
+      "CategoryName",
+      "NumProducts",
+      "MinPrice",
+      "MaxPrice"
+    ]
+  },
+  {
+    "id": 58,
+    "question": "Thống kê số nhà cung cấp và số sản phẩm theo từng quốc gia nhà cung cấp. Lấy top 10 theo số sản phẩm.",
+    "question_en": "Count suppliers and products by supplier country. Get the top 10 by product count.",
+    "gold_sql": "SELECT s.Country, COUNT(DISTINCT s.SupplierID) AS NumSuppliers, COUNT(p.ProductID) AS NumProducts FROM Suppliers s JOIN Products p ON s.SupplierID = p.SupplierID GROUP BY s.Country ORDER BY NumProducts DESC LIMIT 10",
+    "intent": "aggregate",
+    "pattern": "join_group_by_distinct_count_top_k",
+    "tables": [
+      "Suppliers",
+      "Products"
+    ],
+    "output_columns": [
+      "Country",
+      "NumSuppliers",
+      "NumProducts"
+    ]
+  },
+  {
+    "id": 59,
+    "question": "Mỗi đơn vị vận chuyển xử lý bao nhiêu đơn hàng? Hiển thị tên đơn vị vận chuyển và số đơn hàng, sắp xếp giảm dần.",
+    "question_en": "How many orders does each shipper handle? Show shipper name and order count, sorted descending.",
+    "gold_sql": "SELECT sh.CompanyName, COUNT(o.OrderID) AS NumOrders FROM Shippers sh JOIN Orders o ON sh.ShipperID = o.ShipVia GROUP BY sh.ShipperID, sh.CompanyName ORDER BY NumOrders DESC",
+    "intent": "aggregate",
+    "pattern": "join_group_by",
+    "tables": [
+      "Shippers",
+      "Orders"
+    ],
+    "output_columns": [
+      "CompanyName",
+      "NumOrders"
+    ]
+  },
+  {
+    "id": 60,
+    "question": "Thống kê số đơn hàng theo thứ trong tuần (0=Chủ nhật, 6=Thứ 7). Sắp xếp theo số đơn hàng giảm dần.",
+    "question_en": "Count orders by day of week (0=Sunday, 6=Saturday). Sort by order count descending.",
+    "gold_sql": "SELECT strftime('%w', OrderDate) AS DayOfWeek, COUNT(OrderID) AS NumOrders FROM Orders GROUP BY DayOfWeek ORDER BY NumOrders DESC",
+    "intent": "aggregate",
+    "pattern": "group_by_date_part",
+    "tables": [
+      "Orders"
+    ],
+    "output_columns": [
+      "DayOfWeek",
+      "NumOrders"
+    ]
+  },
+  {
+    "id": 61,
+    "question": "Thống kê số lượng khách hàng theo từng quốc gia. Lấy top 10 quốc gia có nhiều khách hàng nhất.",
+    "question_en": "Count customers by country. Get the top 10 countries with the most customers.",
+    "gold_sql": "SELECT c.Country, COUNT(DISTINCT c.CustomerID) AS NumCustomers FROM Customers c GROUP BY c.Country ORDER BY NumCustomers DESC LIMIT 10",
+    "intent": "aggregate",
+    "pattern": "group_by_distinct_count_top_k",
+    "tables": [
+      "Customers"
+    ],
+    "output_columns": [
+      "Country",
+      "NumCustomers"
+    ]
+  },
+  {
+    "id": 62,
+    "question": "Tìm 5 sản phẩm được mua bởi nhiều khách hàng nhất và xuất hiện trong nhiều đơn hàng nhất. Hiển thị tên sản phẩm, số khách hàng và số đơn hàng.",
+    "question_en": "Find the top 5 products purchased by the most customers and appearing in the most orders. Show product name, customer count, and order count.",
+    "gold_sql": "SELECT p.ProductName, COUNT(DISTINCT o.CustomerID) AS NumCustomers, COUNT(DISTINCT od.OrderID) AS NumOrders FROM \"Order Details\" od JOIN Orders o ON od.OrderID = o.OrderID JOIN Products p ON od.ProductID = p.ProductID GROUP BY od.ProductID, p.ProductName ORDER BY NumCustomers DESC LIMIT 5",
+    "intent": "aggregate",
+    "pattern": "multi_join_group_by_distinct_count_top_k",
+    "tables": [
+      "Order Details",
+      "Orders",
+      "Products"
+    ],
+    "output_columns": [
+      "ProductName",
+      "NumCustomers",
+      "NumOrders"
+    ]
+  },
+  {
+    "id": 63,
+    "question": "Thống kê số lượng nhân viên theo từng chức danh.",
+    "question_en": "Count the number of employees by job title.",
+    "gold_sql": "SELECT e.Title, COUNT(e.EmployeeID) AS NumEmployees FROM Employees e GROUP BY e.Title ORDER BY NumEmployees DESC",
+    "intent": "aggregate",
+    "pattern": "group_by",
+    "tables": [
+      "Employees"
+    ],
+    "output_columns": [
+      "Title",
+      "NumEmployees"
+    ]
+  },
+  {
+    "id": 64,
+    "question": "Thống kê số nhân viên được tuyển dụng theo từng năm, sắp xếp theo năm.",
+    "question_en": "Count the number of employees hired per year, sorted by year.",
+    "gold_sql": "SELECT strftime('%Y', HireDate) AS HireYear, COUNT(EmployeeID) AS NumHired FROM Employees GROUP BY HireYear ORDER BY HireYear",
+    "intent": "aggregate",
+    "pattern": "group_by_date",
+    "tables": [
+      "Employees"
+    ],
+    "output_columns": [
+      "HireYear",
+      "NumHired"
+    ]
+  },
+  {
+    "id": 65,
+    "question": "Tính giá sản phẩm trung bình theo từng quốc gia nhà cung cấp. Lấy top 10 quốc gia có giá trung bình cao nhất.",
+    "question_en": "Calculate average product price by supplier country. Get the top 10 countries with the highest average price.",
+    "gold_sql": "SELECT s.Country, ROUND(AVG(p.UnitPrice), 2) AS AvgProductPrice FROM Suppliers s JOIN Products p ON s.SupplierID = p.SupplierID GROUP BY s.Country ORDER BY AvgProductPrice DESC LIMIT 10",
+    "intent": "aggregate",
+    "pattern": "join_group_by_avg_top_k",
+    "tables": [
+      "Suppliers",
+      "Products"
+    ],
+    "output_columns": [
+      "Country",
+      "AvgProductPrice"
+    ]
+  },
+  {
+    "id": 66,
+    "question": "Tính phí vận chuyển trung bình và số đơn hàng của từng đơn vị vận chuyển.",
+    "question_en": "Calculate average freight and order count for each shipper.",
+    "gold_sql": "SELECT o.ShipVia, sh.CompanyName, ROUND(AVG(o.Freight), 2) AS AvgFreight, COUNT(o.OrderID) AS NumOrders FROM Orders o JOIN Shippers sh ON o.ShipVia = sh.ShipperID GROUP BY o.ShipVia, sh.CompanyName",
+    "intent": "aggregate",
+    "pattern": "join_group_by_avg",
+    "tables": [
+      "Orders",
+      "Shippers"
+    ],
+    "output_columns": [
+      "ShipVia",
+      "CompanyName",
+      "AvgFreight",
+      "NumOrders"
+    ]
+  },
+  {
+    "id": 67,
+    "question": "Thống kê số khách hàng theo chức danh người liên hệ. Lấy top 10 chức danh phổ biến nhất.",
+    "question_en": "Count customers by contact title. Get the top 10 most common titles.",
+    "gold_sql": "SELECT c.ContactTitle, COUNT(c.CustomerID) AS NumCustomers FROM Customers c GROUP BY c.ContactTitle ORDER BY NumCustomers DESC LIMIT 10",
+    "intent": "aggregate",
+    "pattern": "group_by_top_k",
+    "tables": [
+      "Customers"
+    ],
+    "output_columns": [
+      "ContactTitle",
+      "NumCustomers"
+    ]
+  },
+
+    # === DATE FILTER (68-77) ===
+    {
+    "id": 68,
+    "question": "Tìm 10 đơn hàng mất nhiều ngày giao nhất. Hiển thị mã đơn hàng, ngày đặt, ngày giao và số ngày giao.",
+    "question_en": "Find the top 10 orders that took the most days to ship. Show order ID, order date, shipped date, and days to ship.",
+    "gold_sql": "SELECT OrderID, CustomerID, OrderDate, ShippedDate, JULIANDAY(ShippedDate) - JULIANDAY(OrderDate) AS DaysToShip FROM Orders WHERE ShippedDate IS NOT NULL ORDER BY DaysToShip DESC LIMIT 10",
+    "intent": "aggregate",
+    "pattern": "date_diff_filter_top_k",
+    "tables": [
+      "Orders"
+    ],
+    "output_columns": [
+      "OrderID",
+      "CustomerID",
+      "OrderDate",
+      "ShippedDate",
+      "DaysToShip"
+    ]
+  },
+  {
+    "id": 69,
+    "question": "Tính số đơn hàng và doanh thu theo từng năm và từng tháng. Sắp xếp theo thời gian.",
+    "question_en": "Calculate order count and revenue by year and month. Sort by time.",
+    "gold_sql": "SELECT strftime('%Y', o.OrderDate) AS Year, strftime('%m', o.OrderDate) AS Month, COUNT(o.OrderID) AS NumOrders, ROUND(SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)), 2) AS Revenue FROM Orders o JOIN \"Order Details\" od ON o.OrderID = od.OrderID GROUP BY Year, Month ORDER BY Year, Month",
+    "intent": "aggregate",
+    "pattern": "join_group_by_year_month",
+    "tables": [
+      "Orders",
+      "Order Details"
+    ],
+    "output_columns": [
+      "Year",
+      "Month",
+      "NumOrders",
+      "Revenue"
+    ]
+  },
+  {
+    "id": 70,
+    "question": "Tìm các đơn hàng chưa được giao nhưng đã quá ngày yêu cầu. Hiển thị mã khách hàng, mã đơn hàng, ngày đặt và ngày yêu cầu.",
+    "question_en": "Find orders not yet shipped but already past the required date. Show customer ID, order ID, order date, and required date.",
+    "gold_sql": "SELECT CustomerID, OrderID, OrderDate, ShippedDate FROM Orders WHERE ShippedDate IS NULL AND RequiredDate < date('now') ORDER BY RequiredDate",
+    "intent": "simple",
+    "pattern": "date_filter_null_overdue",
+    "tables": [
+      "Orders"
+    ],
+    "output_columns": [
+      "CustomerID",
+      "OrderID",
+      "OrderDate",
+      "ShippedDate"
+    ]
+  },
+  {
+    "id": 71,
+    "question": "Thống kê số đơn hàng theo từng năm. Sắp xếp theo số đơn hàng giảm dần.",
+    "question_en": "Count orders by year. Sort by order count descending.",
+    "gold_sql": "SELECT strftime('%Y', OrderDate) AS Year, COUNT(OrderID) AS NumOrders FROM Orders GROUP BY Year ORDER BY NumOrders DESC",
+    "intent": "aggregate",
+    "pattern": "group_by_year",
+    "tables": [
+      "Orders"
+    ],
+    "output_columns": [
+      "Year",
+      "NumOrders"
+    ]
+  },
+  {
+    "id": 72,
+    "question": "Liệt kê tất cả đơn hàng được đặt vào tháng 12. Hiển thị mã đơn hàng, mã khách hàng, ngày đặt và phí vận chuyển.",
+    "question_en": "List all orders placed in December. Show order ID, customer ID, order date, and freight.",
+    "gold_sql": "SELECT OrderID, CustomerID, OrderDate, Freight FROM Orders WHERE strftime('%m', OrderDate) = '12' ORDER BY OrderDate",
+    "intent": "simple",
+    "pattern": "date_part_filter",
+    "tables": [
+      "Orders"
+    ],
+    "output_columns": [
+      "OrderID",
+      "CustomerID",
+      "OrderDate",
+      "Freight"
+    ]
+  },
+  {
+    "id": 73,
+    "question": "Liệt kê các đơn hàng và tên công ty khách hàng được đặt trong năm 2022. Sắp xếp theo ngày đặt hàng.",
+    "question_en": "List orders and customer company names placed in 2022. Sort by order date.",
+    "gold_sql": "SELECT c.CompanyName, o.OrderID, o.OrderDate FROM Customers c JOIN Orders o ON c.CustomerID = o.CustomerID WHERE o.OrderDate >= '2022-01-01' AND o.OrderDate < '2023-01-01' ORDER BY o.OrderDate",
+    "intent": "join",
+    "pattern": "join_date_range_filter",
+    "tables": [
+      "Customers",
+      "Orders"
+    ],
+    "output_columns": [
+      "CompanyName",
+      "OrderID",
+      "OrderDate"
+    ]
+  },
+  {
+    "id": 74,
+    "question": "Số ngày trung bình từ lúc đặt hàng đến lúc giao hàng là bao nhiêu?",
+    "question_en": "What is the average number of days from order date to ship date?",
+    "gold_sql": "SELECT ROUND(AVG(JULIANDAY(ShippedDate) - JULIANDAY(OrderDate)), 2) AS AvgShipDays FROM Orders WHERE ShippedDate IS NOT NULL",
+    "intent": "aggregate",
+    "pattern": "aggregate_date_diff",
+    "tables": [
+      "Orders"
+    ],
+    "output_columns": [
+      "AvgShipDays"
+    ]
+  },
+  {
+    "id": 75,
+    "question": "Tính phí vận chuyển trung bình theo từng năm. Sắp xếp theo năm tăng dần.",
+    "question_en": "Calculate average freight per year. Sort by year ascending.",
+    "gold_sql": "SELECT strftime('%Y', OrderDate) AS Year, ROUND(AVG(Freight), 2) AS AvgFreight FROM Orders GROUP BY Year ORDER BY Year",
+    "intent": "aggregate",
+    "pattern": "group_by_year_avg",
+    "tables": [
+      "Orders"
+    ],
+    "output_columns": [
+      "Year",
+      "AvgFreight"
+    ]
+  },
+  {
+    "id": 76,
+    "question": "Tìm 10 đơn hàng giao trễ nhất so với ngày yêu cầu. Hiển thị mã đơn hàng, ngày đặt, ngày giao và số ngày trễ.",
+    "question_en": "Find the top 10 orders shipped latest past the required date. Show order ID, order date, shipped date, and days late.",
+    "gold_sql": "SELECT o.OrderID, o.OrderDate, o.ShippedDate, ROUND(JULIANDAY(o.ShippedDate) - JULIANDAY(o.RequiredDate), 1) AS DaysLate FROM Orders o WHERE o.ShippedDate > o.RequiredDate ORDER BY DaysLate DESC LIMIT 10",
+    "intent": "aggregate",
+    "pattern": "date_diff_filter_top_k",
+    "tables": [
+      "Orders"
+    ],
+    "output_columns": [
+      "OrderID",
+      "OrderDate",
+      "ShippedDate",
+      "DaysLate"
+    ]
+  },
+  {
+    "id": 77,
+    "question": "Thống kê số đơn hàng giao trễ và tổng số đơn hàng theo từng năm. Sắp xếp theo năm.",
+    "question_en": "Count late orders and total orders per year. Sort by year.",
+    "gold_sql": "SELECT strftime('%Y', o.OrderDate) AS Year, COUNT(CASE WHEN o.ShippedDate > o.RequiredDate THEN 1 END) AS LateOrders, COUNT(o.OrderID) AS TotalOrders FROM Orders o WHERE o.ShippedDate IS NOT NULL GROUP BY Year ORDER BY Year",
+    "intent": "aggregate",
+    "pattern": "group_by_year_conditional_count",
+    "tables": [
+      "Orders"
+    ],
+    "output_columns": [
+      "Year",
+      "LateOrders",
+      "TotalOrders"
+    ]
+  },
+
+    # === NOT EXISTS / CHƯA TỪNG (78-82) ===
+    {
+    "id": 78,
+    "question": "Tìm các nhân viên chưa từng xử lý đơn hàng nào trong năm 2022. Hiển thị tên đầy đủ.",
+    "question_en": "Find employees who have never handled any order in 2022. Show full name.",
+    "gold_sql": "SELECT e.FirstName || ' ' || e.LastName AS Employee FROM Employees e WHERE NOT EXISTS (SELECT 1 FROM Orders o WHERE o.EmployeeID = e.EmployeeID AND strftime('%Y', o.OrderDate) = '2022')",
+    "intent": "subquery",
+    "pattern": "not_exists_date_filter",
+    "tables": [
+      "Employees",
+      "Orders"
+    ],
+    "output_columns": [
+      "Employee"
+    ]
+  },
+  {
+    "id": 79,
+    "question": "Tìm các nhà cung cấp không có bất kỳ sản phẩm nào đang hoạt động (tất cả sản phẩm đã ngừng kinh doanh). Hiển thị tên công ty.",
+    "question_en": "Find suppliers who have no active products (all products are discontinued). Show company name.",
+    "gold_sql": "SELECT s.CompanyName FROM Suppliers s WHERE NOT EXISTS (SELECT 1 FROM Products p WHERE p.SupplierID = s.SupplierID AND p.Discontinued = '0')",
+    "intent": "subquery",
+    "pattern": "not_exists_filter",
+    "tables": [
+      "Suppliers",
+      "Products"
+    ],
+    "output_columns": [
+      "CompanyName"
+    ]
+  },
+  {
+    "id": 80,
+    "question": "Tìm các khách hàng chưa từng mua sản phẩm nào thuộc danh mục 'Seafood'. Hiển thị tên công ty.",
+    "question_en": "Find customers who have never purchased any product in the 'Seafood' category. Show company name.",
+    "gold_sql": "SELECT c.CompanyName FROM Customers c WHERE NOT EXISTS (SELECT 1 FROM Orders o JOIN \"Order Details\" od ON o.OrderID = od.OrderID JOIN Products p ON od.ProductID = p.ProductID WHERE o.CustomerID = c.CustomerID AND p.CategoryID = (SELECT CategoryID FROM Categories WHERE CategoryName = 'Seafood'))",
+    "intent": "subquery",
+    "pattern": "not_exists_multi_join",
+    "tables": [
+      "Customers",
+      "Orders",
+      "Order Details",
+      "Products",
+      "Categories"
+    ],
+    "output_columns": [
+      "CompanyName"
+    ]
+  },
+  {
+    "id": 81,
+    "question": "Tìm các sản phẩm chưa từng được bán trong năm 2023. Hiển thị tên sản phẩm.",
+    "question_en": "Find products that have never been sold in 2023. Show product name.",
+    "gold_sql": "SELECT p.ProductName FROM Products p WHERE NOT EXISTS (SELECT 1 FROM \"Order Details\" od JOIN Orders o ON od.OrderID = o.OrderID WHERE od.ProductID = p.ProductID AND strftime('%Y', o.OrderDate) = '2023')",
+    "intent": "subquery",
+    "pattern": "not_exists_date_filter",
+    "tables": [
+      "Products",
+      "Order Details",
+      "Orders"
+    ],
+    "output_columns": [
+      "ProductName"
+    ]
+  },
+  {
+    "id": 82,
+    "question": "Tìm các khách hàng luôn được giao hàng đến đúng quốc gia của họ (chưa từng có đơn hàng giao đến quốc gia khác). Hiển thị tên công ty và quốc gia.",
+    "question_en": "Find customers who have always had orders shipped to their own country (no orders shipped to a different country). Show company name and country.",
+    "gold_sql": "SELECT c.CompanyName, c.Country FROM Customers c WHERE NOT EXISTS (SELECT 1 FROM Orders o WHERE o.CustomerID = c.CustomerID AND o.ShipCountry != c.Country)",
+    "intent": "subquery",
+    "pattern": "not_exists_cross_column",
+    "tables": [
+      "Customers",
+      "Orders"
+    ],
+    "output_columns": [
+      "CompanyName",
+      "Country"
+    ]
+  },
+
+    # === EMPLOYEE HIERARCHY / SELF-JOIN (83-87) ===
+    {
+    "id": 83,
+    "question": "Hiển thị danh sách nhân viên kèm chức danh, tên quản lý và chức danh quản lý. Sắp xếp theo tên quản lý và tên nhân viên.",
+    "question_en": "Show each employee with their title, manager name, and manager title. Sort by manager name and employee name.",
+    "gold_sql": "SELECT e.FirstName || ' ' || e.LastName AS Employee, e.Title, m.FirstName || ' ' || m.LastName AS Manager, m.Title AS ManagerTitle FROM Employees e LEFT JOIN Employees m ON e.ReportsTo = m.EmployeeID ORDER BY m.LastName, e.LastName",
+    "intent": "self_join",
+    "pattern": "self_join_hierarchy_multi_col",
+    "tables": [
+      "Employees"
+    ],
+    "output_columns": [
+      "Employee",
+      "Title",
+      "Manager",
+      "ManagerTitle"
+    ]
+  },
+  {
+    "id": 84,
+    "question": "Hiển thị mỗi quản lý cùng danh sách tên các nhân viên trực tiếp báo cáo cho họ (gộp thành một chuỗi).",
+    "question_en": "Show each manager along with a comma-separated list of their direct reports.",
+    "gold_sql": "SELECT m.FirstName || ' ' || m.LastName AS Manager, GROUP_CONCAT(e.FirstName || ' ' || e.LastName, ', ') AS DirectReports FROM Employees e JOIN Employees m ON e.ReportsTo = m.EmployeeID GROUP BY m.EmployeeID",
+    "intent": "self_join",
+    "pattern": "self_join_group_concat",
+    "tables": [
+      "Employees"
+    ],
+    "output_columns": [
+      "Manager",
+      "DirectReports"
+    ]
+  },
+  {
+    "id": 85,
+    "question": "Tìm các nhân viên được tuyển dụng trước cả quản lý của họ. Hiển thị tên nhân viên, ngày tuyển dụng, tên quản lý và ngày tuyển dụng của quản lý.",
+    "question_en": "Find employees hired before their own manager. Show employee name, hire date, manager name, and manager hire date.",
+    "gold_sql": "SELECT e.FirstName || ' ' || e.LastName AS Employee, e.HireDate, m.FirstName || ' ' || m.LastName AS Manager, m.HireDate AS ManagerHireDate FROM Employees e JOIN Employees m ON e.ReportsTo = m.EmployeeID WHERE e.HireDate < m.HireDate",
+    "intent": "self_join",
+    "pattern": "self_join_date_compare",
+    "tables": [
+      "Employees"
+    ],
+    "output_columns": [
+      "Employee",
+      "HireDate",
+      "Manager",
+      "ManagerHireDate"
+    ]
+  },
+  {
+    "id": 86,
+    "question": "Hiển thị từng nhân viên kèm số đơn hàng họ đã xử lý và tên quản lý của họ. Sắp xếp theo số đơn hàng giảm dần.",
+    "question_en": "Show each employee with their order count and manager name. Sort by order count descending.",
+    "gold_sql": "SELECT e.FirstName || ' ' || e.LastName AS Employee, COUNT(o.OrderID) AS NumOrders, m.FirstName || ' ' || m.LastName AS Manager FROM Employees e LEFT JOIN Employees m ON e.ReportsTo = m.EmployeeID JOIN Orders o ON e.EmployeeID = o.EmployeeID GROUP BY e.EmployeeID ORDER BY NumOrders DESC",
+    "intent": "self_join",
+    "pattern": "self_join_join_group_by",
+    "tables": [
+      "Employees",
+      "Orders"
+    ],
+    "output_columns": [
+      "Employee",
+      "NumOrders",
+      "Manager"
+    ]
+  },
+  {
+    "id": 87,
+    "question": "Tìm nhân viên đứng đầu (không có quản lý). Hiển thị tên, thành phố và quốc gia.",
+    "question_en": "Find the top-level employee (no manager). Show name, city, and country.",
+    "gold_sql": "SELECT e.FirstName || ' ' || e.LastName AS Employee, e.City, e.Country FROM Employees e WHERE e.ReportsTo IS NULL",
+    "intent": "simple",
+    "pattern": "self_join_null_filter",
+    "tables": [
+      "Employees"
+    ],
+    "output_columns": [
+      "Employee",
+      "City",
+      "Country"
+    ]
+  },
+
+    # === COMPLEX / NESTED QUERY (88-100) ===
+    {
+    "id": 88,
+    "question": "Tìm sản phẩm có giá trị tồn kho (giá × số lượng) cao nhất. Hiển thị tên sản phẩm, giá, số lượng tồn kho và giá trị tồn kho.",
+    "question_en": "Find the product with the highest inventory value (price × stock). Show product name, unit price, units in stock, and inventory value.",
+    "gold_sql": "SELECT p.ProductName, p.UnitPrice, p.UnitsInStock, p.UnitPrice * p.UnitsInStock AS InventoryValue FROM Products p WHERE p.UnitPrice * p.UnitsInStock = (SELECT MAX(UnitPrice * UnitsInStock) FROM Products)",
+    "intent": "subquery",
+    "pattern": "subquery_scalar_max",
+    "tables": [
+      "Products"
+    ],
+    "output_columns": [
+      "ProductName",
+      "UnitPrice",
+      "UnitsInStock",
+      "InventoryValue"
+    ]
+  },
+  {
+    "id": 89,
+    "question": "Tìm các khách hàng đã mua ít nhất 3 sản phẩm khác nhau thuộc danh mục 'Beverages'. Hiển thị tên công ty và quốc gia.",
+    "question_en": "Find customers who have purchased at least 3 distinct products from the 'Beverages' category. Show company name and country.",
+    "gold_sql": "SELECT c.CompanyName, c.Country FROM Customers c WHERE c.CustomerID IN (SELECT o.CustomerID FROM Orders o JOIN \"Order Details\" od ON o.OrderID = od.OrderID JOIN Products p ON od.ProductID = p.ProductID WHERE p.CategoryID = (SELECT CategoryID FROM Categories WHERE CategoryName = 'Beverages') GROUP BY o.CustomerID HAVING COUNT(DISTINCT p.ProductID) >= 3)",
+    "intent": "subquery",
+    "pattern": "subquery_in_having",
+    "tables": [
+      "Customers",
+      "Orders",
+      "Order Details",
+      "Products",
+      "Categories"
+    ],
+    "output_columns": [
+      "CompanyName",
+      "Country"
+    ]
+  },
+  {
+    "id": 90,
+    "question": "Tìm các sản phẩm có doanh thu cao hơn doanh thu trung bình của tất cả sản phẩm. Hiển thị tên sản phẩm và doanh thu, sắp xếp giảm dần.",
+    "question_en": "Find products with revenue above the average revenue across all products. Show product name and revenue, sorted descending.",
+    "gold_sql": "SELECT p.ProductName, ROUND(SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)), 2) AS Revenue FROM \"Order Details\" od JOIN Products p ON od.ProductID = p.ProductID GROUP BY od.ProductID, p.ProductName HAVING Revenue > (SELECT AVG(ProdRev) FROM (SELECT SUM(od2.UnitPrice * od2.Quantity * (1 - od2.Discount)) AS ProdRev FROM \"Order Details\" od2 GROUP BY od2.ProductID)) ORDER BY Revenue DESC",
+    "intent": "subquery",
+    "pattern": "nested_subquery_having_avg",
+    "tables": [
+      "Order Details",
+      "Products"
+    ],
+    "output_columns": [
+      "ProductName",
+      "Revenue"
+    ]
+  },
+  {
+    "id": 91,
+    "question": "Tìm các nhân viên có tổng doanh thu cao hơn mức trung bình của tất cả nhân viên. Hiển thị tên nhân viên và doanh thu.",
+    "question_en": "Find employees with total revenue above the average of all employees. Show employee name and revenue.",
+    "gold_sql": "SELECT e.FirstName || ' ' || e.LastName AS Employee, ROUND(SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)), 2) AS Revenue FROM Employees e JOIN Orders o ON e.EmployeeID = o.EmployeeID JOIN \"Order Details\" od ON o.OrderID = od.OrderID GROUP BY e.EmployeeID HAVING Revenue > (SELECT AVG(EmpRev) FROM (SELECT SUM(od2.UnitPrice * od2.Quantity * (1 - od2.Discount)) AS EmpRev FROM Orders o2 JOIN \"Order Details\" od2 ON o2.OrderID = od2.OrderID GROUP BY o2.EmployeeID)) ORDER BY Revenue DESC",
+    "intent": "subquery",
+    "pattern": "nested_subquery_having_avg",
+    "tables": [
+      "Employees",
+      "Orders",
+      "Order Details"
+    ],
+    "output_columns": [
+      "Employee",
+      "Revenue"
+    ]
+  },
+  {
+    "id": 92,
+    "question": "Tìm 10 khách hàng đã đặt hàng trong nhiều năm khác nhau nhất. Hiển thị tên công ty và số năm hoạt động.",
+    "question_en": "Find the top 10 customers who ordered in the most distinct years. Show company name and number of active years.",
+    "gold_sql": "SELECT c.CompanyName, COUNT(DISTINCT strftime('%Y', o.OrderDate)) AS ActiveYears FROM Customers c JOIN Orders o ON c.CustomerID = o.CustomerID GROUP BY c.CustomerID, c.CompanyName ORDER BY ActiveYears DESC LIMIT 10",
+    "intent": "aggregate",
+    "pattern": "join_group_by_distinct_count_top_k",
+    "tables": [
+      "Customers",
+      "Orders"
+    ],
+    "output_columns": [
+      "CompanyName",
+      "ActiveYears"
+    ]
+  },
+  {
+    "id": 93,
+    "question": "Tính tổng doanh thu và số khách hàng theo từng quốc gia khách hàng bằng CTE. Lấy top 5 quốc gia có doanh thu cao nhất.",
+    "question_en": "Using a CTE, calculate total revenue and customer count by customer country. Get the top 5 countries by revenue.",
+    "gold_sql": "WITH CustomerRevenue AS (SELECT o.CustomerID, ROUND(SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)), 2) AS Revenue FROM Orders o JOIN \"Order Details\" od ON o.OrderID = od.OrderID GROUP BY o.CustomerID) SELECT c.Country, COUNT(cr.CustomerID) AS NumCustomers, ROUND(SUM(cr.Revenue), 2) AS TotalRevenue FROM CustomerRevenue cr JOIN Customers c ON cr.CustomerID = c.CustomerID GROUP BY c.Country ORDER BY TotalRevenue DESC LIMIT 5",
+    "intent": "subquery",
+    "pattern": "cte_join_group_by_top_k",
+    "tables": [
+      "Orders",
+      "Order Details",
+      "Customers"
+    ],
+    "output_columns": [
+      "Country",
+      "NumCustomers",
+      "TotalRevenue"
+    ]
+  },
+  {
+    "id": 94,
+    "question": "Tìm sản phẩm có giá cao nhất trong mỗi danh mục. Hiển thị tên sản phẩm, giá và tên danh mục.",
+    "question_en": "Find the most expensive product in each category. Show product name, unit price, and category name.",
+    "gold_sql": "SELECT p1.ProductName, p1.UnitPrice, cat.CategoryName FROM Products p1 JOIN Categories cat ON p1.CategoryID = cat.CategoryID WHERE p1.UnitPrice = (SELECT MAX(p2.UnitPrice) FROM Products p2 WHERE p2.CategoryID = p1.CategoryID)",
+    "intent": "subquery",
+    "pattern": "correlated_subquery_max_per_group",
+    "tables": [
+      "Products",
+      "Categories"
+    ],
+    "output_columns": [
+      "ProductName",
+      "UnitPrice",
+      "CategoryName"
+    ]
+  },
+  {
+    "id": 95,
+    "question": "Tìm các khách hàng có tổng chi tiêu lớn hơn 10.000. Hiển thị tên công ty, quốc gia và tổng chi tiêu, sắp xếp giảm dần.",
+    "question_en": "Find customers with total spending greater than 10,000. Show company name, country, and total spending, sorted descending.",
+    "gold_sql": "SELECT c.CompanyName, c.Country, ROUND(SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)), 2) AS TotalSpent FROM Customers c JOIN Orders o ON c.CustomerID = o.CustomerID JOIN \"Order Details\" od ON o.OrderID = od.OrderID GROUP BY c.CustomerID, c.CompanyName, c.Country HAVING TotalSpent > 10000 ORDER BY TotalSpent DESC",
+    "intent": "aggregate",
+    "pattern": "multi_join_group_by_having",
+    "tables": [
+      "Customers",
+      "Orders",
+      "Order Details"
+    ],
+    "output_columns": [
+      "CompanyName",
+      "Country",
+      "TotalSpent"
+    ]
+  },
+  {
+    "id": 96,
+    "question": "Tính doanh thu từng năm và doanh thu năm trước đó để so sánh (dùng window function LAG).",
+    "question_en": "Calculate yearly revenue and the previous year's revenue for comparison using the LAG window function.",
+    "gold_sql": "SELECT strftime('%Y', o.OrderDate) AS Year, SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)) AS Revenue, LAG(SUM(od.UnitPrice * od.Quantity * (1 - od.Discount))) OVER (ORDER BY strftime('%Y', o.OrderDate)) AS PrevYearRevenue FROM Orders o JOIN \"Order Details\" od ON o.OrderID = od.OrderID GROUP BY Year ORDER BY Year",
+    "intent": "aggregate",
+    "pattern": "window_function_lag",
+    "tables": [
+      "Orders",
+      "Order Details"
+    ],
+    "output_columns": [
+      "Year",
+      "Revenue",
+      "PrevYearRevenue"
+    ]
+  },
+  {
+    "id": 97,
+    "question": "Xếp hạng đơn hàng theo phí vận chuyển trong từng năm (dùng RANK). Lấy 20 kết quả đầu tiên.",
+    "question_en": "Rank orders by freight within each year using RANK. Return the first 20 results.",
+    "gold_sql": "SELECT o.OrderID, o.OrderDate, c.CompanyName, o.Freight, RANK() OVER (PARTITION BY strftime('%Y', o.OrderDate) ORDER BY o.Freight DESC) AS FreightRank FROM Orders o JOIN Customers c ON o.CustomerID = c.CustomerID ORDER BY strftime('%Y', o.OrderDate), FreightRank LIMIT 20",
+    "intent": "aggregate",
+    "pattern": "window_function_rank_partition",
+    "tables": [
+      "Orders",
+      "Customers"
+    ],
+    "output_columns": [
+      "OrderID",
+      "OrderDate",
+      "CompanyName",
+      "Freight",
+      "FreightRank"
+    ]
+  },
+  {
+    "id": 98,
+    "question": "Xếp hạng sản phẩm theo tổng số lượng bán ra (dùng RANK). Hiển thị top 10.",
+    "question_en": "Rank products by total quantity sold using RANK. Show the top 10.",
+    "gold_sql": "SELECT p.ProductName, SUM(od.Quantity) AS TotalSold, RANK() OVER (ORDER BY SUM(od.Quantity) DESC) AS SaleRank FROM \"Order Details\" od JOIN Products p ON od.ProductID = p.ProductID GROUP BY od.ProductID, p.ProductName ORDER BY SaleRank LIMIT 10",
+    "intent": "aggregate",
+    "pattern": "window_function_rank",
+    "tables": [
+      "Order Details",
+      "Products"
+    ],
+    "output_columns": [
+      "ProductName",
+      "TotalSold",
+      "SaleRank"
+    ]
+  },
+  {
+    "id": 99,
+    "question": "Tính tổng chi tiêu tích lũy theo thời gian cho từng khách hàng. Hiển thị tên công ty, mã đơn hàng, ngày đặt, giá trị đơn và chi tiêu tích lũy. Lấy 20 kết quả.",
+    "question_en": "Calculate cumulative spending over time for each customer. Show company name, order ID, order date, order value, and cumulative spending. Return 20 results.",
+    "gold_sql": "SELECT c.CompanyName, o.OrderID, o.OrderDate, ROUND(SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)), 2) AS OrderValue, ROUND(SUM(SUM(od.UnitPrice * od.Quantity * (1 - od.Discount))) OVER (PARTITION BY c.CustomerID ORDER BY o.OrderDate), 2) AS CumulativeSpent FROM Customers c JOIN Orders o ON c.CustomerID = o.CustomerID JOIN \"Order Details\" od ON o.OrderID = od.OrderID GROUP BY c.CustomerID, c.CompanyName, o.OrderID, o.OrderDate ORDER BY c.CompanyName, o.OrderDate LIMIT 20",
+    "intent": "aggregate",
+    "pattern": "window_function_cumulative_sum",
+    "tables": [
+      "Customers",
+      "Orders",
+      "Order Details"
+    ],
+    "output_columns": [
+      "CompanyName",
+      "OrderID",
+      "OrderDate",
+      "OrderValue",
+      "CumulativeSpent"
+    ]
+  },
+  {
+    "id": 100,
+    "question": "Tính doanh thu và tỷ lệ phần trăm đóng góp của từng sản phẩm trong danh mục của nó (dùng window function). Sắp xếp theo danh mục và doanh thu giảm dần.",
+    "question_en": "Calculate revenue and each product's percentage contribution within its category using a window function. Sort by category and revenue descending.",
+    "gold_sql": "SELECT p.ProductName, cat.CategoryName, ROUND(SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)), 2) AS Revenue, ROUND(100.0 * SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)) / SUM(SUM(od.UnitPrice * od.Quantity * (1 - od.Discount))) OVER (PARTITION BY cat.CategoryID), 2) AS PctOfCategory FROM \"Order Details\" od JOIN Products p ON od.ProductID = p.ProductID JOIN Categories cat ON p.CategoryID = cat.CategoryID GROUP BY od.ProductID, p.ProductName, cat.CategoryID, cat.CategoryName ORDER BY cat.CategoryName, Revenue DESC",
+    "intent": "aggregate",
+    "pattern": "window_function_percent_partition",
+    "tables": [
+      "Order Details",
+      "Products",
+      "Categories"
+    ],
+    "output_columns": [
+      "ProductName",
+      "CategoryName",
+      "Revenue",
+      "PctOfCategory"
+    ]
+  },
+]
+
+# Add standard fields
+result = []
+for e in entries:
+    entry = {
+  "dataset": "northwind",
+  "split": "test",
+  "db_id": "northwind",
+  "question": e[
+    "question"
+  ],
+  "question_en": e[
+    "question_en"
+  ],
+  "gold_sql": e[
+    "gold_sql"
+  ],
+  "intent": e[
+    "intent"
+  ],
+  "pattern": e[
+    "pattern"
+  ],
+  "tables": e[
+    "tables"
+  ],
+  "output_columns": e[
+    "output_columns"
+  ],
+  "verified": True
+}
+    result.append(entry)
+
+with open('/mnt/user-data/outputs/northwind_test_100.json', 'w', encoding='utf-8') as f:
+    json.dump(result, f, ensure_ascii=False, indent=2)
+
+# Stats
+from collections import Counter
+patterns = Counter(e[
+  "intent"
+] for e in result)
+print(f"Total: {len(result)} entries")
+print("\nIntent distribution:")
+for k, v in sorted(patterns.items()): print(f"  {k}: {v}")
+print("\nSample Q88:")
+print(json.dumps(result[
+  87
+], ensure_ascii=False, indent=2))
+EOF
+Output
+
+Total: 100 entries
+
+Intent distribution:
+  aggregate: 61
+  join: 5
+  self_join: 4
+  simple: 18
+  subquery: 12
+
+Sample Q88: {
+  "dataset": "northwind",
+  "split": "test",
+  "db_id": "northwind",
+  "question": "Tìm sản phẩm có giá trị tồn kho (giá × số lượng) cao nhất. Hiển thị tên sản phẩm, giá, số lượng tồn kho và giá trị tồn kho.",
+  "question_en": "Find the product with the highest inventory value (price × stock). Show product name, unit price, units in stock, and inventory value.",
+  "gold_sql": "SELECT p.ProductName, p.UnitPrice, p.UnitsInStock, p.UnitPrice * p.UnitsInStock AS InventoryValue FROM Products p WHERE p.UnitPrice * p.UnitsInStock = (SELECT MAX(UnitPrice * UnitsInStock) FROM Products)",
+  "intent": "subquery",
+  "pattern": "subquery_scalar_max",
+  "tables": [
+    "Products"
+  ],
+  "output_columns": [
+    "ProductName",
+    "UnitPrice",
+    "UnitsInStock",
+    "InventoryValue"
+  ],
+  "verified": true
 }

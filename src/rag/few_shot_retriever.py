@@ -27,11 +27,8 @@ class FewShotRetriever:
                 self.vector_db = None
         return self.vector_db
 
-    def index_dataset(self, data_path: str, dataset_type: str = "spider", start_offset: int = 0):
-        """
-        Thêm một dataset vào Vector DB.
-        dataset_type: 'spider', 'bird', hoặc 'custom'
-        """
+    def index_dataset(self, data_path: str, dataset_type: str = "spider", start_offset: int = 0, split: str = "train"):
+        """Index a dataset into FAISS."""
         if not os.path.exists(data_path):
             print(f"❌ Không tìm thấy file: {data_path}")
             return
@@ -50,7 +47,7 @@ class FewShotRetriever:
         texts = []
         metadatas = []
 
-        for item in train_data:
+        for i, item in enumerate(train_data):
             question = item.get("question", "")
             
             if dataset_type.lower() == "bird":
@@ -67,11 +64,24 @@ class FewShotRetriever:
                 search_text += f"\nHint/Evidence: {hint}"
             texts.append(search_text)
 
+            dataset_value = item.get("dataset", dataset_type).lower()
+            split_value = item.get("split", split)
+            db_value = item.get("db_id", "unknown")
+            
             metadatas.append({
-                "sql": sql, 
-                "db_id": item.get("db_id", "unknown"),
+                "sql": sql,
+                "db_id": db_value,
                 "hint": hint,
-                "dataset": dataset_type.lower() # Lưu tên chuẩn
+                "dataset": dataset_value,
+                "split": split_value,
+                "example_id": str(item.get("id", i)),
+                "intent": item.get("intent", ""),
+                "pattern": item.get("pattern", ""),
+                "tables": item.get("tables", []),
+                "output_columns": item.get("output_columns", []),
+                "verified": item.get("verified", False),
+                "question": item.get("question", ""),
+                "question_en": item.get("question_en", "")
             })
         
         # Load DB hiện tại nếu có
@@ -107,38 +117,120 @@ class FewShotRetriever:
         
         print(f"✅ Đã index xong tập {dataset_type} từ {data_path} vào FAISS DB!")
 
-    def retrieve(self, question: str, hint: str = "", dataset_type: str = None, k: int = 3) -> List[Dict[str, Any]]:
-        """Tìm K ví dụ giống nhất với Bộ lọc Dataset (Filter)"""
+    def retrieve(
+        self,
+        question: str,
+        hint: str = "",
+        dataset_type: str = None,
+        k: int = 3,
+        similarity_threshold: float = 0.55,
+        split: str = None,
+        db_id: str = None
+    ) -> List[Dict[str, Any]]:
+        """Retrieve up to K most-similar examples, filtering by similarity threshold.
+
+        Args:
+            question: User question.
+            hint: Optional hint/evidence text (same as indexing).
+            dataset_type: Dataset filter ('chinook_vn', 'northwind', etc.).
+            k: Maximum number of examples to return.
+            similarity_threshold: Cosine similarity minimum (0-1). Examples below
+                this score are dropped rather than injected into the prompt.
+            split: Expected split label ('train' or 'fewshot'). Future use for train/val/test isolation.
+            db_id: Optional exact DB filter if required.
+        Returns:
+            List of {question, sql, hint, dataset, similarity} dicts.
+            Returns [] if no example meets the threshold — generator runs zero-shot.
+        """
         db = self._get_db()
         if db is None:
             return []
-            
-        # Tạo text tìm kiếm giống hệt lúc Index
+
+        # Build search text matching indexing format
         search_text = question
         if hint:
             search_text += f"\nHint/Evidence: {hint}"
 
-        # BÍ QUYẾT 2: Filter để cô lập không gian tìm kiếm
-        filter_dict = None
+        filter_dict = {}
         if dataset_type:
-            filter_dict = {"dataset": dataset_type.lower()}
-        
+            filter_dict["dataset"] = dataset_type.lower()
+        if split:
+            filter_dict["split"] = split
+        if db_id:
+            filter_dict["db_id"] = db_id
+
+        if not filter_dict:
+            filter_dict = None
+
         try:
-            # FAISS hỗ trợ filter metadata tương tự
-            # CẦN THÊM fetch_k RẤT LỚN VÌ FAISS LẤY fetch_k TRƯỚC RỒI MỚI LỌC FILTER!
-            docs = db.similarity_search(search_text, k=k, filter=filter_dict, fetch_k=100000)
+            fetch_k = max(k * 20, 50)
+            log.info("few_shot_search_start", filter_dict=filter_dict, k=k, fetch_k=fetch_k, threshold=similarity_threshold)
+            docs_scores = db.similarity_search_with_score(
+                search_text, k=k, filter=filter_dict, fetch_k=fetch_k
+            )
         except Exception as e:
-            print(f"Retrieve Error: {e}")
+            log.warning("few_shot_retrieve_error", error=str(e))
             return []
 
         examples = []
-        for d in docs:
+        example_ids = []
+        for doc, score in docs_scores:
+            similarity = 1.0 / (1.0 + float(score))
+            
+            log.info(
+                "few_shot_candidate",
+                raw_score=float(score),
+                similarity=round(similarity, 3),
+                example_id=doc.metadata.get("example_id"),
+                dataset=doc.metadata.get("dataset"),
+                split=doc.metadata.get("split"),
+                db_id=doc.metadata.get("db_id"),
+                intent=doc.metadata.get("intent")
+            )
+            
+            if similarity < similarity_threshold:
+                log.info(
+                    "few_shot_dropped",
+                    reason="below_threshold",
+                    similarity=round(similarity, 3),
+                    threshold=similarity_threshold,
+                    question=doc.page_content[:60],
+                )
+                continue
+                
             examples.append({
-                "question": d.page_content,
-                "sql": d.metadata.get("sql", ""),
-                "hint": d.metadata.get("hint", ""),
-                "dataset": d.metadata.get("dataset", "")
+                "question": doc.page_content,
+                "sql": doc.metadata.get("sql", ""),
+                "hint": doc.metadata.get("hint", ""),
+                "dataset": doc.metadata.get("dataset", ""),
+                "split": doc.metadata.get("split", ""),
+                "db_id": doc.metadata.get("db_id", ""),
+                "example_id": doc.metadata.get("example_id", ""),
+                "intent": doc.metadata.get("intent", ""),
+                "pattern": doc.metadata.get("pattern", ""),
+                "tables": doc.metadata.get("tables", []),
+                "output_columns": doc.metadata.get("output_columns", []),
+                "similarity": round(similarity, 3),
+                "raw_score": float(score),
             })
+            if "example_id" in doc.metadata:
+                example_ids.append(doc.metadata["example_id"])
+
+        if not examples:
+            log.info(
+                "few_shot_zero_shot", 
+                reason="no_example_above_threshold",
+                filter_dict=filter_dict,
+                candidates=len(docs_scores),
+                threshold=similarity_threshold
+            )
+        else:
+            log.info("few_shot_retrieved", 
+                     fewshot_dataset_used=dataset_type,
+                     fewshot_split_used=split,
+                     fewshot_db_id_used=db_id,
+                     fewshot_top_k=k,
+                     fewshot_example_ids=example_ids)
         return examples
 
     def add_single_example(self, question: str, sql: str, hint: str = "", dataset_type: str = "custom"):

@@ -159,6 +159,23 @@ def result_formatter_node(state: AgentState) -> AgentState:
     """
     log.info("formatter_run", row_count=state.query_result.get("row_count", 0) if state.query_result else 0)
 
+    if state.clarification_needed:
+        clarification_msg = state.clarification_reason or "Vui lòng chọn rõ cơ sở dữ liệu cần truy vấn."
+        state.formatted_answer = {
+            "summary": "Cần chọn rõ cơ sở dữ liệu",
+            "detailed_answer": clarification_msg,
+            "insights": [],
+            "visualization": {"recommended": False, "reason": "Database clarification needed."},
+            "sql": "",
+            "execution_time_ms": 0.0,
+            "from_cache": False,
+            "columns": [],
+            "rows": [],
+        }
+        state.current_step = "clarification_requested"
+        state.next_agent = "finish"
+        return state
+
     if state.intent_type == "ambiguous":
         clarification_msg = "Xin lỗi, câu hỏi của bạn có chứa các từ khóa chưa rõ ràng hoặc không có trong cơ sở dữ liệu. Bạn có thể giải thích rõ hơn hoặc cung cấp thêm ngữ cảnh được không?"
         if state.orchestrator_reasoning:

@@ -9,6 +9,7 @@ from src.agents.route_node import router_node
 from src.agents.state import AgentState
 from src.agents.orchestrator import orchestrator_node
 from src.agents.query_planner import query_planner_node
+from src.agents.query_spec import query_spec_node
 from src.agents.sql_generator import sql_generator_node
 from src.agents.validator import validator_node
 from src.agents.executor import executor_node
@@ -80,6 +81,7 @@ def build_graph() -> StateGraph:
     graph.add_node("router", timed_node("router", router_node))
     graph.add_node("orchestrator", timed_node("orchestrator", orchestrator_node))
     graph.add_node("query_planner", timed_node("query_planner", query_planner_node))
+    graph.add_node("query_spec", timed_node("query_spec", query_spec_node))
     graph.add_node("sql_generator", timed_node("sql_generator", sql_generator_node))
     graph.add_node("validator", timed_node("validator", validator_node))
     graph.add_node("executor", timed_node("executor", executor_node))
@@ -98,6 +100,8 @@ def build_graph() -> StateGraph:
     def router_route(state: AgentState) -> str:
         if state.error:
             return END
+        if state.next_agent == "result_formatter":
+            return "result_formatter"
         if state.next_agent == "sql_generator":
             return "sql_generator"
         return "orchestrator"
@@ -107,6 +111,7 @@ def build_graph() -> StateGraph:
         path=router_route,
         path_map={
             "orchestrator": "orchestrator",
+            "result_formatter": "result_formatter",
             "sql_generator": "sql_generator",
             END: END,
         },
@@ -117,6 +122,8 @@ def build_graph() -> StateGraph:
             return END
         if state.cache_hit:
             return "result_formatter"
+        if state.next_agent == "query_spec":
+            return "query_spec"
         if state.plan_needed:
             return "query_planner"
         return "sql_generator"
@@ -128,12 +135,16 @@ def build_graph() -> StateGraph:
             "result_formatter": "result_formatter",
             "sql_generator": "sql_generator",
             "query_planner": "query_planner",
+            "query_spec": "query_spec",
             END: END,
         },
     )
 
-    # 4. Query Planner → SQL Generator
+    # 4. Query Spec → SQL Generator (always, spec is just context)
+    graph.add_edge("query_spec", "sql_generator")
     graph.add_edge("query_planner", "sql_generator")
+
+    # 5. Query Planner → SQL Generator
 
     # 5. SQL Generator → Validator
     graph.add_edge("sql_generator", "validator")
@@ -264,6 +275,7 @@ async def _arun_query_impl(
     analysis_mode: str = "deep",
     evaluation_profile: str = "full",
     evaluation_options: dict = None,
+    benchmark_context: dict = None,
 ) -> AgentState:
     # Resolve và init DB (rebuild schema nếu đổi DB)
     # Khi db_path="" + có override_schema_context → Spider evaluation, không init DB
@@ -294,6 +306,7 @@ async def _arun_query_impl(
         db_dialect=db_dialect,
         evaluation_profile=evaluation_profile,
         evaluation_options=evaluation_options or {},
+        benchmark_context=benchmark_context or {},
     )
 
     workflow = get_workflow()
@@ -324,6 +337,7 @@ async def arun_query(
     analysis_mode: str = "deep",
     evaluation_profile: str = "full",
     evaluation_options: dict = None,
+    benchmark_context: dict = None,
 ) -> AgentState:
     """Run one query and attach isolated evaluation telemetry."""
     from copy import deepcopy
@@ -351,6 +365,7 @@ async def arun_query(
             analysis_mode=analysis_mode,
             evaluation_profile=evaluation_profile,
             evaluation_options=options,
+            benchmark_context=benchmark_context,
         )
     result.telemetry = deepcopy(collector)
     return result
@@ -366,6 +381,7 @@ def run_query(
     analysis_mode: str = "deep",
     evaluation_profile: str = "full",
     evaluation_options: dict = None,
+    benchmark_context: dict = None,
 ) -> AgentState:
     """
     Run a single query against the specified SQLite database.
@@ -396,6 +412,7 @@ def run_query(
                         analysis_mode,
                         evaluation_profile,
                         evaluation_options,
+                        benchmark_context,
                     ),
                 )
                 return future.result()
@@ -410,6 +427,7 @@ def run_query(
                 analysis_mode,
                 evaluation_profile,
                 evaluation_options,
+                benchmark_context,
             ))
     except RuntimeError:
         return asyncio.run(arun_query(
@@ -422,6 +440,7 @@ def run_query(
             analysis_mode,
             evaluation_profile,
             evaluation_options,
+            benchmark_context,
         ))
 
 def stream_query(

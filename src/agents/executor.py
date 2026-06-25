@@ -7,10 +7,43 @@ from src.memory import get_semantic_cache
 log = structlog.get_logger("executor")
 
 def _fix_common_errors(sql: str) -> str:
-    sql = re.sub(r'\bSELECT\s+TOP\s+(\d+)\b', r'SELECT', sql, flags=re.IGNORECASE)
+    top_match = re.search(r'\bSELECT\s+TOP\s+(\d+)\s+', sql, flags=re.IGNORECASE)
+
+    if top_match:
+        n = top_match.group(1)
+        sql = re.sub(r'\bSELECT\s+TOP\s+\d+\s+', 'SELECT ', sql, flags=re.IGNORECASE)
+
+        if not re.search(r'\bLIMIT\s+\d+\b', sql, flags=re.IGNORECASE):
+            sql = sql.rstrip().rstrip(";") + f" LIMIT {n};"
+
     sql = re.sub(r'\bLIMIT\s+(\d+)(st|nd|rd|th)\b', r'LIMIT \1', sql, flags=re.IGNORECASE)
     sql = sql.replace("\\'", "''")
     return sql
+
+def _is_select_only(sql: str) -> tuple[bool, list[str]]:
+    if not sql or not sql.strip():
+        return False, ["SQL empty"]
+
+    s = sql.strip()
+    upper = s.upper()
+
+    if not (upper.startswith("SELECT") or upper.startswith("WITH")):
+        return False, ["Only SELECT/WITH queries are allowed"]
+
+    dangerous = [
+        "DROP", "DELETE", "INSERT", "UPDATE", "TRUNCATE",
+        "ALTER", "CREATE", "GRANT", "REVOKE", "EXEC", "EXECUTE"
+    ]
+
+    issues = [kw for kw in dangerous if re.search(rf"\b{kw}\b", upper)]
+
+    if issues:
+        return False, issues
+
+    if s.count(";") > 1:
+        return False, ["Multiple SQL statements are not allowed"]
+
+    return True, []
 
 def executor_node(state: AgentState) -> dict:
     if not state.current_db_path:
@@ -28,6 +61,15 @@ def executor_node(state: AgentState) -> dict:
 
     db = get_db_manager(state.current_db_path) if state.current_db_path else None
     sql_to_exec = _fix_common_errors(state.generated_sql)
+    state.generated_sql = sql_to_exec  # Update state so UI/logging sees the fixed SQL
+
+    is_safe, safety_issues = _is_select_only(sql_to_exec)
+    if not is_safe:
+        state.error = f"Unsafe SQL blocked by executor: {safety_issues}"
+        state.execution_error = state.error
+        state.next_agent = "error"
+        state.current_step = "execution_blocked_unsafe_sql"
+        return state
 
     result = db.execute_query(sql_to_exec)
 
@@ -52,6 +94,7 @@ def executor_node(state: AgentState) -> dict:
         # Zero-row self-correction logic (Content Matching)
         if (
             state.evaluation_options.get("self_correction_enabled", True)
+            and state.evaluation_options.get("zero_row_correction_enabled", False)
             and result.row_count == 0
             and state.generation_attempts < state.max_retries
         ):
@@ -84,12 +127,12 @@ def executor_node(state: AgentState) -> dict:
                     cache.put(
                         state.user_question,
                         state.query_result,
-                        state.generated_sql,
+                        sql_to_exec,  # Cache the fixed/executed SQL, not the original faulty one
                         namespace=state.current_db_path,
                     )
                 except TypeError:
-                    cache.put(state.user_question, state.query_result, state.generated_sql)
-                log.info("result_cached", sql=state.generated_sql[:60] if state.generated_sql else None)
+                    cache.put(state.user_question, state.query_result, sql_to_exec)
+                log.info("result_cached", sql=sql_to_exec[:60] if sql_to_exec else None)
             except Exception as cache_err:
                 log.warning("cache_put_failed", error=str(cache_err))
         
