@@ -1,103 +1,170 @@
-# Multi-Agent Text-to-SQL System
+# Multi-Agent Text-to-SQL
 
-> 📖 **Tài liệu chi tiết:** [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — Giải thích toàn bộ code, kiến trúc, luồng dữ liệu.
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![LangGraph](https://img.shields.io/badge/Workflow-LangGraph-1C3C3C)](https://langchain-ai.github.io/langgraph/)
+[![SQLite](https://img.shields.io/badge/Database-SQLite-003B57?logo=sqlite&logoColor=white)](https://www.sqlite.org/)
+[![Gemini](https://img.shields.io/badge/LLM-Gemini-4285F4?logo=google&logoColor=white)](https://ai.google.dev/)
 
-Hệ thống **Multi-Agent Text-to-SQL** sử dụng LangGraph, cho phép truy vấn cơ sở dữ liệu bằng ngôn ngữ tự nhiên (tiếng Việt & tiếng Anh). Hệ thống hỗ trợ nạp linh hoạt (Onboard) nhiều cơ sở dữ liệu khác nhau thông qua Web UI và cơ chế Semantic Caching tiên tiến.
+An inspectable, Vietnamese-first Text-to-SQL system for SQLite. It turns a natural-language question into a safe `SELECT` query, executes it, and returns both the answer and the SQL behind it.
 
-## 🌟 Kiến trúc
+The project uses a LangGraph workflow rather than a single opaque prompt. A structured **QuerySpec**, schema grounding, few-shot retrieval, validation, bounded repair, telemetry, and an optional semantic cache make the pipeline easier to evaluate and improve.
 
-```text
-User Question
-     │
-     ▼
-┌─────────────────┐
-│  Orchestrator   │ ← Phân tích intent, route tới agent phù hợp
-└────────┬────────┘
-         │
-         ├─ [Simple] ──────→ SQL Generator → Validator → Executor → Formatter
-         │
-         └─ [Complex] ─────→ Query Planner → SQL Generator → Validator → Executor → Formatter
+> This is a research and thesis project. It is designed for read-only SQLite querying and is not a substitute for access control, database governance, or production security review.
+
+## Why this project
+
+- Vietnamese and English questions over SQLite databases.
+- Dynamic schema introspection whenever the selected database changes.
+- A structured QuerySpec for requested projection, tables, filters, grouping, ordering, and limit.
+- Read-only validation and bounded SQL repair with per-node telemetry.
+- FAISS few-shot retrieval for generation and a separate conservative semantic cache for repeated requests.
+- Reproducible evaluation with execution metrics, AST diagnostics, latency, tokens, LLM calls, checkpoints, and ablation profiles.
+
+## Architecture at a glance
+
+```mermaid
+flowchart TD
+    A[Question from Web UI, CLI, or evaluator] --> B[Input adapter]
+    B --> C[Database router]
+    C --> D[Orchestrator]
+    D -->|Cache hit| J[Result formatter]
+    D -->|Aggregate / join / complex| E[QuerySpec]
+    D -->|Planner fallback when QuerySpec is disabled| F[Query planner]
+    D -->|Simple request| G[SQL generator]
+    E --> G
+    F --> G
+    S[(SQLite schema)] --> H[Schema context]
+    R[(FAISS few-shot index)] --> G
+    H --> G
+    G --> I[Validator + projection checks]
+    I -->|Repairable issue, bounded retries| G
+    I -->|Valid| K[Read-only executor]
+    K -->|Execution issue, bounded retries| G
+    K --> L[Optional semantic cache write]
+    K --> J
+    J --> M[Output adapter]
 ```
 
-### 🧠 LangGraph Agents
+Read the component-level explanation in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
-| Agent | Vai trò | Công nghệ / LLM |
-|-------|---------|-----------------|
-| **Orchestrator** | Điều phối pipeline, phân tích độ phức tạp (intent) | Gemini 2.5 Flash |
-| **Context Optimizer** | Tối ưu context window: Lọc bảng (Table Selector) và lọc cột (Column Pruner) | Khớp đồ thị (Graph Traversal) |
-| **Query Planner** | Lên kế hoạch query phức tạp (JOIN, CTE, Aggregations) | Gemini 2.5 Flash |
-| **SQL Generator** | Sinh SQL dựa trên Dynamic Schema và Kinh nghiệm RAG (Few-shots) | Gemini 2.5 Flash |
-| **Validator** | Kiểm tra cú pháp SQL, chặn câu lệnh độc hại (DROP/DELETE) | Python `sqlite3` + Regex |
-| **Executor** | Thực thi SQL an toàn trên database SQLite & in-memory caching | Jaccard + Cosine Cache |
-| **Result Formatter**| Đóng gói kết quả thô thành JSON chuẩn, tự động nhận diện ý định vẽ Biểu đồ | Gemini 2.5 Flash |
+## Quick start
 
-## 🚀 Tính năng nổi bật
+### 1. Requirements
 
-- ✅ **LLM Cốt lõi**: Hoạt động siêu tốc bằng mô hình **Gemini 1.5 Flash** (có hỗ trợ đổi sang Llama-3 qua Groq API).
-- ✅ **Dynamic Few-Shot RAG**: Tự động sinh kinh nghiệm ảo (Synthetic Few-shots) bằng FAISS Vector Database ngay khi upload file `.sqlite` mới.
-- ✅ **Cơ chế Jaccard + Semantic Cache**: Kết hợp so khớp từ vựng (Jaccard) và ngữ nghĩa (Cosine Similarity) để trả lời siêu tốc độ (0.5s) cho các câu hỏi lặp lại.
-- ✅ **Giao diện Web Tương tác (Streamlit UI)**: Đẹp mắt, chuyên nghiệp. Hỗ trợ Upload file Database tự động học cấu trúc và sinh **Biểu đồ động Plotly Express**.
-- ✅ **Execution Match Evaluation**: Phương pháp chấm điểm thực thi chạy đua trực tiếp song song (AI vs Gold SQL) kèm Trọng tài AI thông minh.
+- Python 3.10 or newer
+- A Google Gemini API key
+- Windows, macOS, or Linux
 
-## ⚙️ Cài đặt
+### 2. Install
 
 ```bash
-# 1. Clone / cd vào project
+git clone <your-fork-url>
 cd text_to_sql
 
-# 2. Tạo virtual environment
 python -m venv venv
-source venv/Scripts/activate  # Windows
-# source venv/bin/activate    # Linux/Mac
+# Windows PowerShell
+.\\venv\\Scripts\\Activate.ps1
+# macOS/Linux
+# source venv/bin/activate
 
-# 3. Cài dependencies
 pip install -r requirements.txt
-
-# 4. Cấu hình .env
-cp .env.example .env
-# Chỉnh sửa file .env và thêm:
-# - GEMINI_API_KEY
+Copy-Item .env.example .env  # Windows PowerShell
+# cp .env.example .env       # macOS/Linux
 ```
 
-## 🛠 Cách chạy Hệ thống
+Set `GEMINI_API_KEY` in `.env`. You may also set `LLM_MODEL_FLASH`, `LLM_MODEL_PRO`, and `EMBEDDING_MODEL`.
 
-### 1. Giao diện Người dùng chính (Web UI)
-Giao diện Chatbot truy vấn và hiển thị Biểu đồ (Dashboard):
+### 3. Run the web app
+
 ```bash
 streamlit run app/main.py
 ```
-*(Mở `http://localhost:8501` trên trình duyệt)*
 
-### 2. Giao diện Trọng tài Đánh giá (Evaluation Inspector UI)
-Công cụ trực quan hóa (Side-by-side) dùng để chấm điểm trực tiếp kết quả của AI so với Đáp án chuẩn (Gold SQL):
-```bash
-streamlit run scripts/eval_inspector.py
-```
-
-### 3. Công cụ kỹ sư (Developer Tools)
-- **Onboard hàng loạt DB**: Nạp toàn bộ folder Database vào hệ thống trong đêm.
-  ```bash
-  python scripts/bulk_onboard.py --dir data/spider/database --workers 8
-  ```
-- **Chấm điểm Batch (Evaluation)**: Chạy bài test 100 câu hỏi và tính tỷ lệ Accuracy.
-  ```bash
-  python test/evaluate.py
-  ```
-
-## 📂 Cấu trúc Project
+Open `http://localhost:8501`, select or upload a SQLite database, then ask:
 
 ```text
-text_to_sql/
-├── app/                 # Giao diện Web UI (Streamlit, Plotly Charts)
-├── data/                # Chứa các file SQLite và JSON Test Sets
-├── docs/                # Tài liệu thiết kế hệ thống
-├── scripts/             # Các công cụ tiện ích (Bulk Onboard, Eval UI)
-├── src/
-│   ├── agents/          # Các Node của LangGraph (Planner, Generator, Validator...)
-│   ├── db/              # Xử lý tương tác với SQLite
-│   ├── rag/             # Hệ thống FAISS và VertexAI/Gemini Embeddings
-│   └── config.py        # Quản lý cấu hình dự án
-├── test/
-│   └── evaluate.py      # Hệ thống chấm điểm Execution Match
-└── .env                 # File biến môi trường
+Liệt kê 5 khách hàng đầu tiên theo tên công ty.
 ```
+
+### 4. Run one query from Python
+
+```python
+from src.graph import run_query
+
+result = run_query(
+    "Liệt kê 5 khách hàng đầu tiên theo tên công ty.",
+    db_path="data/northwind/northwind.sqlite",
+    dataset_type="northwind",
+    analysis_mode="fast",
+    evaluation_profile="full_no_cache",
+)
+
+print(result.generated_sql)
+print(result.formatted_answer["detailed_answer"])
+```
+
+`fast` formats results locally to reduce LLM calls. `deep` additionally asks the formatter LLM for a richer answer; the UI exposes it as a future Pro experience.
+
+## Evaluation
+
+The evaluator clears the semantic cache before an accuracy run and writes JSON, CSV, and an incremental checkpoint. For comparable results, keep the model, profile, input data, seed, and evaluation mode fixed.
+
+```bash
+python test/evaluate_v2.py \
+  --data data/northwind_test_100_balanced_fixed.json \
+  --db data/northwind/northwind.sqlite \
+  --dataset-type northwind \
+  --profile full_no_cache \
+  --analysis-mode fast \
+  --seed 42 \
+  --clear-checkpoint \
+  --output-dir test/evaluation_runs \
+  --name northwind_run
+```
+
+`full_no_cache` is the main accuracy profile: it retains few-shot retrieval, QuerySpec, validation, and repair while disabling cache hits. Other profiles include `no_rag`, `no_query_spec`, `no_planner`, `no_validator`, `single_zero_shot`, and `single_structured` for ablation experiments.
+
+### Reported final-candidate results
+
+These runs used `gemini-2.5-pro`, `full_no_cache`, `fast` mode, seed 42, and cache disabled for accuracy. Strict execution compares result values, column order, and duplicate rows; relaxed execution is less sensitive to output labels.
+
+| Dataset | N | Strict EX | Relaxed EX | Exec OK | Mean tokens/query | Mean latency |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Chinook VN | 300 | 85.00% | 88.67% | 100.00% | 8,042 | 25.44 s |
+| Northwind VN | 100 | 86.00% | 93.00% | 100.00% | 7,765 | 27.28 s |
+| Internal Spider subset | 100 | 76.00% | 83.00% | 98.00% | 8,804 | 37.59 s |
+
+Results are dataset- and configuration-specific, not a claim of general performance across all Text-to-SQL benchmarks. Detailed artifacts and limitations are in [evaluation_outcomes_and_limitations.md](evaluation_outcomes_and_limitations.md).
+
+## Repository map
+
+```text
+app/                    Streamlit chat interface, charts, and session UI
+src/agents/             LangGraph nodes: routing, QuerySpec, planning, SQL, validation, execution, formatting
+src/rag/                Schema context, embeddings, and FAISS few-shot retrieval
+src/memory/             Conservative, database-scoped semantic cache
+src/evaluation/         Profiles, metrics, telemetry, baselines, and ablation helpers
+src/db/                 SQLite introspection and read-only query execution
+test/evaluate_v2.py     Batch evaluator with JSON/CSV/checkpoint artifacts
+tests/                  Unit and regression tests
+data/                   Local datasets and SQLite databases (not all are intended for redistribution)
+docs/                   Architecture and thesis-supporting documentation
+```
+
+## Development
+
+```bash
+pytest -q
+```
+
+Before opening a pull request, please add or update a focused test for behavioral changes. Keep dataset-specific benchmark metadata in evaluator/data files, and avoid putting benchmark answers into prompts or production routing logic.
+
+## Contributing and supporting the project
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for a short guide to reporting reproducible Text-to-SQL failures and proposing changes. Ideas for schema linking, retrieval, multilingual evaluation, and reproducibility are welcome.
+
+If this project helps your research or gives you a useful starting point, consider starring the repository and sharing a concrete issue or improvement. That feedback is more useful than a silent star count.
+
+## Citation
+
+If you use this repository in academic work, cite the associated thesis and link to the commit or release you evaluated. A formal citation file can be added once the thesis metadata is finalized.
