@@ -1,0 +1,55 @@
+flowchart TD
+    %% Định nghĩa class cho subgraph: nền trắng, viền trắng, chữ đen
+    classDef whiteBox fill:#ffffff,stroke:#ffffff,stroke-width:0px,color:#000000;
+    
+    %% Định nghĩa class cho các node bên trong: nền trắng, viền đen, chữ đen
+    classDef nodeStyle fill:#ffffff,stroke:#000000,stroke-width:1px,color:#000000;
+
+    %% Cấu hình mặc định cho tất cả đường nối (màu đen)
+    linkStyle default stroke:#000000,stroke-width:2px;
+
+    %% Block 1: User Interface
+    subgraph UserInterface [" User Interface "]
+        U["User question"] --> UI["Web UI / CLI"]
+    end
+
+    %% Block 2: Orchestration & Planning
+    subgraph Orchestration [" Orchestration & Planning "]
+        UI --> R["Router and Orchestrator"]
+        R --> QS["QuerySpec Generator"]
+        QS --> P{"Planning needed?"}
+        P -->|Yes| QP["Query Planner"]
+    end
+
+    %% Block 3: SQL Generation
+    subgraph Generation [" SQL Generation "]
+        P -->|No| SG["SQL Generator"]
+        QP --> SG
+        SI["Schema Indexer"] --> SG
+        FS["FAISS Few-shot Retrieval"] --> SG
+    end
+
+    %% Block 4: Validation & Repair
+    subgraph Validation [" Validation & Repair "]
+        SG --> V["SQL Validator"]
+        V --> PC["Projection Checker"]
+        PC -->|Repairable error| SG
+    end
+
+    %% Block 5: Execution & Output
+    subgraph Execution [" Execution & Output "]
+        PC -->|Pass| EX["Executor"]
+        EX --> RF["Result Formatter"]
+        RF --> OUT["SQL, table, answer, chart"]
+        EX <--> C["Semantic Cache"]
+    end
+
+    %% External Data Source
+    DB[("SQLite databases")] --> SI
+    DB --> EX
+
+    %% Áp dụng class whiteBox cho các Subgraph
+    class UserInterface,Orchestration,Generation,Validation,Execution whiteBox;
+    
+    %% Áp dụng class nodeStyle cho các Node để đồng bộ chữ đen viền đen
+    class U,UI,R,QS,P,QP,SG,SI,FS,V,PC,EX,RF,OUT,C,DB nodeStyle;

@@ -62,19 +62,30 @@ def _ensure_db(db_path: str) -> str:
 def build_graph() -> StateGraph:
     """
     Pipeline:
+    input_adapter
+    ↓
+    router
+    ↓
     orchestrator
-        ↓
-    [plan_needed?] → query_planner   (join/aggregate/complex/cte/subquery)
-        ↓ no
-    sql_generator
-        ↓
-    validator          ← hard-validate SQL (dynamic table/column checks)
-        ↓ valid
+    ↓
+    [cache_hit?] → result_formatter
+    ↓
+    [query_spec?] → query_spec → sql_generator
+    ↓
+    [plan_needed?] → query_planner → sql_generator
+    ↓
+    [otherwise] → sql_generator
+    ↓
+    validator
+    ↓ valid
     executor
-        ↓
-    result_formatter → END
+    ↓
+    result_formatter
+    ↓
+    output_adapter → END
 
-    Nếu validator fail → retry sql_generator (tối đa max_retries lần)
+    Nếu validator hoặc executor fail và còn retry budget:
+    → sql_generator
     """
     graph = StateGraph(AgentState)
 
@@ -352,6 +363,8 @@ async def arun_query(
             session_id=session_id,
             db_path=db_path,
             baseline=options["baseline"],
+            dataset_type=dataset_type,
+            benchmark_context=benchmark_context,
         )
 
     with telemetry_run(session_id) as collector:
@@ -367,7 +380,10 @@ async def arun_query(
             evaluation_options=options,
             benchmark_context=benchmark_context,
         )
-    result.telemetry = deepcopy(collector)
+    # Preserve agent-level diagnostics/decisions while attaching authoritative
+    # token and timing counters from the isolated collector.
+    agent_telemetry = deepcopy(result.telemetry or {})
+    result.telemetry = {**agent_telemetry, **deepcopy(collector)}
     return result
 
 

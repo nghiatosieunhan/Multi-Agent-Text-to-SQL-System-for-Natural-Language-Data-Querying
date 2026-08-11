@@ -1,0 +1,10 @@
+.env
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+chroma_db/
+faiss_unified_fewshot_db/
+logs/
+data/chat_history.json

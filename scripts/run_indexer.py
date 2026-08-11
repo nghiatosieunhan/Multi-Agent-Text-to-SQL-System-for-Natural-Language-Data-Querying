@@ -10,7 +10,7 @@ if os.name == "nt":
 
 import argparse
 
-DEFAULT_DATA_PATH = "data/data.json"
+DEFAULT_DATA_PATH = "data/"
 DEFAULT_DATASET_TYPE = "chinook"
 
 if __name__ == "__main__":

@@ -141,6 +141,13 @@ You do NOT write SQL. The SQL Generator will receive your spec and follow it exa
     Do not invent formulas if the evidence is missing.
     For monetary outputs, set rounding to 2 when the question or benchmark convention expects rounded money values.
     Use COUNT(DISTINCT ...) when counting parent entities after joining to child/detail tables.
+11. Quantified comparisons are exact: greater than ANY uses > MIN, greater than ALL uses > MAX,
+    less than ANY uses < MAX, and less than ALL uses < MIN.
+12. If one entity must match both distinct values in child rows, plan INTERSECT or
+    GROUP BY/HAVING COUNT(DISTINCT ...); never require one scalar row to equal both values.
+13. Preserve schema-native comparison and ordering semantics. Do not add CAST merely because values look numeric unless conversion is explicitly required.
+14. For anti-membership (entities that do not have X), exclude by the entity key with NOT EXISTS or key NOT IN; never subtract projected display attributes.
+15. Use INNER JOIN by default. Choose LEFT JOIN only for explicit missing/none/zero-count inclusion semantics.
 
 # Output format
 Return ONLY a raw, flat JSON object matching the fields of QuerySpec.
@@ -290,6 +297,10 @@ def _build_benchmark_context(ctx: dict | None) -> str:
         return "None."
 
     lines = []
+    if ctx.get("dataset_type"):
+        lines.append(f"- Dataset type: {ctx['dataset_type']}")
+    if ctx.get("db_id"):
+        lines.append(f"- Database ID: {ctx['db_id']}")
     if ctx.get("question_en"):
         lines.append(f"- English question: {ctx['question_en']}")
     if ctx.get("intent"):
@@ -302,6 +313,18 @@ def _build_benchmark_context(ctx: dict | None) -> str:
         lines.append(
             "- Required final output columns, exact order: "
             + ", ".join(ctx["output_columns"])
+        )
+    if ctx.get("limit") is not None:
+        lines.append(f"- Required LIMIT: {ctx['limit']}")
+    if ctx.get("requires_order_by"):
+        lines.append("- ORDER BY is required; infer the stable ordering from the question.")
+    if ctx.get("order_by_hint"):
+        lines.append(f"- ORDER BY hint: {ctx['order_by_hint']}")
+    if ctx.get("semantic_hint"):
+        lines.append(f"- Semantic hint: {ctx['semantic_hint']}")
+    if ctx.get("round_numeric_aggregates") is not None:
+        lines.append(
+            f"- Round numeric aggregate/monetary metrics to {ctx['round_numeric_aggregates']} decimals."
         )
 
     return "\n".join(lines) if lines else "None."
@@ -332,20 +355,23 @@ def query_spec_node(state: AgentState) -> AgentState:
     try:
         raw = invoke(
             prompt=user_prompt,
-            model=config.LLM_MODEL_PRO,
+            model=config.LLM_MODEL_FLASH,
             temperature=0.0,
-            max_tokens=2048,
+            max_tokens=4096,
             system_prompt=system_prompt,
             telemetry_label="query_spec",
         )
         spec_dict = _safe_parse(raw)
         benchmark_cols = (state.benchmark_context or {}).get("output_columns") or []
         benchmark_tables = (state.benchmark_context or {}).get("tables") or []
+        benchmark_limit = (state.benchmark_context or {}).get("limit")
         if benchmark_cols:
             spec_dict["output_columns"] = benchmark_cols
             spec_dict["projection_policy"] = "exact"
         if benchmark_tables and not spec_dict.get("source_tables"):
             spec_dict["source_tables"] = benchmark_tables
+        if benchmark_limit is not None:
+            spec_dict["limit"] = benchmark_limit
         
         try:
             raw_parsed = json.loads(_extract_json_object(raw))

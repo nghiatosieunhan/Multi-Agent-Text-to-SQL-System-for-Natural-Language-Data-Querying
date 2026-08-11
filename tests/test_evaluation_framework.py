@@ -20,7 +20,7 @@ from evaluation_metrics import (  # noqa: E402
     percentile,
     summarize_results,
 )
-from evaluate_cache import threshold_sweep  # noqa: E402
+from evaluate_cache import threshold_sweep, validate_cache_cases  # noqa: E402
 from src.evaluation.profiles import get_profile_options  # noqa: E402
 from src.evaluation.telemetry import record_llm_call, snapshot, telemetry_run  # noqa: E402
 
@@ -133,8 +133,12 @@ def test_profiles_are_reproducible_and_cache_is_off_for_accuracy():
     assert get_profile_options("full_no_cache")["cache_enabled"] is False
     assert get_profile_options("no_rag")["few_shot_enabled"] is False
     assert get_profile_options("no_planner")["planner_enabled"] is False
+    assert get_profile_options("no_query_spec")["query_spec_enabled"] is False
+    assert get_profile_options("no_query_spec")["planner_enabled"] is True
     assert get_profile_options("no_validator")["validator_enabled"] is False
     assert get_profile_options("no_validator")["self_correction_enabled"] is False
+    assert get_profile_options("no_validator")["projection_validation_enabled"] is False
+    assert get_profile_options("no_validator")["projection_contract_enabled"] is False
     assert get_profile_options("auto_bypass")["schema_pruning_mode"] == "auto"
     assert get_profile_options("forced_pruning")["schema_pruning_mode"] == "force"
     with pytest.raises(ValueError):
@@ -196,6 +200,7 @@ def test_cache_case_file_contains_90_lookups():
     assert len(data["groups"]) == 30
     assert all({"id", "base", "paraphrase", "hard_negative"} <= set(group) for group in data["groups"])
     assert len(data["groups"]) * 3 == 90
+    assert validate_cache_cases(data["groups"]) == []
 
 
 def test_cache_threshold_sweep_reuses_embeddings(monkeypatch):

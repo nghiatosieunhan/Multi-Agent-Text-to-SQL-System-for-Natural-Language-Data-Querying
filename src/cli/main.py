@@ -6,6 +6,7 @@ import sys
 import os
 import time
 import argparse
+import warnings
 from pathlib import Path
 
 # Force UTF-8 on Windows
@@ -18,6 +19,13 @@ if os.name == "nt":
     )
 
 import structlog
+try:
+    from langchain_core._api.deprecation import LangChainDeprecationWarning
+
+    warnings.filterwarnings("ignore", category=LangChainDeprecationWarning)
+except ImportError:
+    pass
+
 from src.config import config
 from src.db import DatabaseManager, get_db_manager
 from src.rag import rebuild_schema_index
@@ -39,6 +47,16 @@ def init_system(db_path: str = "", force_rebuild: bool = False):
     resolved = db_path or config.DB_PATH
     db_name = Path(resolved).stem
 
+    if not resolved.startswith(("postgresql", "mysql")):
+        sqlite_path = Path(resolved)
+        if not sqlite_path.is_file():
+            raise SystemExit(f"ERROR: Database file not found: {resolved}")
+        if sqlite_path.stat().st_size == 0:
+            raise SystemExit(
+                f"ERROR: Database file is empty: {resolved}\n"
+                "Check --db-path and point it to an initialized SQLite database."
+            )
+
     print("=" * 60)
     print("  MULTI-AGENT TEXT-TO-SQL SYSTEM")
     print(f"  Database: {db_name}")
@@ -52,6 +70,11 @@ def init_system(db_path: str = "", force_rebuild: bool = False):
 
     # 2. Show schema
     schema = db.get_schema()
+    if not schema.tables:
+        raise SystemExit(
+            f"ERROR: Database contains no tables: {resolved}\n"
+            "Check --db-path and point it to the intended database file."
+        )
     print(f"[2/5] Schema loaded: {len(schema.tables)} tables")
     for t in schema.tables:
         print(f"     - {t.table_name}: {t.row_count} rows, {len(t.columns)} cols")
@@ -70,11 +93,13 @@ def init_system(db_path: str = "", force_rebuild: bool = False):
     print(f"[4/5] Semantic cache ready (max {cache.max_size} entries)")
 
     # 5. Check API keys
-    if not config.GEMINI_API_KEY:
+    if config.LLM_PROVIDER == "google" and config.GOOGLE_CLOUD_PROJECT:
+        print(f"[5/5] System ready")
+    elif not config.GEMINI_API_KEY:
         print("[5/5] WARNING: No Gemini API key found!")
         print("     Please add GEMINI_API_KEY to your .env file")
     else:
-        print(f"[5/5] Gemini API ready ({config.LLM_MODEL_PRO})")
+        print(f"[5/5] System ready")
 
     print()
     print(f"System ready with: {db_name}")
@@ -277,8 +302,9 @@ def main():
 
     if args.query:
         init_system(db_path=db_path, force_rebuild=args.force_rebuild)
+        started = time.time()
         result = run_query(args.query, db_path=db_path)
-        _print_result(result, 0)
+        _print_result(result, time.time() - started)
         return
 
     if args.init:

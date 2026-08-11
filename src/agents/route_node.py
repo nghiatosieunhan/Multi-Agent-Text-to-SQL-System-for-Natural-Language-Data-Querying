@@ -41,6 +41,7 @@ Nếu câu hỏi không rõ ràng hoặc không khớp với CSDL nào, trả v�
     try:
         result = invoke(
             prompt,
+            model=config.LLM_MODEL_FLASH,
             temperature=0.0,
             telemetry_label="router",
         ).strip().lower()

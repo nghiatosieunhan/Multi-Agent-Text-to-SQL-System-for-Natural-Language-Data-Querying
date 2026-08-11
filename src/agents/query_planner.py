@@ -105,7 +105,7 @@ def query_planner_node(state: AgentState) -> AgentState:
     try:
         raw_response = invoke(
             prompt=user_prompt,
-            model=config.LLM_MODEL_PRO,
+            model=config.LLM_MODEL_FLASH,
             temperature=0.0,
             max_tokens=2048,
             system_prompt=QUERY_PLANNER_SYSTEM.format(

@@ -1,0 +1,35 @@
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#000000",
+    "primaryColor": "#1a1a1a",
+    "primaryTextColor": "#ffffff",
+    "primaryBorderColor": "#555555",
+    "lineColor": "#aaaaaa",
+    "secondaryColor": "#111111",
+    "tertiaryColor": "#0d0d0d",
+    "edgeLabelBackground": "#000000",
+    "clusterBkg": "#0d0d0d",
+    "titleColor": "#ffffff",
+    "nodeTextColor": "#ffffff"
+  }
+}}%%
+flowchart LR
+    U["User question"] --> UI["Web UI / CLI"]
+    UI --> R["Router and Orchestrator"]
+    R --> QS["QuerySpec Generator"]
+    QS --> P{"Planning needed?"}
+    P -->|Yes| QP["Query Planner"]
+    P -->|No| SG["SQL Generator"]
+    QP --> SG
+    SI["Schema Indexer"] --> SG
+    FS["FAISS Few-shot Retrieval"] --> SG
+    SG --> V["SQL Validator"]
+    V --> PC["Projection Checker"]
+    PC -->|Pass| EX["Executor"]
+    PC -->|Repairable error| SG
+    EX --> RF["Result Formatter"]
+    RF --> OUT["SQL, table, answer, chart"]
+    EX <--> C["Semantic Cache"]
+    DB[("SQLite databases")] --> SI
+    DB --> EX

@@ -1,0 +1,121 @@
+flowchart TD
+    A[User gọi tool check_format với file .docx]
+    --> B[chat_service._execute_tool]
+
+    B --> C[format_check_adapter.check_format_document]
+
+    C --> D[run_docx_format_pipeline]
+
+    D --> E[check_common_format_rules]
+    E --> E1[Kiểm tra định dạng chung]
+    E1 --> E2[
+        Khổ giấy,
+        hướng giấy,
+        lề trang,
+        font,
+        mã hóa Unicode,
+        màu chữ,
+        số trang
+    ]
+
+    D --> F[extract_annotation_targets]
+    F --> F1[Trích xuất node/text/format/layout từ DOCX]
+
+    F1 --> G[label_docx_analysis]
+    G --> G1[LLM/classifier gắn nhãn thành phần]
+    G1 --> G2[
+        quoc_hieu,
+        tieu_ngu,
+        ten_co_quan_to_chuc_ban_hanh,
+        so_ky_hieu_van_ban,
+        dia_danh_ngay_thang_nam,
+        ten_loai,
+        trich_yeu,
+        noi_dung_van_ban,
+        kinh_gui,
+        noi_nhan,
+        chuc_vu_ho_ten_chu_ky_nguoi_co_tham_quyen,
+        unlabeled
+    ]
+
+    G2 --> H[check_comp_all]
+
+    H --> I[phan_dau_van_ban]
+    I --> I1[check_header_components_payload]
+    I1 --> I2[Chọn vùng đầu văn bản/header table]
+    I2 --> I3[
+        quoc_hieu,
+        tieu_ngu,
+        ten_co_quan_to_chuc_ban_hanh,
+        so_ky_hieu_van_ban,
+        dia_danh_ngay_thang_nam
+    ]
+    I3 --> I4[
+        Kiểm tra vị trí,
+        cỡ chữ,
+        đậm/nghiêng,
+        căn lề,
+        nội dung cơ bản,
+        quan hệ bố cục header
+    ]
+
+    H --> J[phan_kinh_gui]
+    J --> J1[check_kinh_gui_components_payload]
+    J1 --> J2[
+        Kiểm tra Kính gửi:
+        tiêu đề,
+        dấu hai chấm,
+        cỡ chữ,
+        vị trí sau phần đầu/tiêu đề,
+        trước nội dung chính,
+        không thuộc bảng cuối văn bản
+    ]
+
+    H --> K[phan_cuoi_van_ban]
+    K --> K1[check_closing_components_payload]
+    K1 --> K2[
+        Kiểm tra Nơi nhận cuối văn bản,
+        bảng cuối văn bản,
+        chữ ký,
+        chức vụ,
+        họ tên người ký
+    ]
+
+    G2 --> C1[classify_document_type_llm_first]
+    C1 --> C2[normalize_document_profile]
+    C2 --> T[the_thuc_theo_loai_van_ban]
+    T --> T1[
+        Văn bản có tên loại:
+        tên loại, trích yếu,
+        ký hiệu theo loại,
+        marker/căn cứ hẹp
+    ]
+    T --> T2[
+        Công văn:
+        không có tên loại,
+        trích yếu V/v,
+        ký hiệu dạng cơ quan-đơn vị
+    ]
+    T --> T3[unknown/low confidence -> manual]
+
+    E2 --> L[Tổng hợp kết quả pipeline]
+    I4 --> L
+    J2 --> L
+    K2 --> L
+    T1 --> L
+    T2 --> L
+    T3 --> L
+
+    L --> M[
+        Tính status:
+        pass / manual / fail / error
+    ]
+
+    M --> N[format_check_adapter._format_pipeline_result]
+
+    N --> O[
+        Trả kết quả text cho tool check_format:
+        trạng thái, file, phân loại,
+        tóm tắt, thống kê, phạm vi,
+        lỗi/manual/pass
+    ]

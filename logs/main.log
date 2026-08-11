@@ -18,3 +18,222 @@
 {"event": "onboard_success", "level": "info", "timestamp": "2026-06-03T04:35:57.284526Z"}
 {"db": "northwind", "path": "data/northwind/northwind.sqlite", "event": "onboarding", "level": "info", "timestamp": "2026-06-03T06:54:50.334416Z"}
 {"event": "onboard_success", "level": "info", "timestamp": "2026-06-03T06:56:25.629421Z"}
+{"event": "rebuilding_schema_index", "level": "info", "timestamp": "2026-07-01T13:02:05.744837Z"}
+{"event": "ChromaDB disabled on Windows — using direct schema lookup", "level": "info", "timestamp": "2026-07-01T13:02:05.760688Z"}
+{"documents": 8, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-01T13:02:05.760688Z"}
+{"old": "(none)", "new": "data\\northwind.sqlite", "event": "db_changed", "level": "info", "timestamp": "2026-07-01T13:06:53.928718Z"}
+{"event": "rebuilding_schema_index", "level": "info", "timestamp": "2026-07-01T13:06:53.929828Z"}
+{"event": "ChromaDB disabled on Windows — using direct schema lookup", "level": "info", "timestamp": "2026-07-01T13:06:53.929828Z"}
+{"documents": 8, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-01T13:06:53.929828Z"}
+{"db_path": "data\\northwind.sqlite", "tables": 0, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-01T13:06:53.929828Z"}
+{"question": "Doanh thu theo từng năm là bao nhiêu? Sắp xếp theo năm tăng dần.", "session_id": "session_1782910925", "db": "data\\northwind.sqlite", "event": "arun_query_start", "level": "info", "timestamp": "2026-07-01T13:06:53.929828Z"}
+{"question": "Doanh thu theo từng năm là bao nhiêu? Sắp xếp theo năm tăng dần.", "event": "orchestrator_run", "level": "info", "timestamp": "2026-07-01T13:06:54.601038Z"}
+{"count": 1, "attempt": 1, "event": "gemini_embed_success", "level": "info", "timestamp": "2026-07-01T13:07:08.109419Z"}
+{"tables": 0, "relationships": 0, "pruning_mode": "auto", "event": "schema_context_built", "level": "info", "timestamp": "2026-07-01T13:07:08.118542Z"}
+{"intent": "aggregate", "confidence": 0.95, "next": "query_spec", "route_reason": "spec_required", "event": "orchestrator_decision", "level": "info", "timestamp": "2026-07-01T13:07:28.897927Z"}
+{"question": "Doanh thu theo từng năm là bao nhiêu? Sắp xếp theo năm tăng dần.", "event": "query_spec_run", "level": "info", "timestamp": "2026-07-01T13:07:28.902929Z"}
+{"grain": "one row per year", "columns": ["Year", "Revenue"], "confidence": 0.7, "assumptions": ["The schema contains 'Orders' (T1) and 'Order_Details' (T2) tables.", "The tables can be joined on 'OrderID'.", "The 'Orders' table has an 'OrderDate' column from which the year can be extracted. The output column 'Year' is an alias for YEAR(T1.OrderDate).", "Revenue ('Doanh thu') is calculated as the sum of 'Quantity' multiplied by 'UnitPrice' from the 'Order_Details' table."], "event": "query_spec_produced", "level": "info", "timestamp": "2026-07-01T13:08:00.263142Z"}
+{"filter_dict": {"split": "train"}, "k": 2, "fetch_k": 50, "threshold": 0.55, "event": "few_shot_search_start", "level": "info", "timestamp": "2026-07-01T13:08:01.766709Z"}
+{"raw_score": 0.5606666207313538, "similarity": 0.641, "example_id": "5604", "dataset": "spider", "split": "train", "db_id": "swimming", "intent": "unknown", "event": "few_shot_candidate", "level": "info", "timestamp": "2026-07-01T13:08:06.236461Z"}
+{"raw_score": 0.565208375453949, "similarity": 0.639, "example_id": "5057", "dataset": "spider", "split": "train", "db_id": "device", "intent": "unknown", "event": "few_shot_candidate", "level": "info", "timestamp": "2026-07-01T13:08:06.236461Z"}
+{"fewshot_dataset_used": null, "fewshot_split_used": "train", "fewshot_db_id_used": null, "fewshot_top_k": 2, "fewshot_example_ids": ["5604", "5057"], "event": "few_shot_retrieved", "level": "info", "timestamp": "2026-07-01T13:08:06.236461Z"}
+{"attempt": 1, "error": "(sqlite3.OperationalError) no such table: Orders\n[SQL: EXPLAIN QUERY PLAN SELECT strftime('%Y', T1.OrderDate) AS Year, ROUND(SUM(T2.Quantity * T2.UnitPrice), 2) AS Revenue FROM Orders AS T1 INNER JOIN Order_Details AS T2 ON T1.OrderID = T2.OrderID GROUP BY strftime('%Y', T1.OrderDate) ORDER BY Year ASC;]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)", "event": "sql_self_correction_triggered", "level": "warning", "timestamp": "2026-07-01T13:08:21.647717Z"}
+{"seconds": 2, "reason": "Retry backoff", "event": "sql_gen_waiting", "level": "info", "timestamp": "2026-07-01T13:08:21.647717Z"}
+{"attempt": 2, "error": "(sqlite3.OperationalError) no such table: orders\n[SQL: EXPLAIN QUERY PLAN SELECT strftime('%Y', T1.OrderDate) AS Year, ROUND(SUM(T2.Quantity * T2.UnitPrice), 2) AS Revenue FROM orders AS T1 INNER JOIN `order details` AS T2 ON T1.OrderID = T2.OrderID GROUP BY strftime('%Y', T1.OrderDate) ORDER BY Year ASC;]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)", "event": "sql_self_correction_triggered", "level": "warning", "timestamp": "2026-07-01T13:08:44.137159Z"}
+{"attempts": 1, "event": "sql_generation_failed", "level": "warning", "timestamp": "2026-07-01T13:08:44.137159Z"}
+{"question": "Doanh thu theo từng năm là bao nhiêu? Sắp xếp theo năm tăng ", "step": "sql_generation_failed", "cache_hit": false, "sql": null, "event": "arun_query_complete", "level": "info", "timestamp": "2026-07-01T13:08:44.203467Z"}
+{"event": "rebuilding_schema_index", "level": "info", "timestamp": "2026-07-01T13:14:05.916236Z"}
+{"event": "ChromaDB disabled on Windows — using direct schema lookup", "level": "info", "timestamp": "2026-07-01T13:14:05.918234Z"}
+{"documents": 114, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-01T13:14:05.918234Z"}
+{"event": "rebuilding_schema_index", "level": "info", "timestamp": "2026-07-01T13:14:22.783405Z"}
+{"event": "ChromaDB disabled on Windows — using direct schema lookup", "level": "info", "timestamp": "2026-07-01T13:14:22.785406Z"}
+{"documents": 114, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-01T13:14:22.785406Z"}
+{"old": "(none)", "new": "data\\northwind\\northwind.sqlite", "event": "db_changed", "level": "info", "timestamp": "2026-07-01T13:14:22.788406Z"}
+{"event": "rebuilding_schema_index", "level": "info", "timestamp": "2026-07-01T13:14:22.788406Z"}
+{"event": "ChromaDB disabled on Windows — using direct schema lookup", "level": "info", "timestamp": "2026-07-01T13:14:22.789408Z"}
+{"documents": 114, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-01T13:14:22.789408Z"}
+{"db_path": "data\\northwind\\northwind.sqlite", "tables": 13, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-01T13:14:22.789408Z"}
+{"question": "Doanh thu theo từng năm là bao nhiêu? Sắp xếp theo năm tăng dần.", "session_id": "default", "db": "data\\northwind\\northwind.sqlite", "event": "arun_query_start", "level": "info", "timestamp": "2026-07-01T13:14:22.789408Z"}
+{"question": "Doanh thu theo từng năm là bao nhiêu? Sắp xếp theo năm tăng dần.", "event": "orchestrator_run", "level": "info", "timestamp": "2026-07-01T13:14:22.842443Z"}
+{"error": "HTTPSConnectionPool(host='oauth2.googleapis.com', port=443): Max retries exceeded with url: /token (Caused by NewConnectionError(\"HTTPSConnection(host='oauth2.googleapis.com', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))", "attempt": 1, "event": "gemini_embed_failed", "level": "error", "timestamp": "2026-07-01T13:14:29.813531Z"}
+{"model": "gemini-embedding-001", "event": "gemini_embed_fallback_to_hashing", "level": "warning", "timestamp": "2026-07-01T13:14:29.814094Z"}
+{"count": 1, "dimension": 384, "event": "hashing_fallback_embed", "level": "info", "timestamp": "2026-07-01T13:14:29.814619Z"}
+{"tables": 13, "relationships": 13, "pruning_mode": "auto", "event": "schema_context_built", "level": "info", "timestamp": "2026-07-01T13:14:30.319591Z"}
+{"error": "503 failed to connect to all addresses; last error: UNAVAILABLE: ipv6:%5B2001:4860:4802:34::223%5D:443: WSAGetOverlappedResult: Permission denied (An attempt was made to access a socket in a way forbidden by its access permissions.\r\n -- 10013)", "model": "gemini-2.5-pro", "event": "gemini_invoke_failed", "level": "warning", "timestamp": "2026-07-01T13:15:09.749101Z"}
+{"event": "rebuilding_schema_index", "level": "info", "timestamp": "2026-07-01T13:15:25.783641Z"}
+{"event": "ChromaDB disabled on Windows — using direct schema lookup", "level": "info", "timestamp": "2026-07-01T13:15:25.785645Z"}
+{"documents": 114, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-01T13:15:25.785645Z"}
+{"old": "(none)", "new": "data\\northwind\\northwind.sqlite", "event": "db_changed", "level": "info", "timestamp": "2026-07-01T13:15:25.787645Z"}
+{"event": "rebuilding_schema_index", "level": "info", "timestamp": "2026-07-01T13:15:25.787645Z"}
+{"event": "ChromaDB disabled on Windows — using direct schema lookup", "level": "info", "timestamp": "2026-07-01T13:15:25.787645Z"}
+{"documents": 114, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-01T13:15:25.787645Z"}
+{"db_path": "data\\northwind\\northwind.sqlite", "tables": 13, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-01T13:15:25.788645Z"}
+{"question": "Doanh thu theo từng năm là bao nhiêu? Sắp xếp theo năm tăng dần.", "session_id": "default", "db": "data\\northwind\\northwind.sqlite", "event": "arun_query_start", "level": "info", "timestamp": "2026-07-01T13:15:25.788645Z"}
+{"question": "Doanh thu theo từng năm là bao nhiêu? Sắp xếp theo năm tăng dần.", "event": "orchestrator_run", "level": "info", "timestamp": "2026-07-01T13:15:25.825737Z"}
+{"count": 1, "attempt": 1, "event": "gemini_embed_success", "level": "info", "timestamp": "2026-07-01T13:15:32.545149Z"}
+{"tables": 13, "relationships": 13, "pruning_mode": "auto", "event": "schema_context_built", "level": "info", "timestamp": "2026-07-01T13:15:32.888413Z"}
+{"error": "503 failed to connect to all addresses; last error: UNAVAILABLE: ipv4:216.239.34.223:443: WSAGetOverlappedResult: Permission denied (An attempt was made to access a socket in a way forbidden by its access permissions.\r\n -- 10013)", "model": "gemini-2.5-pro", "event": "gemini_invoke_failed", "level": "warning", "timestamp": "2026-07-01T13:15:41.762120Z"}
+{"finish_reason": "MAX_TOKENS", "content_length": 133, "event": "gemini_abnormal_finish", "level": "warning", "timestamp": "2026-07-01T13:15:53.520975Z"}
+{"error": "Vertex AI silent TPM drop detected: MAX_TOKENS at len 133", "model": "gemini-2.5-pro", "event": "gemini_invoke_failed", "level": "warning", "timestamp": "2026-07-01T13:15:53.521976Z"}
+{"error": "Vertex AI silent TPM drop detected: MAX_TOKENS at len 133", "event": "orchestrator_error", "level": "error", "timestamp": "2026-07-01T13:15:53.521976Z"}
+{"question": "Doanh thu theo từng năm là bao nhiêu? Sắp xếp theo năm tăng ", "step": "start", "cache_hit": false, "sql": null, "event": "arun_query_complete", "level": "info", "timestamp": "2026-07-01T13:15:53.523974Z"}
+{"error": "503 failed to connect to all addresses; last error: UNAVAILABLE: ipv4:216.239.34.223:443: WSAGetOverlappedResult: Permission denied (An attempt was made to access a socket in a way forbidden by its access permissions.\r\n -- 10013)", "model": "gemini-2.5-pro", "event": "gemini_invoke_failed", "level": "warning", "timestamp": "2026-07-01T13:16:13.773363Z"}
+{"error": "503 failed to connect to all addresses; last error: UNAVAILABLE: ipv4:216.239.34.223:443: WSAGetOverlappedResult: Permission denied (An attempt was made to access a socket in a way forbidden by its access permissions.\r\n -- 10013)", "event": "orchestrator_error", "level": "error", "timestamp": "2026-07-01T13:16:13.774112Z"}
+{"question": "Doanh thu theo từng năm là bao nhiêu? Sắp xếp theo năm tăng ", "step": "start", "cache_hit": false, "sql": null, "event": "arun_query_complete", "level": "info", "timestamp": "2026-07-01T13:16:13.777075Z"}
+{"event": "rebuilding_schema_index", "level": "info", "timestamp": "2026-07-01T13:17:26.600049Z"}
+{"event": "ChromaDB disabled on Windows — using direct schema lookup", "level": "info", "timestamp": "2026-07-01T13:17:26.602048Z"}
+{"documents": 114, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-01T13:17:26.602048Z"}
+{"old": "(none)", "new": "data\\northwind\\northwind.sqlite", "event": "db_changed", "level": "info", "timestamp": "2026-07-01T13:17:26.605048Z"}
+{"event": "rebuilding_schema_index", "level": "info", "timestamp": "2026-07-01T13:17:26.605048Z"}
+{"event": "ChromaDB disabled on Windows — using direct schema lookup", "level": "info", "timestamp": "2026-07-01T13:17:26.605048Z"}
+{"documents": 114, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-01T13:17:26.606049Z"}
+{"db_path": "data\\northwind\\northwind.sqlite", "tables": 13, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-01T13:17:26.606049Z"}
+{"question": "Doanh thu theo từng năm là bao nhiêu? Sắp xếp theo năm tăng dần.", "session_id": "default", "db": "data\\northwind\\northwind.sqlite", "event": "arun_query_start", "level": "info", "timestamp": "2026-07-01T13:17:26.606049Z"}
+{"question": "Doanh thu theo từng năm là bao nhiêu? Sắp xếp theo năm tăng dần.", "event": "orchestrator_run", "level": "info", "timestamp": "2026-07-01T13:17:26.671643Z"}
+{"count": 1, "attempt": 1, "event": "gemini_embed_success", "level": "info", "timestamp": "2026-07-01T13:17:35.043655Z"}
+{"tables": 13, "relationships": 13, "pruning_mode": "auto", "event": "schema_context_built", "level": "info", "timestamp": "2026-07-01T13:17:35.324417Z"}
+{"finish_reason": "MAX_TOKENS", "content_length": 161, "event": "gemini_abnormal_finish", "level": "warning", "timestamp": "2026-07-01T13:17:53.428337Z"}
+{"error": "Vertex AI silent TPM drop detected: MAX_TOKENS at len 161", "model": "gemini-2.5-pro", "event": "gemini_invoke_failed", "level": "warning", "timestamp": "2026-07-01T13:17:53.428337Z"}
+{"error": "Vertex AI silent TPM drop detected: MAX_TOKENS at len 161", "event": "orchestrator_error", "level": "error", "timestamp": "2026-07-01T13:17:53.429317Z"}
+{"question": "Doanh thu theo từng năm là bao nhiêu? Sắp xếp theo năm tăng ", "step": "start", "cache_hit": false, "sql": null, "event": "arun_query_complete", "level": "info", "timestamp": "2026-07-01T13:17:53.432190Z"}
+{"event": "rebuilding_schema_index", "level": "info", "timestamp": "2026-07-01T13:19:44.996170Z"}
+{"event": "ChromaDB disabled on Windows — using direct schema lookup", "level": "info", "timestamp": "2026-07-01T13:19:44.998169Z"}
+{"documents": 114, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-01T13:19:44.998169Z"}
+{"old": "(none)", "new": "data\\northwind\\northwind.sqlite", "event": "db_changed", "level": "info", "timestamp": "2026-07-01T13:19:45.000287Z"}
+{"event": "rebuilding_schema_index", "level": "info", "timestamp": "2026-07-01T13:19:45.001297Z"}
+{"event": "ChromaDB disabled on Windows — using direct schema lookup", "level": "info", "timestamp": "2026-07-01T13:19:45.002070Z"}
+{"documents": 114, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-01T13:19:45.002070Z"}
+{"db_path": "data\\northwind\\northwind.sqlite", "tables": 13, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-01T13:19:45.002297Z"}
+{"question": "Doanh thu theo từng năm là bao nhiêu? Sắp xếp theo năm tăng dần.", "session_id": "default", "db": "data\\northwind\\northwind.sqlite", "event": "arun_query_start", "level": "info", "timestamp": "2026-07-01T13:19:45.002297Z"}
+{"question": "Doanh thu theo từng năm là bao nhiêu? Sắp xếp theo năm tăng dần.", "event": "orchestrator_run", "level": "info", "timestamp": "2026-07-01T13:19:45.080175Z"}
+{"count": 1, "attempt": 1, "event": "gemini_embed_success", "level": "info", "timestamp": "2026-07-01T13:19:52.748620Z"}
+{"tables": 13, "relationships": 13, "pruning_mode": "auto", "event": "schema_context_built", "level": "info", "timestamp": "2026-07-01T13:19:53.035178Z"}
+{"intent": "aggregate", "confidence": 0.95, "next": "query_spec", "route_reason": "spec_required", "event": "orchestrator_decision", "level": "info", "timestamp": "2026-07-01T13:20:11.097414Z"}
+{"question": "Doanh thu theo từng năm là bao nhiêu? Sắp xếp theo năm tăng dần.", "event": "query_spec_run", "level": "info", "timestamp": "2026-07-01T13:20:11.100403Z"}
+{"error": "2 validation errors for QuerySpec\ndate_semantics.0.operator\n  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.10/v/string_type\ndate_semantics.0.value\n  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.10/v/string_type", "raw": "```json\n{\n  \"intent\": \"Calculate the total revenue for each year and sort the results by year in ascending order.\",\n  \"output_columns\": [\n    \"OrderYear\",\n    \"TotalRevenue\"\n  ],\n  \"output_grain\": \"on", "event": "query_spec_failed", "level": "warning", "timestamp": "2026-07-01T13:20:32.104973Z"}
+{"filter_dict": {"split": "train"}, "k": 2, "fetch_k": 50, "threshold": 0.55, "event": "few_shot_search_start", "level": "info", "timestamp": "2026-07-01T13:20:32.327737Z"}
+{"raw_score": 0.5606666207313538, "similarity": 0.641, "example_id": "5604", "dataset": "spider", "split": "train", "db_id": "swimming", "intent": "unknown", "event": "few_shot_candidate", "level": "info", "timestamp": "2026-07-01T13:20:36.415436Z"}
+{"raw_score": 0.565208375453949, "similarity": 0.639, "example_id": "5057", "dataset": "spider", "split": "train", "db_id": "device", "intent": "unknown", "event": "few_shot_candidate", "level": "info", "timestamp": "2026-07-01T13:20:36.415436Z"}
+{"fewshot_dataset_used": null, "fewshot_split_used": "train", "fewshot_db_id_used": null, "fewshot_top_k": 2, "fewshot_example_ids": ["5604", "5057"], "event": "few_shot_retrieved", "level": "info", "timestamp": "2026-07-01T13:20:36.415436Z"}
+{"sql": "SELECT STRFTIME('%Y', T1.OrderDate), SUM(T2.UnitPrice * T2.Quantity * (1 - T2.Di", "event": "sql_validation_success", "level": "info", "timestamp": "2026-07-01T13:20:47.415117Z"}
+{"sql": "SELECT STRFTIME('%Y', T1.OrderDate), SUM(T2.UnitPrice * T2.Quantity * (1 - T2.Di", "confidence": 0.6, "event": "sql_generated", "level": "info", "timestamp": "2026-07-01T13:20:47.415117Z"}
+{"tables": ["order details", "orders"], "db_path": "data\\northwind\\northwind.sqlite", "event": "validate_tables_start", "level": "info", "timestamp": "2026-07-01T13:20:47.430118Z"}
+{"sql": "SELECT STRFTIME('%Y', T1.OrderDate), SUM(T2.UnitPrice * T2.Quantity * (1 - T2.Di", "event": "validation_passed", "level": "info", "timestamp": "2026-07-01T13:20:47.434135Z"}
+{"sql": "SELECT STRFTIME('%Y', T1.OrderDate), SUM(T2.UnitPrice * T2.Quantity * (1 - T2.Di", "event": "executor_run", "level": "info", "timestamp": "2026-07-01T13:20:47.437082Z"}
+{"count": 1, "attempt": 1, "event": "gemini_embed_success", "level": "info", "timestamp": "2026-07-01T13:20:50.264020Z"}
+{"key": "de953b1b208487651701860a", "sql_snippet": "SELECT STRFTIME('%Y', T1.OrderDate), SUM(T2.UnitPrice * T2.Q", "event": "cache_put", "level": "info", "timestamp": "2026-07-01T13:20:50.265178Z"}
+{"sql": "SELECT STRFTIME('%Y', T1.OrderDate), SUM(T2.UnitPrice * T2.Q", "event": "result_cached", "level": "info", "timestamp": "2026-07-01T13:20:50.265178Z"}
+{"row_count": 12, "time_ms": 1264.52, "event": "execution_success", "level": "info", "timestamp": "2026-07-01T13:20:50.265178Z"}
+{"row_count": 12, "event": "formatter_run", "level": "info", "timestamp": "2026-07-01T13:20:50.268489Z"}
+{"finish_reason": "MAX_TOKENS", "content_length": 591, "event": "gemini_abnormal_finish", "level": "warning", "timestamp": "2026-07-01T13:21:08.386629Z"}
+{"error": "Vertex AI silent TPM drop detected: MAX_TOKENS at len 591", "model": "gemini-2.5-pro", "event": "gemini_invoke_failed", "level": "warning", "timestamp": "2026-07-01T13:21:08.386629Z"}
+{"error": "Vertex AI silent TPM drop detected: MAX_TOKENS at len 591", "event": "formatter_error", "level": "error", "timestamp": "2026-07-01T13:21:08.386629Z"}
+{"question": "Doanh thu theo từng năm là bao nhiêu? Sắp xếp theo năm tăng ", "step": "execution_success", "cache_hit": false, "sql": "SELECT STRFTIME('%Y', T1.OrderDate), SUM(T2.UnitPrice * T2.Q", "event": "arun_query_complete", "level": "info", "timestamp": "2026-07-01T13:21:08.389643Z"}
+{"event": "rebuilding_schema_index", "level": "info", "timestamp": "2026-07-01T13:21:50.501341Z"}
+{"event": "ChromaDB disabled on Windows — using direct schema lookup", "level": "info", "timestamp": "2026-07-01T13:21:50.502482Z"}
+{"documents": 114, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-01T13:21:50.502482Z"}
+{"event": "rebuilding_schema_index", "level": "info", "timestamp": "2026-07-01T13:26:21.946625Z"}
+{"event": "ChromaDB disabled on Windows — using direct schema lookup", "level": "info", "timestamp": "2026-07-01T13:26:21.948625Z"}
+{"documents": 114, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-01T13:26:21.948625Z"}
+{"old": "(none)", "new": "data\\northwind\\northwind.sqlite", "event": "db_changed", "level": "info", "timestamp": "2026-07-01T13:26:36.340986Z"}
+{"event": "rebuilding_schema_index", "level": "info", "timestamp": "2026-07-01T13:26:36.340986Z"}
+{"event": "ChromaDB disabled on Windows — using direct schema lookup", "level": "info", "timestamp": "2026-07-01T13:26:36.341979Z"}
+{"documents": 114, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-01T13:26:36.341979Z"}
+{"db_path": "data\\northwind\\northwind.sqlite", "tables": 13, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-01T13:26:36.341979Z"}
+{"question": "Doanh thu theo từng năm là bao nhiêu?", "session_id": "session_1782912381", "db": "data\\northwind\\northwind.sqlite", "event": "arun_query_start", "level": "info", "timestamp": "2026-07-01T13:26:36.341979Z"}
+{"question": "Doanh thu theo từng năm là bao nhiêu?", "event": "orchestrator_run", "level": "info", "timestamp": "2026-07-01T13:26:36.380108Z"}
+{"count": 1, "attempt": 1, "event": "gemini_embed_success", "level": "info", "timestamp": "2026-07-01T13:26:42.915823Z"}
+{"tables": 13, "relationships": 13, "pruning_mode": "auto", "event": "schema_context_built", "level": "info", "timestamp": "2026-07-01T13:26:43.204861Z"}
+{"intent": "aggregate", "confidence": 0.95, "next": "query_spec", "route_reason": "spec_required", "event": "orchestrator_decision", "level": "info", "timestamp": "2026-07-01T13:26:59.462889Z"}
+{"question": "Doanh thu theo từng năm là bao nhiêu?", "event": "query_spec_run", "level": "info", "timestamp": "2026-07-01T13:26:59.465978Z"}
+{"finish_reason": "MAX_TOKENS", "content_length": 773, "event": "gemini_abnormal_finish", "level": "warning", "timestamp": "2026-07-01T13:27:37.444834Z"}
+{"error": "Vertex AI silent TPM drop detected: MAX_TOKENS at len 773", "model": "gemini-2.5-pro", "event": "gemini_invoke_failed", "level": "warning", "timestamp": "2026-07-01T13:27:37.445055Z"}
+{"error": "Vertex AI silent TPM drop detected: MAX_TOKENS at len 773", "raw": "", "event": "query_spec_failed", "level": "warning", "timestamp": "2026-07-01T13:27:37.445055Z"}
+{"filter_dict": {"split": "train"}, "k": 2, "fetch_k": 50, "threshold": 0.55, "event": "few_shot_search_start", "level": "info", "timestamp": "2026-07-01T13:27:37.608892Z"}
+{"raw_score": 0.5930829644203186, "similarity": 0.628, "example_id": "4618", "dataset": "spider", "split": "train", "db_id": "entertainment_awards", "intent": "unknown", "event": "few_shot_candidate", "level": "info", "timestamp": "2026-07-01T13:27:41.746465Z"}
+{"raw_score": 0.5981852412223816, "similarity": 0.626, "example_id": "5279", "dataset": "spider", "split": "train", "db_id": "manufactory_1", "intent": "unknown", "event": "few_shot_candidate", "level": "info", "timestamp": "2026-07-01T13:27:41.746465Z"}
+{"fewshot_dataset_used": null, "fewshot_split_used": "train", "fewshot_db_id_used": null, "fewshot_top_k": 2, "fewshot_example_ids": ["4618", "5279"], "event": "few_shot_retrieved", "level": "info", "timestamp": "2026-07-01T13:27:41.746465Z"}
+{"sql": "SELECT STRFTIME('%Y', T1.OrderDate), SUM(T2.UnitPrice * T2.Quantity * (1 - T2.Di", "event": "sql_validation_success", "level": "info", "timestamp": "2026-07-01T13:27:56.509354Z"}
+{"sql": "SELECT STRFTIME('%Y', T1.OrderDate), SUM(T2.UnitPrice * T2.Quantity * (1 - T2.Di", "confidence": 0.6, "event": "sql_generated", "level": "info", "timestamp": "2026-07-01T13:27:56.509354Z"}
+{"tables": ["order details", "orders"], "db_path": "data\\northwind\\northwind.sqlite", "event": "validate_tables_start", "level": "info", "timestamp": "2026-07-01T13:27:56.524383Z"}
+{"sql": "SELECT STRFTIME('%Y', T1.OrderDate), SUM(T2.UnitPrice * T2.Quantity * (1 - T2.Di", "event": "validation_passed", "level": "info", "timestamp": "2026-07-01T13:27:56.528355Z"}
+{"sql": "SELECT STRFTIME('%Y', T1.OrderDate), SUM(T2.UnitPrice * T2.Quantity * (1 - T2.Di", "event": "executor_run", "level": "info", "timestamp": "2026-07-01T13:27:56.530384Z"}
+{"count": 1, "attempt": 1, "event": "gemini_embed_success", "level": "info", "timestamp": "2026-07-01T13:27:59.018353Z"}
+{"key": "633949ce41c109ea67fb2520", "sql_snippet": "SELECT STRFTIME('%Y', T1.OrderDate), SUM(T2.UnitPrice * T2.Q", "event": "cache_put", "level": "info", "timestamp": "2026-07-01T13:27:59.018567Z"}
+{"sql": "SELECT STRFTIME('%Y', T1.OrderDate), SUM(T2.UnitPrice * T2.Q", "event": "result_cached", "level": "info", "timestamp": "2026-07-01T13:27:59.018820Z"}
+{"row_count": 12, "time_ms": 867.3, "event": "execution_success", "level": "info", "timestamp": "2026-07-01T13:27:59.018820Z"}
+{"row_count": 12, "event": "formatter_run", "level": "info", "timestamp": "2026-07-01T13:27:59.021567Z"}
+{"finish_reason": "MAX_TOKENS", "content_length": 182, "event": "gemini_abnormal_finish", "level": "warning", "timestamp": "2026-07-01T13:28:17.681735Z"}
+{"error": "Vertex AI silent TPM drop detected: MAX_TOKENS at len 182", "model": "gemini-2.5-pro", "event": "gemini_invoke_failed", "level": "warning", "timestamp": "2026-07-01T13:28:17.682716Z"}
+{"error": "Vertex AI silent TPM drop detected: MAX_TOKENS at len 182", "event": "formatter_error", "level": "error", "timestamp": "2026-07-01T13:28:17.682716Z"}
+{"question": "Doanh thu theo từng năm là bao nhiêu?", "step": "execution_success", "cache_hit": false, "sql": "SELECT STRFTIME('%Y', T1.OrderDate), SUM(T2.UnitPrice * T2.Q", "event": "arun_query_complete", "level": "info", "timestamp": "2026-07-01T13:28:17.685732Z"}
+{"event": "rebuilding_schema_index", "level": "info", "timestamp": "2026-07-02T03:06:20.472758Z"}
+{"event": "ChromaDB disabled on Windows — using direct schema lookup", "level": "info", "timestamp": "2026-07-02T03:06:20.474719Z"}
+{"documents": 114, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-02T03:06:20.474719Z"}
+{"event": "rebuilding_schema_index", "level": "info", "timestamp": "2026-07-02T03:14:34.527219Z"}
+{"event": "ChromaDB disabled on Windows — using direct schema lookup", "level": "info", "timestamp": "2026-07-02T03:14:34.530220Z"}
+{"documents": 114, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-02T03:14:34.531221Z"}
+{"old": "(none)", "new": "data\\northwind\\northwind.sqlite", "event": "db_changed", "level": "info", "timestamp": "2026-07-02T03:21:51.844179Z"}
+{"event": "rebuilding_schema_index", "level": "info", "timestamp": "2026-07-02T03:21:51.845194Z"}
+{"event": "ChromaDB disabled on Windows — using direct schema lookup", "level": "info", "timestamp": "2026-07-02T03:21:51.845194Z"}
+{"documents": 114, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-02T03:21:51.845194Z"}
+{"db_path": "data\\northwind\\northwind.sqlite", "tables": 13, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-02T03:21:51.845194Z"}
+{"question": "Tìm các sản phẩm có giá đơn vị lớn hơn 50 và chưa bị ngừng kinh doanh. Hiển thị tên sản phẩm, giá và", "session_id": "session_1782962074", "db": "data\\northwind\\northwind.sqlite", "event": "arun_query_start", "level": "info", "timestamp": "2026-07-02T03:21:51.845194Z"}
+{"question": "Tìm các sản phẩm có giá đơn vị lớn hơn 50 và chưa bị ngừng kinh doanh. Hiển thị ", "event": "orchestrator_run", "level": "info", "timestamp": "2026-07-02T03:21:51.974534Z"}
+{"count": 1, "attempt": 1, "event": "gemini_embed_success", "level": "info", "timestamp": "2026-07-02T03:22:03.556839Z"}
+{"tables": 13, "relationships": 13, "pruning_mode": "auto", "event": "schema_context_built", "level": "info", "timestamp": "2026-07-02T03:22:03.993360Z"}
+{"intent": "simple", "confidence": 0.95, "next": "sql_generator", "route_reason": "compact", "event": "orchestrator_decision", "level": "info", "timestamp": "2026-07-02T03:22:18.534773Z"}
+{"filter_dict": {"split": "train"}, "k": 2, "fetch_k": 50, "threshold": 0.55, "event": "few_shot_search_start", "level": "info", "timestamp": "2026-07-02T03:22:20.023293Z"}
+{"raw_score": 0.4340568482875824, "similarity": 0.697, "example_id": "336", "dataset": "spider", "split": "train", "db_id": "product_catalog", "intent": "unknown", "event": "few_shot_candidate", "level": "info", "timestamp": "2026-07-02T03:22:24.450477Z"}
+{"raw_score": 0.4682009518146515, "similarity": 0.681, "example_id": "5328", "dataset": "spider", "split": "train", "db_id": "manufactory_1", "intent": "unknown", "event": "few_shot_candidate", "level": "info", "timestamp": "2026-07-02T03:22:24.451481Z"}
+{"fewshot_dataset_used": null, "fewshot_split_used": "train", "fewshot_db_id_used": null, "fewshot_top_k": 2, "fewshot_example_ids": ["336", "5328"], "event": "few_shot_retrieved", "level": "info", "timestamp": "2026-07-02T03:22:24.451481Z"}
+{"sql": "SELECT T1.ProductName, T1.UnitPrice, T1.UnitsInStock FROM Products AS T1 WHERE T", "event": "sql_validation_success", "level": "info", "timestamp": "2026-07-02T03:22:41.529929Z"}
+{"sql": "SELECT T1.ProductName, T1.UnitPrice, T1.UnitsInStock FROM Products AS T1 WHERE T", "confidence": 0.6, "event": "sql_generated", "level": "info", "timestamp": "2026-07-02T03:22:41.529929Z"}
+{"tables": ["products"], "db_path": "data\\northwind\\northwind.sqlite", "event": "validate_tables_start", "level": "info", "timestamp": "2026-07-02T03:22:41.544929Z"}
+{"sql": "SELECT T1.ProductName, T1.UnitPrice, T1.UnitsInStock FROM Products AS T1 WHERE T", "event": "validation_passed", "level": "info", "timestamp": "2026-07-02T03:22:41.547931Z"}
+{"sql": "SELECT T1.ProductName, T1.UnitPrice, T1.UnitsInStock FROM Products AS T1 WHERE T", "event": "executor_run", "level": "info", "timestamp": "2026-07-02T03:22:41.549929Z"}
+{"count": 1, "attempt": 1, "event": "gemini_embed_success", "level": "info", "timestamp": "2026-07-02T03:22:43.187941Z"}
+{"key": "60722683bec18962cea4607c", "sql_snippet": "SELECT T1.ProductName, T1.UnitPrice, T1.UnitsInStock FROM Pr", "event": "cache_put", "level": "info", "timestamp": "2026-07-02T03:22:43.187941Z"}
+{"sql": "SELECT T1.ProductName, T1.UnitPrice, T1.UnitsInStock FROM Pr", "event": "result_cached", "level": "info", "timestamp": "2026-07-02T03:22:43.187941Z"}
+{"row_count": 5, "time_ms": 0.56, "event": "execution_success", "level": "info", "timestamp": "2026-07-02T03:22:43.187941Z"}
+{"row_count": 5, "event": "formatter_run", "level": "info", "timestamp": "2026-07-02T03:22:43.190867Z"}
+{"from_cache": false, "row_count": 5, "event": "formatter_complete", "level": "info", "timestamp": "2026-07-02T03:22:46.861565Z"}
+{"question": "Tìm các sản phẩm có giá đơn vị lớn hơn 50 và chưa bị ngừng k", "step": "formatted", "cache_hit": false, "sql": "SELECT T1.ProductName, T1.UnitPrice, T1.UnitsInStock FROM Pr", "event": "arun_query_complete", "level": "info", "timestamp": "2026-07-02T03:22:46.864566Z"}
+{"event": "rebuilding_schema_index", "level": "info", "timestamp": "2026-07-02T03:28:26.556438Z"}
+{"event": "ChromaDB disabled on Windows — using direct schema lookup", "level": "info", "timestamp": "2026-07-02T03:28:26.558438Z"}
+{"documents": 114, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-02T03:28:26.558438Z"}
+{"old": "(none)", "new": "data\\northwind\\northwind.sqlite", "event": "db_changed", "level": "info", "timestamp": "2026-07-02T03:28:35.515012Z"}
+{"event": "rebuilding_schema_index", "level": "info", "timestamp": "2026-07-02T03:28:35.515750Z"}
+{"event": "ChromaDB disabled on Windows — using direct schema lookup", "level": "info", "timestamp": "2026-07-02T03:28:35.515750Z"}
+{"documents": 114, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-02T03:28:35.515750Z"}
+{"db_path": "data\\northwind\\northwind.sqlite", "tables": 13, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-02T03:28:35.515750Z"}
+{"question": "Tìm các sản phẩm có giá đơn vị lớn hơn 50 và chưa bị ngừng kinh doanh. Hiển thị tên sản phẩm, giá và", "session_id": "session_1782962906", "db": "data\\northwind\\northwind.sqlite", "event": "arun_query_start", "level": "info", "timestamp": "2026-07-02T03:28:35.515750Z"}
+{"question": "Tìm các sản phẩm có giá đơn vị lớn hơn 50 và chưa bị ngừng kinh doanh. Hiển thị ", "event": "orchestrator_run", "level": "info", "timestamp": "2026-07-02T03:28:35.564750Z"}
+{"count": 1, "attempt": 1, "event": "gemini_embed_success", "level": "info", "timestamp": "2026-07-02T03:28:43.057624Z"}
+{"tables": 13, "relationships": 13, "pruning_mode": "auto", "event": "schema_context_built", "level": "info", "timestamp": "2026-07-02T03:28:43.320648Z"}
+{"intent": "simple", "confidence": 0.95, "next": "sql_generator", "route_reason": "compact", "event": "orchestrator_decision", "level": "info", "timestamp": "2026-07-02T03:28:53.561341Z"}
+{"filter_dict": {"split": "train"}, "k": 2, "fetch_k": 50, "threshold": 0.55, "event": "few_shot_search_start", "level": "info", "timestamp": "2026-07-02T03:28:53.775283Z"}
+{"raw_score": 0.4340568482875824, "similarity": 0.697, "example_id": "336", "dataset": "spider", "split": "train", "db_id": "product_catalog", "intent": "unknown", "event": "few_shot_candidate", "level": "info", "timestamp": "2026-07-02T03:28:57.942177Z"}
+{"raw_score": 0.4682009518146515, "similarity": 0.681, "example_id": "5328", "dataset": "spider", "split": "train", "db_id": "manufactory_1", "intent": "unknown", "event": "few_shot_candidate", "level": "info", "timestamp": "2026-07-02T03:28:57.942177Z"}
+{"fewshot_dataset_used": null, "fewshot_split_used": "train", "fewshot_db_id_used": null, "fewshot_top_k": 2, "fewshot_example_ids": ["336", "5328"], "event": "few_shot_retrieved", "level": "info", "timestamp": "2026-07-02T03:28:57.942177Z"}
+{"sql": "SELECT T1.ProductName, T1.UnitPrice, T1.UnitsInStock FROM Products AS T1 WHERE T", "event": "sql_validation_success", "level": "info", "timestamp": "2026-07-02T03:29:00.284259Z"}
+{"sql": "SELECT T1.ProductName, T1.UnitPrice, T1.UnitsInStock FROM Products AS T1 WHERE T", "confidence": 0.6, "event": "sql_generated", "level": "info", "timestamp": "2026-07-02T03:29:00.284496Z"}
+{"tables": ["products"], "db_path": "data\\northwind\\northwind.sqlite", "event": "validate_tables_start", "level": "info", "timestamp": "2026-07-02T03:29:00.304498Z"}
+{"sql": "SELECT T1.ProductName, T1.UnitPrice, T1.UnitsInStock FROM Products AS T1 WHERE T", "event": "validation_passed", "level": "info", "timestamp": "2026-07-02T03:29:00.307817Z"}
+{"sql": "SELECT T1.ProductName, T1.UnitPrice, T1.UnitsInStock FROM Products AS T1 WHERE T", "event": "executor_run", "level": "info", "timestamp": "2026-07-02T03:29:00.310565Z"}
+{"count": 1, "attempt": 1, "event": "gemini_embed_success", "level": "info", "timestamp": "2026-07-02T03:29:01.921751Z"}
+{"key": "60722683bec18962cea4607c", "sql_snippet": "SELECT T1.ProductName, T1.UnitPrice, T1.UnitsInStock FROM Pr", "event": "cache_put", "level": "info", "timestamp": "2026-07-02T03:29:01.921751Z"}
+{"sql": "SELECT T1.ProductName, T1.UnitPrice, T1.UnitsInStock FROM Pr", "event": "result_cached", "level": "info", "timestamp": "2026-07-02T03:29:01.921751Z"}
+{"row_count": 5, "time_ms": 0.58, "event": "execution_success", "level": "info", "timestamp": "2026-07-02T03:29:01.921751Z"}
+{"row_count": 5, "event": "formatter_run", "level": "info", "timestamp": "2026-07-02T03:29:01.923751Z"}
+{"from_cache": false, "row_count": 5, "event": "formatter_complete", "level": "info", "timestamp": "2026-07-02T03:29:08.178144Z"}
+{"question": "Tìm các sản phẩm có giá đơn vị lớn hơn 50 và chưa bị ngừng k", "step": "formatted", "cache_hit": false, "sql": "SELECT T1.ProductName, T1.UnitPrice, T1.UnitsInStock FROM Pr", "event": "arun_query_complete", "level": "info", "timestamp": "2026-07-02T03:29:08.181181Z"}
+{"event": "rebuilding_schema_index", "level": "info", "timestamp": "2026-07-20T19:50:04.624706Z"}
+{"event": "ChromaDB disabled on Windows — using direct schema lookup", "level": "info", "timestamp": "2026-07-20T19:50:04.634707Z"}
+{"documents": 86, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-20T19:50:04.634707Z"}
+{"event": "rebuilding_schema_index", "level": "info", "timestamp": "2026-07-20T19:52:12.849480Z"}
+{"event": "ChromaDB disabled on Windows — using direct schema lookup", "level": "info", "timestamp": "2026-07-20T19:52:12.862837Z"}
+{"documents": 86, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-20T19:52:12.862837Z"}
+{"event": "rebuilding_schema_index", "level": "info", "timestamp": "2026-07-21T05:22:09.607412Z"}
+{"event": "ChromaDB disabled on Windows — using direct schema lookup", "level": "info", "timestamp": "2026-07-21T05:22:09.787977Z"}
+{"documents": 86, "event": "schema_index_rebuilt", "level": "info", "timestamp": "2026-07-21T05:22:09.787977Z"}
